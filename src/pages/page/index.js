@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'dva';
 
 const Home = function (props) {
-  console.log(props, 'props');
+  console.log(props, 'propss');
   return <div>{props.mess}</div>;
 };
 
