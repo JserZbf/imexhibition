@@ -1,0 +1,68 @@
+.categoryContainer {
+  height: 100%;
+  width: 100%;
+  .menu {
+    transition: none;
+  }
+  :global {
+    .ant-menu {
+      height: calc(~'100% - 20px');
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      overflow-y: auto;
+      .ant-menu-submenu-title {
+        font-size: 13px;
+        white-space: inherit !important;
+        width: 100%;
+      }
+      .ant-menu-sub.ant-menu-inline {
+        background-color: transparent;
+      }
+      .ant-menu-item {
+        font-size: 12px;
+        white-space: inherit !important;
+        width: 100%;
+      }
+      .ant-menu-item-selected {
+        font-size: 12px;
+      }
+      .ant-menu-item-selected:after {
+        display: none !important;
+      }
+    }
+    .ant-menu-submenu-title {
+      font-size: 12px !important;
+      font-family: PingFangSC-Regular !important;
+    }
+  }
+  .menuIcon {
+    display: inline-block;
+    font-size: 16px;
+    padding-right: 20px;
+    text-align: center;
+    line-height: 32px;
+    min-width: 16px;
+  }
+}
+.toggleShrink {
+  background: #1d2328;
+  height: 20px;
+  margin-bottom: 0;
+  text-align: center;
+  cursor: pointer;
+  width: 80px;
+}
+.toggleCollapsed {
+  background: #1d2328;
+  height: 20px;
+  margin-bottom: 0;
+  text-align: center;
+  cursor: pointer;
+  width: 181px;
+  border-right: 1px solid #fff;
+}
+.icon {
+  color: #fff !important;
+  line-height: 20px;
+  font-size: 15px;
+}

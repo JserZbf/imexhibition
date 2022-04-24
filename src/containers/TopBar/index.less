@@ -1,0 +1,99 @@
+.headContainer {
+  height: 50px;
+  width: 100%;
+  background: #1a1c1f;
+  display: flex;
+  color: #ffffff;
+}
+.headLeft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #ffffff;
+  cursor: pointer;
+}
+.headTitle {
+  line-height: 20px;
+  padding-right: 40px;
+  padding-left:  6px;
+  border-right: 1px solid #595959;
+}
+.headLeftIcon {
+  width: 52px;
+  font-size: 27.4px !important;
+  padding: 12.3px;
+  color: #fff;
+  background-repeat:no-repeat; 
+  background-size:100% 100%;
+  background-image:url('https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg')
+}
+.headCenter {
+  display: flex;
+  flex: 1;
+  padding: 0 20px;
+  .headCenterItem {
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #babbbc;
+    border-top: 2px solid transparent;
+    cursor: pointer;
+  }
+  .headCenterItemActive {
+    background: rgba(64, 104, 226, 0.2);
+    border-top: 2px solid rgb(64, 104, 226);
+    color: #ffffff;
+  }
+}
+.headRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
+  width: 230px;
+  .action {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 12px;
+  }
+}
+.updateTime {
+  font-family: PingFangSC-Semibold;
+  font-size: 12px;
+  color: #ffffff;
+}
+.avatarWrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.userName {
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+}
+.loginOut {
+  margin-left: 10px;
+}
+.menu {
+  padding: 0;
+}
+.menuItem {
+  background: #232528;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #aaabac;
+  text-align: left;
+  height: 40px;
+  width: 180px;
+  line-height: 30px;
+  padding-left: 20px;
+  &:hover {
+    background: #212b45;
+    color: #fff;
+  }
+}

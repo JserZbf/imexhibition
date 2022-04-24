@@ -1,0 +1,101 @@
+.menuContainer {
+  height: 100%;
+  overflow-y: hidden;
+  &.toggleShrink {
+    width: 80px;
+  }
+  &.toggleCollapsed {
+    width: 180px;
+  }
+  .menu {
+    background: #fff;
+    overflow-y: auto !important;
+    box-shadow: 0px 1px 2px #ccc;
+    height: calc(~'100% - 35px');
+    color: #000;
+  }
+  :global {
+    .side-menu-item-content {
+      display: none;
+    }
+    .ant-menu-sub {
+      background: #fff;
+      .ant-menu-item {
+        float: left;
+        height: 60px;
+        width: 50px !important;
+        padding: 0 !important;
+        margin-left: 8px !important;
+        border-left: none !important;
+      }
+      .ant-menu-item:active {
+        background: #e6f8ff;
+      }
+    }
+    .ant-menu-submenu-arrow::after {
+      background-image: linear-gradient(to right, #000, #000) !important;
+    }
+    .ant-menu-submenu-arrow::before {
+      background-image: linear-gradient(to right, #000, #000) !important;
+    }
+    .ant-menu-submenu-title:hover {
+      color: #007aff;
+    }
+    .ant-menu-item-selected {
+      border-right: 0;
+      background-color: #fff;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .ant-menu-inline .ant-menu-item::after {
+      border-right: none !important;
+    }
+    .ant-menu-submenu-active {
+      color: #007aff !important;
+    }
+  }
+}
+
+.menuItemContainer {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid #f5f5f5;
+  border-radius: 4px;
+  height: 40px;
+  overflow: visible;
+  user-select: none;
+  color: #3061f2;
+  i {
+    font-size: 26px !important;
+    margin-right: 0 !important;
+    line-height: 40px;
+  }
+  .menuItemTitle {
+    text-align: center;
+    font-size: 12px;
+    position: absolute;
+    top: 30px;
+    color: #333;
+  }
+}
+
+.collapseWrap {
+  height: 35px;
+  margin-bottom: 0;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  border-right: 1px solid #eee;
+  overflow: visible;
+  margin-bottom: 1px;
+}
+.icon {
+  line-height: 35px;
+  font-size: 18px;
+}
+.subTitle {
+  opacity: 0;
+}
+.titleMarginLeft {
+  margin-left: 10px;
+}
