@@ -1,0 +1,226 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wrap {
+  width: 11520px; //11514
+  height: 2160px;
+  background: url("./img/background/overall-background.png") no-repeat;
+  background-size: 100% 100%;
+
+  >.ant-row {
+    width: 100%;
+    height: 100%;
+  }
+
+  .moni-time {
+    width: 2388px;
+    height: 449px;
+
+    .moni-time-top {
+      display: flex;
+
+      .jian-tou {
+        width: 40px;
+        height: 25px;
+        background: url("./img/background/two-triangle.png") no-repeat;
+        background-size: 100% 100%;
+        margin-left: 122px;
+        margin-top: 75px;
+      }
+
+      >span {
+        margin-top: 50px;
+        margin-left: 10px;
+        font-size: 48px;
+        font-family: Segoe UI-Regular, Segoe UI;
+        font-weight: 400;
+        color: #3272D7;
+      }
+    }
+
+    .moni-time-bottom {
+      font-size: 75px;
+      font-family: Bahnschrift-Regular, Bahnschrift;
+      font-weight: 400;
+      color: #FFFFFF;
+      margin-left: 168px;
+    }
+  }
+
+  .plan-total {
+    width: 100%;
+    height: 1000px;
+
+    >.ant-row {
+      width: 100%;
+      height: 100%;
+
+      .table-material {
+        width: 100%;
+        height: 100%;
+
+        .ant-table-wrapper {
+          width: 98%;
+          height: 100%;
+          position: relative;
+          top: 30px;
+        }
+
+        .ant-table {
+          background-color: #02060B;
+          color: white;
+          border:1px solid #09306D;
+        }
+
+        // 表头样式
+        .ant-table-thead>tr>th {
+          background-color: #02060B;
+          color: white;
+        }
+
+        // 修改选中行样式
+        .ant-table-tbody {
+
+          >tr:hover:not(.ant-table-expanded-row)>td,
+          .ant-table-row-hover,
+          .ant-table-row-hover>td {
+            background-color: #02060B !important;
+          }
+        }
+
+        // 去除边框，留右边框 && 表格内容居中 && 行高
+        .ant-table-tbody>tr>td,
+        .ant-table-thead>tr>th {
+          border-bottom: none;
+          text-align: center !important;
+          padding: 10px 10px !important;
+        }
+
+        // 去除表头最右边边框
+        .ant-table-container table>thead>tr:first-child th:last-child {
+          border-right: none;
+        }
+
+        // 去除tbody最右边边框
+        .ant-table-container table>tbody>tr td:last-child {
+          border-right: none;
+        }
+
+        // 暂无数据样式
+        .ant-empty-description {
+          color: white;
+        }
+
+        // 奇数行
+        .table-color-odd {
+          background-color: rgb(9, 100, 100);
+        }
+
+        // 偶数行
+        .table-color-even {
+          background-color: rgb(19, 147, 147);
+        }
+      }
+
+      .ehcarts-yield-one,
+      .ehcarts-yield-two,
+      .ehcarts-yield-three,
+      .ehcarts-yield-four {
+        width: 108%;
+        height: 250px;
+        background: url("./img/background/plan-yeild.png") no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        margin-top: 2%;
+
+        >div>ul {
+          display: flex;
+          width: 100%;
+          margin-top: 5%;
+
+          >.title {
+            font-size: 13px;
+            font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+            font-weight: normal;
+            color: #A5CFE7;
+            line-height: 15px;
+            margin: 0% 4.5%
+          }
+
+          .title-button {
+            display: flex;
+
+            >span {
+              cursor: pointer;
+              width: 55px;
+              height: 17px;
+              font-size: 8px;
+              text-align: center;
+              font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+              font-weight: normal;
+              color: #FFFFFF;
+              background: #597BF3;
+              border-radius: 10px 10px 10px 10px;
+              margin: 0% 2%;
+            }
+          }
+        }
+
+        >div>.steps {
+          width: 100%;
+          height: auto;
+          margin-left: -4%;
+          margin-top: 5%;
+
+          .ant-steps-item-title {
+            font-size: 12px;
+            font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+            font-weight: normal;
+            color: #A5CFE7;
+            line-height: 14px;
+            margin-top: 11%;
+          }
+
+          .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
+          .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+            width: 30px;
+            height: 30px;
+            background: #7CA9FF;
+          }
+
+          .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
+            background: #8AB2FF;
+            height: 14px;
+          }
+
+          .ant-steps-dot .ant-steps-item-icon,
+          .ant-steps-dot.ant-steps-small .ant-steps-item-icon {
+            margin-left: 61px;
+            margin-top: -3px;
+          }
+
+          .ant-steps-item-icon .ant-steps-icon {
+            left: -6px;
+            top: -5.5px;
+          }
+        }
+      }
+
+      .ehcarts-yield-two {
+        margin-left: -3%;
+      }
+
+      .ehcarts-yield-three {
+        margin-left: -4%;
+      }
+
+      .ehcarts-yield-four {
+        margin-left: -7%;
+      }
+    }
+
+  }
+}

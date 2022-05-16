@@ -1,0 +1,216 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wrap {
+  width: 11520px;
+  height: 2160px;
+  background: url("img/background/overall-background.png") no-repeat;
+  background-size: 100% 100%;
+}
+.wrap > .ant-row {
+  width: 100%;
+  height: 100%;
+}
+.wrap .moni-time {
+  width: 2388px;
+  height: 449px;
+}
+.wrap .moni-time .moni-time-top {
+  display: flex;
+}
+.wrap .moni-time .moni-time-top .jian-tou {
+  width: 40px;
+  height: 25px;
+  background: url("img/background/two-triangle.png") no-repeat;
+  background-size: 100% 100%;
+  margin-left: 122px;
+  margin-top: 75px;
+}
+.wrap .moni-time .moni-time-top > span {
+  margin-top: 50px;
+  margin-left: 10px;
+  font-size: 48px;
+  font-family: Segoe UI-Regular, Segoe UI;
+  font-weight: 400;
+  color: #3272D7;
+}
+.wrap .moni-time .moni-time-bottom {
+  font-size: 75px;
+  font-family: Bahnschrift-Regular, Bahnschrift;
+  font-weight: 400;
+  color: #FFFFFF;
+  margin-left: 168px;
+}
+.wrap .plan-total {
+  width: 100%;
+  height: 1000px;
+}
+.wrap .plan-total > .ant-row {
+  width: 100%;
+  height: 100%;
+}
+.wrap .plan-total > .ant-row .table-material {
+  width: 100%;
+  height: 100%;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table-wrapper {
+  width: 98%;
+  height: 100%;
+  position: relative;
+  top: 30px;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table {
+  background-color: #02060B;
+  color: white;
+  border: 1px solid #09306D;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table-thead > tr > th {
+  background-color: #02060B;
+  color: white;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td,
+.wrap .plan-total > .ant-row .table-material .ant-table-tbody .ant-table-row-hover,
+.wrap .plan-total > .ant-row .table-material .ant-table-tbody .ant-table-row-hover > td {
+  background-color: #02060B !important;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table-tbody > tr > td,
+.wrap .plan-total > .ant-row .table-material .ant-table-thead > tr > th {
+  border-bottom: none;
+  text-align: center !important;
+  padding: 10px 10px !important;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table-container table > thead > tr:first-child th:last-child {
+  border-right: none;
+}
+.wrap .plan-total > .ant-row .table-material .ant-table-container table > tbody > tr td:last-child {
+  border-right: none;
+}
+.wrap .plan-total > .ant-row .table-material .ant-empty-description {
+  color: white;
+}
+.wrap .plan-total > .ant-row .table-material .table-color-odd {
+  background-color: #096464;
+}
+.wrap .plan-total > .ant-row .table-material .table-color-even {
+  background-color: #139393;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one,
+.wrap .plan-total > .ant-row .ehcarts-yield-two,
+.wrap .plan-total > .ant-row .ehcarts-yield-three,
+.wrap .plan-total > .ant-row .ehcarts-yield-four {
+  width: 108%;
+  height: 250px;
+  background: url("img/background/plan-yeild.png") no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  margin-top: 2%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > ul,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > ul,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > ul,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > ul {
+  display: flex;
+  width: 100%;
+  margin-top: 5%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > ul > .title,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > ul > .title,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > ul > .title,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > ul > .title {
+  font-size: 13px;
+  font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+  font-weight: normal;
+  color: #A5CFE7;
+  line-height: 15px;
+  margin: 0% 4.5%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > ul .title-button,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > ul .title-button,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > ul .title-button,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > ul .title-button {
+  display: flex;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > ul .title-button > span,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > ul .title-button > span,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > ul .title-button > span,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > ul .title-button > span {
+  cursor: pointer;
+  width: 55px;
+  height: 17px;
+  font-size: 8px;
+  text-align: center;
+  font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+  font-weight: normal;
+  color: #FFFFFF;
+  background: #597BF3;
+  border-radius: 10px 10px 10px 10px;
+  margin: 0% 2%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps {
+  width: 100%;
+  height: auto;
+  margin-left: -4%;
+  margin-top: 5%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-title,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-title,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-title,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-title {
+  font-size: 12px;
+  font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+  font-weight: normal;
+  color: #A5CFE7;
+  line-height: 14px;
+  margin-top: 11%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+  width: 30px;
+  height: 30px;
+  background: #7CA9FF;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+  background: #8AB2FF;
+  height: 14px;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-dot .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-dot .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-dot .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-dot .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-dot.ant-steps-small .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-dot.ant-steps-small .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-dot.ant-steps-small .ant-steps-item-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-dot.ant-steps-small .ant-steps-item-icon {
+  margin-left: 61px;
+  margin-top: -3px;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-icon .ant-steps-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-icon .ant-steps-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-icon .ant-steps-icon,
+.wrap .plan-total > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-icon .ant-steps-icon {
+  left: -6px;
+  top: -5.5px;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-two {
+  margin-left: -3%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-three {
+  margin-left: -4%;
+}
+.wrap .plan-total > .ant-row .ehcarts-yield-four {
+  margin-left: -7%;
+}
