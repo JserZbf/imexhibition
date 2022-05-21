@@ -7,7 +7,7 @@ const ReactEchartsCom = React.memo((props) => {
             option={props.option}
             notMerge={false}
             lazyUpdate={false}
-            style={{ height: '210px', width: '210px', left: '20px', top: '20px' }}
+            style={{ height: '230px', width: '230px', left: '24px', top: '7px' }}
         />
     )
 })

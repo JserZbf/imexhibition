@@ -1,0 +1,61 @@
+.right-top {
+  width: 2388px;
+  height: 449px;
+  margin-left: 47%;
+  display: flex;
+}
+.right-top .right-top-infor {
+  display: flex;
+  margin-top: 2%;
+}
+.right-top .right-top-infor .jian-tou {
+  width: 34px;
+  height: 25px;
+  background: url("img/background/two-triangle.png") no-repeat;
+  background-size: 100% 100%;
+  margin-left: 122px;
+  margin-top: 88px;
+}
+.right-top .right-top-infor > span {
+  margin-top: 77px;
+  margin-left: 10px;
+  font-size: 30px;
+  font-family: PingFang SC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #367AE3;
+}
+.right-top .right-top-split {
+  width: 8px;
+  height: 221px;
+  background: url("img/background/split-logo.png") no-repeat;
+  background-size: 100% 100%;
+  margin-top: 7%;
+  margin: 2% 1% 0% 3%;
+}
+.right-top .right-top-list {
+  margin-top: 1.5%;
+  width: 40%;
+}
+.right-top .right-top-list > ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.right-top .right-top-list > ul > li:nth-child(2) {
+  margin-right: 19%;
+}
+.right-top .right-top-list > ul > li > span {
+  display: block;
+}
+.right-top .right-top-list > ul > li > span:nth-child(1) {
+  font-size: 30px;
+  font-family: PingFang SC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #3272D7;
+}
+.right-top .right-top-list > ul > li > span:nth-child(2) {
+  font-size: 50px;
+  font-family: PingFang SC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}

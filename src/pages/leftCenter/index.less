@@ -1,0 +1,386 @@
+.left-center {
+  width: 100%;
+  height: 940px;
+  margin: 4.5% 0 0 262px;
+
+  // background: orange;
+  >.ant-row {
+    width: 100%;
+    height: 100%;
+
+    .plan-mark-total {
+      width: 98%;
+      height: 77.5%;
+      border: 1px solid #09306D;
+      position: relative;
+      padding: 72px 0px 57.5px 0px;
+
+      >.back-line-list {
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+        >li {
+          width: 1px;
+          height: 100%;
+          border: 1px solid rgba(14, 101, 240, 0.4);
+          margin-left: 8.5%;
+        }
+
+        .one {
+          margin-left: 13%;
+        }
+      }
+
+      .plan-mark-title {
+        display: flex;
+        position: absolute;
+        left: 44px;
+        top: 8px;
+
+        .jian-tou {
+          width: 40px;
+          height: 25px;
+          background: url("./img/background/two-triangle.png") no-repeat;
+          background-size: 100% 100%;
+          margin-top: 20px
+        }
+
+        >span {
+          margin-left: 18px;
+          font-size: 40px;
+          font-family: PingFang SC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #0E65F0;
+        }
+      }
+
+      .data-list {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0%;
+        top: 0%;
+
+        >li {
+          width: 344px;
+          height: 58px;
+          background: url('./img/background/plan-blue-background.png') no-repeat;
+          background-size: 100% 100%;
+          position: absolute;
+          display: flex;
+          align-items: center;
+          font-size: 18px;
+          font-family: PingFang SC-Regular, PingFang SC;
+          font-weight: 400;
+          color: white;
+          padding-left: 26px;
+
+          .line {
+            width: 1px;
+            height: 28px;
+            border: 1px solid #FFFFFF;
+            margin: 0% 3%;
+          }
+        }
+
+        >li:nth-child(1) {
+          left: 86px;
+          top: 107px;
+        }
+
+        >li:nth-child(2) {
+          left: 40px;
+          top: 187px;
+        }
+
+        >li:nth-child(3) {
+          left: 364px;
+          top: 268px;
+        }
+
+        >li:nth-child(4) {
+          left: 651px;
+          top: 355px;
+        }
+
+        >li:nth-child(5) {
+          background: url('./img/background/plan-orange-background.png') no-repeat;
+          background-size: 100% 100%;
+          width: 365px;
+          left: 972px;
+          top: 452px;
+        }
+      }
+
+      .data-last-line {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        >li {
+          position: absolute;
+        }
+
+        >li:nth-child(1) {
+          width: 897px;
+          height: 5px;
+          background: rgba(23, 146, 255, 1);
+          border-radius: 5px 5px 5px 5px;
+          left: 5.4%;
+          top: 66%;
+        }
+
+        >li:nth-child(2) {
+          width: 2px;
+          height: 114px;
+          background: rgba(23, 146, 255, 1);
+          border-radius: 5px 5px 5px 5px;
+          left: 69.5%;
+          top: 69.7%;
+        }
+
+        >li:nth-child(3) {
+          width: 13px;
+          height: 13px;
+          background: rgba(23, 146, 255, 1);
+          border-radius: 50%;
+          left: 69.1%;
+          top: 85%;
+        }
+
+        >li:nth-child(4) {
+          width: 2px;
+          height: 114px;
+          background: rgba(23, 146, 255, 1);
+          border-radius: 5px 5px 5px 5px;
+          left: 94%;
+          top: 69.7%;
+        }
+
+        >li:nth-child(5) {
+          width: 13px;
+          height: 13px;
+          background: rgba(23, 146, 255, 1);
+          border-radius: 50%;
+          left: 93.7%;
+          top: 85%;
+        }
+
+        >li:nth-child(6) {
+          font-size: 24px;
+          font-family: PingFang SC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #FFFFFF;
+          left: 64.7%;
+          top: 87%;
+        }
+
+        >li:nth-child(7) {
+          font-size: 24px;
+          font-family: PingFang SC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #FFFFFF;
+          left: 88.7%;
+          top: 87%;
+        }
+      }
+    }
+
+    .table-material {
+      width: 100%;
+      height: 77.5%;
+
+      .ant-table-wrapper {
+        width: 98%;
+        height: 100%;
+        position: relative;
+        top: 30px;
+      }
+
+      .ant-table {
+        background-color: #02060B;
+        color: white;
+        border: 1px solid #09306D;
+      }
+
+      // 表头样式
+      .ant-table-thead>tr>th {
+        background-color: #02060B;
+        color: white;
+        font-size: 22px;
+        font-family: Segoe UI-Regular, Segoe UI;
+        font-weight: 400;
+      }
+
+      // 修改选中行样式
+      .ant-table-tbody {
+
+        >tr:hover:not(.ant-table-expanded-row)>td,
+        .ant-table-row-hover,
+        .ant-table-row-hover>td {
+          background-color: #132A56 !important;
+          color: #15E0FF !important;
+        }
+      }
+
+      // 去除边框，留右边框 && 表格内容居中 && 行高
+      .ant-table-tbody>tr>td,
+      .ant-table-thead>tr>th {
+        border-bottom: none;
+        text-align: center !important;
+        padding: 10px 10px !important;
+      }
+
+      .ant-table-tbody>tr {
+        >td {
+          font-size: 22px;
+          font-family: Segoe UI-Regular, Segoe UI;
+          font-weight: 400;
+          color: #FFFFFF;
+        }
+      }
+
+      // 去除表头最右边边框
+      .ant-table-container table>thead>tr:first-child th:last-child {
+        border-right: none;
+      }
+
+      // 去除tbody最右边边框
+      .ant-table-container table>tbody>tr td:last-child {
+        border-right: none;
+      }
+
+      // 暂无数据样式
+      .ant-empty-description {
+        color: white;
+      }
+
+      // 奇数行
+      .table-color-odd {
+        background-color: rgb(9, 100, 100);
+      }
+
+      // 偶数行
+      .table-color-even {
+        background-color: rgb(19, 147, 147);
+      }
+    }
+
+    .ehcarts-yield-one,
+    .ehcarts-yield-two,
+    .ehcarts-yield-three,
+    .ehcarts-yield-four {
+      width: 123%;
+      height: 250px;
+      background: url("./img/background/plan-yeild.png") no-repeat;
+      background-size: 100% 100%;
+      display: flex;
+      margin-top: 1.7%;
+
+      >div>ul {
+        display: flex;
+        width: 100%;
+        margin-top: 5%;
+
+        >.title {
+          font-size: 13px;
+          font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+          font-weight: normal;
+          color: #A5CFE7;
+          line-height: 15px;
+          margin: 0% 4.5%
+        }
+
+        .title-button {
+          display: flex;
+
+          >span {
+            cursor: pointer;
+            width: 55px;
+            height: 17px;
+            font-size: 8px;
+            text-align: center;
+            font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+            font-weight: normal;
+            color: #FFFFFF;
+            background: #597BF3;
+            border-radius: 10px 10px 10px 10px;
+            margin: 0% 0% 0% 4%;
+          }
+
+          >span:nth-child(2) {
+            margin-top: 2.5%;
+          }
+
+          >span:nth-child(3) {
+            margin-top: 5%;
+          }
+        }
+      }
+
+      >div>.steps {
+        width: 70%;
+        height: auto;
+        margin-left: -4%;
+        margin-top: 5%;
+
+        .ant-steps-item-title {
+          font-size: 12px;
+          font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+          font-weight: normal;
+          color: #A5CFE7;
+          line-height: 14px;
+          margin-top: 11%;
+          margin-left: 22%;
+        }
+
+        .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
+        .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+          width: 30px;
+          height: 30px;
+          background: #7CA9FF;
+        }
+
+        .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
+          background: #8AB2FF;
+          height: 14px;
+        }
+
+        .ant-steps-dot .ant-steps-item-icon,
+        .ant-steps-dot.ant-steps-small .ant-steps-item-icon {
+          margin-left: 61px;
+          margin-top: -3px;
+        }
+
+        .ant-steps-item-icon .ant-steps-icon {
+          left: -6px;
+          top: -5.5px;
+        }
+      }
+    }
+
+    .ehcarts-yield-one {
+      margin-left: -12%;
+    }
+
+    .ehcarts-yield-two {
+      margin-left: -26%;
+    }
+
+    .ehcarts-yield-three {
+      margin-left: -33%;
+    }
+
+    .ehcarts-yield-four {
+      margin-left: -36%;
+    }
+
+    .ant-col-5 {
+      margin-top: -3%;
+    }
+  }
+
+}

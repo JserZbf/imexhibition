@@ -1,0 +1,31 @@
+.left-top {
+  width: 2388px;
+  height: 15.5%;
+}
+.left-top .left-top-top {
+  display: flex;
+  margin-left: 102px;
+}
+.left-top .left-top-top .jian-tou {
+  width: 40px;
+  height: 25px;
+  background: url("img/background/two-triangle.png") no-repeat;
+  background-size: 100% 100%;
+  margin-left: 122px;
+  margin-top: 75px;
+}
+.left-top .left-top-top > span {
+  margin-top: 50px;
+  margin-left: 10px;
+  font-size: 48px;
+  font-family: Segoe UI-Regular, Segoe UI;
+  font-weight: 400;
+  color: #3272D7;
+}
+.left-top .left-top-bottom {
+  font-size: 75px;
+  font-family: Bahnschrift-Regular, Bahnschrift;
+  font-weight: 400;
+  color: #FFFFFF;
+  margin-left: 269px;
+}
