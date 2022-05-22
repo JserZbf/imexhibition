@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less'
+import ReactEchartsCom from '../../components/ReactEcharts/index'
+import * as echarts from 'echarts'
 const leftBottom = function (props) {
   const [materialList, setMaterialList] = useState([
     {
@@ -58,6 +60,193 @@ const leftBottom = function (props) {
       value: '设备使用均衡'
     }
   ])
+  const [diffOption, setDiffOption] = useState({
+
+    title: {
+      text: '',
+      textStyle: {
+        align: 'center',
+        color: '#fff',
+        fontSize: 20,
+      },
+      top: '5%',
+      left: 'center',
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        lineStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+              offset: 0,
+              color: 'rgba(0, 255, 233,0)'
+            }, {
+              offset: 0.5,
+              color: 'rgba(255, 255, 255,1)',
+            }, {
+              offset: 1,
+              color: 'rgba(0, 255, 233,0)'
+            }],
+            global: false
+          }
+        },
+      },
+    },
+
+    xAxis: [{
+      type: 'category',
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(7, 86, 246, 1)',
+          width: 2,
+        }
+      },
+      splitArea: {
+        // show: true,
+        color: '#f00',
+        lineStyle: {
+          color: '#f00'
+        },
+      },
+      axisLabel: {
+        color: '#fff'
+      },
+      axisTick: {
+        show: false,
+      },
+      splitLine: {
+        show: false
+      },
+      boundaryGap: false,
+      data: ['A', 'B', 'C', 'D', 'E', 'F'],
+    }],
+    yAxis: [{
+      type: 'value',
+      name: '',
+      axisLabel: {
+        formatter: '{value}',
+        textStyle: {
+          color: '#fff'
+        }
+      },
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: 'rgba(7, 86, 246, 1)',
+          width: 2,
+        }
+      },
+      axisTick: {
+        show: false,
+      },
+      splitLine: {
+        show: false,
+        lineStyle: {
+          color: 'RGBA(17, 76, 100, 1)'
+        }
+      }
+    }],
+    series: [
+      {
+        name: '注册总量3',
+        type: 'line',
+        smooth: true, //是否平滑
+        showAllSymbol: true,
+        // symbol: 'image://./static/images/guang-circle.png',
+        symbol: 'circle',
+        symbolSize: 15,
+        lineStyle: {
+          normal: {
+            color: "RGBA(42, 126, 255, 1)",
+            shadowColor: 'rgba(0, 0, 0, 0)',
+            shadowBlur: 0,
+            shadowOffsetY: 5,
+            shadowOffsetX: 5,
+          },
+        },
+        label: {
+          show: false,
+          position: 'top',
+          textStyle: {
+            color: '#00ca95',
+          }
+        },
+
+        itemStyle: {
+          color: "rgba(254, 139, 36, 1)",
+          borderColor: "RGBA(137, 80, 35, 1)",
+          borderWidth: 4,
+          shadowColor: 'rgba(0, 0, 0, .3)',
+          shadowBlur: 0,
+          shadowOffsetY: 0,
+          shadowOffsetX: 0,
+        },
+        tooltip: {
+          show: false
+        },
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: 'rgba(7, 86, 246, 1)'
+            }, {
+              offset: 1,
+              color: 'rgba(5, 108, 128, 0)'
+            }
+            ], false),
+            // shadowColor: 'rgba(0,202,149, 0.9)',
+            shadowBlur: 100
+          }
+        },
+        data: [201.55, 308.35, 104.02, 109.55, 119.57, 136.14,],
+      },
+      {
+        name: '注册总量2',
+        type: 'line',
+        smooth: true, //是否平滑
+        showAllSymbol: true,
+        // symbol: 'image://./static/images/guang-circle.png',
+        symbol: 'none',
+        symbolSize: 15,
+        lineStyle: {
+          normal: {
+            color: "rgba(254, 139, 36, 1)",
+            shadowColor: 'rgba(0, 0, 0, 0)',
+            shadowBlur: 0,
+            shadowOffsetY: 5,
+            shadowOffsetX: 5,
+          },
+        },
+        label: {
+          show: false,
+          position: 'top',
+          textStyle: {
+            color: '#00ca95',
+          }
+        },
+
+        itemStyle: {
+
+          normal: {
+            lineStyle: {
+              width: 2,
+              type: 'dashed'
+            }
+          }
+        },
+        tooltip: {
+          show: false
+        },
+
+        data: [80.55, 80.55, 80.55, 80.55, 80.55, 80.55],
+      }
+    ]
+  });
   return <div className='left-bottom'>
     <Row>
       <Col span={14}>
@@ -100,7 +289,7 @@ const leftBottom = function (props) {
               }
             </ul>
           </div>
-        </div>;
+        </div>
       </Col>
       <Col span={5}>
         <div className='plan-finish-title'>
@@ -120,7 +309,7 @@ const leftBottom = function (props) {
           }
         </div>
         <div className='yield-rate'>
-            
+
         </div>
       </Col>
       <Col span={5}>
@@ -131,6 +320,7 @@ const leftBottom = function (props) {
         <div className='diff-infor-mess'>
           六类算法同步测算比较,EDD算法得出方案机床使用更均衡
         </div>
+        <ReactEchartsCom option={diffOption} width={'600px'} left={'-58px'} top={'0px'} />
       </Col>
     </Row>
   </div>

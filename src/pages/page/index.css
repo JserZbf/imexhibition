@@ -7,12 +7,74 @@
   width: 100%;
   height: 100%;
 }
-.wrap h1 {
-  font-size: 112px;
-  color: linear-gradient(180deg, #FFFFFF 0%, #8383F4 100%);
-  box-shadow: 10px 3px 30px 1px rgba(127, 13, 228, 0.6);
-}
 .wrap > .ant-row {
   width: 100%;
   height: 100%;
+}
+.wrap > .ant-row .center-middle {
+  position: relative;
+}
+.wrap > .ant-row .center-middle .main-title {
+  width: 1067px;
+  height: 112px;
+  background: url("img/background/main-title.png") no-repeat;
+  background-size: 100% 100%;
+  margin: 85px auto;
+}
+.wrap > .ant-row .center-middle .digitization-title {
+  width: 738px;
+  height: 107px;
+  position: absolute;
+  left: 0%;
+  bottom: 10%;
+  display: flex;
+}
+.wrap > .ant-row .center-middle .digitization-title > div:nth-child(1) {
+  width: 140px;
+  height: 140px;
+  background: url("img/background/digitization-logo.png") no-repeat;
+  background-size: 100% 100%;
+  margin-top: -3%;
+}
+.wrap > .ant-row .center-middle .digitization-title > div:nth-child(2) > p:nth-child(1) {
+  font-size: 53px;
+  font-family: PingFang SC-Bold, PingFang SC;
+  color: #1BE0FF;
+}
+.wrap > .ant-row .center-middle .digitization-title > div:nth-child(2) > p:nth-child(2) {
+  font-size: 33px;
+  font-family: PingFang SC-Bold, PingFang SC;
+  color: #1C58FF;
+  margin-top: -39%;
+  margin-left: 5%;
+}
+.wrap > .ant-row .center-middle .modernization-title {
+  width: 738px;
+  height: 107px;
+  position: absolute;
+  right: -10.8%;
+  bottom: 10%;
+  display: flex;
+}
+.wrap > .ant-row .center-middle .modernization-title > div:nth-child(1) {
+  width: 140px;
+  height: 140px;
+  background: url("img/background/modernization-logo.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  left: -7%;
+  top: -21%;
+}
+.wrap > .ant-row .center-middle .modernization-title > div:nth-child(2) > p:nth-child(1) {
+  font-size: 53px;
+  font-family: PingFang SC-Bold, PingFang SC;
+  color: #1BE0FF;
+  margin-left: 18%;
+}
+.wrap > .ant-row .center-middle .modernization-title > div:nth-child(2) > p:nth-child(2) {
+  font-size: 33px;
+  font-family: PingFang SC-Bold, PingFang SC;
+  color: #1C58FF;
+  margin-top: -20%;
+  margin-left: 2%;
 }
