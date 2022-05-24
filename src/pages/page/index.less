@@ -5,9 +5,9 @@
 }
 
 .wrap {
-  width: 100%;
-  height: 100%;
-
+  width: 11520px; 
+  height: 2160px;
+  overflow: hidden;
   >.ant-row {
     width: 100%;
     height: 100%;
@@ -62,15 +62,17 @@
         right: -10.8%;
         bottom: 10%;
         display: flex;
+
         >div:nth-child(1) {
           width: 140px;
-          height:140px;
+          height: 140px;
           background: url("./img/background/modernization-logo.png") no-repeat;
           background-size: 100% 100%;
           position: absolute;
           left: -7%;
           top: -21%;
         }
+
         >div:nth-child(2)>p:nth-child(1) {
           font-size: 53px;
           font-family: PingFang SC-Bold, PingFang SC;
@@ -84,6 +86,73 @@
           color: #1C58FF;
           margin-top: -20%;
           margin-left: 2%;
+        }
+      }
+
+      .left-mess {
+        width: 464px;
+        height: 1135px;
+        background: url("./img/background/center-middle-left-back.png") no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 8.7%;
+        top: 21%;
+
+        >div {
+          width: 66.88%;
+          font-size: 19px;
+          font-family: inpinheiti-, inpinheiti;
+          font-weight: normal;
+          color: #43E0FF;
+          line-height: 29px;
+        }
+
+        >div:nth-child(1) {
+          position: absolute;
+          left: 16%;
+          top: 11%;
+        }
+
+        >div:nth-child(2) {
+          position: absolute;
+          left: 16%;
+          top: 44%;
+        }
+        >div:nth-child(3) {
+          position: absolute;
+          left: 16%;
+          top: 77%;
+        }
+      }
+
+      .right-mess {
+        width: 464px;
+        height: 757px;
+        background: url("./img/background/center-middle-right-back.png") no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        right: 6%;
+        top: 30%;
+
+        >div {
+          width: 66.88%;
+          font-size: 19px;
+          font-family: inpinheiti-, inpinheiti;
+          font-weight: normal;
+          color: #43E0FF;
+          line-height: 29px;
+        }
+
+        >div:nth-child(1) {
+          position: absolute;
+          left: 16%;
+          top: 16%;
+        }
+
+        >div:nth-child(2) {
+          position: absolute;
+          left: 16%;
+          top: 64%;
         }
       }
     }

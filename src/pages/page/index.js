@@ -8,6 +8,7 @@ import LeftCenter from '../leftCenter/index'
 import LeftBottom from '../leftBottom/index'
 import RightTop from '../rightTop/index'
 import RightCenter from '../rightCenter/index'
+import RightBottom from '../rightBottom/index'
 const Home = function (props) {
   return <div className='wrap'>
     <Row>
@@ -32,10 +33,20 @@ const Home = function (props) {
             <p>MODERNIZATION</p>
           </div>
         </div>
+        <div className='left-mess'>
+          <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
+          <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
+          <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
+        </div>
+        <div className='right-mess'>
+          <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
+          <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
+        </div>
       </Col>
       <Col span={8}>
         <RightTop />
-        <RightCenter/>
+        <RightCenter />
+        <RightBottom />
       </Col>
     </Row>
   </div>;

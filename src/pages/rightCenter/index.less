@@ -1,15 +1,100 @@
 .right-center {
   width: 100%;
-  height: 940px;
+  height: 59%;
   // background: orange;
 
   >.ant-row {
     width: 100%;
     height: 100%;
-    .right-center-part3{
+
+    .right-center-part1 {
+      margin-right: 4%;
+
+      .maintain-list {
+        width: 1125px;
+        height: 311px;
+        background: url('./img/background/maintain-back.png') no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+
+        .maintain-back-list {
+          width: 411px;
+          height: 130px;
+          background: url('./img/background/maintain-line-back.png') no-repeat;
+          background-size: 100% 100%;
+          position: absolute;
+          left: 8.5%;
+          top: 53%;
+          color: #FFFFFF;
+          font-size: 8px;
+
+          >p {
+            transform: rotate(-4deg);
+            position: absolute;
+            left: 0%;
+            top: 0%;
+          }
+
+          >p:nth-child(1) {
+            left: 0%;
+            top: 0%;
+          }
+
+          >p:nth-child(2) {
+            left: 0%;
+            top: 25%;
+          }
+
+          >p:nth-child(3) {
+            left: 0%;
+            top: 54%;
+          }
+        }
+
+        >div:nth-child(2) {
+          position: absolute;
+          right: 50%;
+          top: 0%;
+        }
+
+        >div:nth-child(3) {
+          position: absolute;
+          right: 0%;
+          top: 0%;
+        }
+      }
+
+      .maintain-list:nth-child(1) {
+        margin-left: -7%;
+        margin-top: -13%;
+      }
+
+      .maintain-list:nth-child(2) {
+        margin-left: -1%;
+        margin-top: 0.5%;
+      }
+
+      .maintain-list:nth-child(3) {
+        margin-left: 3%;
+        margin-top: 0.5%;
+      }
+
+      .maintain-list:nth-child(4) {
+        margin-left: 3%;
+        margin-top: 0.5%;
+      }
+    }
+
+    .right-center-part2 {
       margin-top: 1%;
       margin-left: -4%;
     }
+
+    .right-center-part3 {
+      margin-top: 1%;
+      margin-left: -4%;
+    }
+
     .right-center-part4 {
       margin-top: 6%;
     }
@@ -25,9 +110,15 @@
       color: #24C5FF;
       padding-left: 77px;
     }
-    .diff-cond{
-      margin-top: 23%;
+
+    .diff-kind {
+      margin-top: 13% !important;
     }
+
+    .diff-cond {
+      margin-top: 23% !important;
+    }
+
     .right-center-mess {
       font-size: 20px;
       font-family: PingFang SC-Regular, PingFang SC;

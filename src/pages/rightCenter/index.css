@@ -1,10 +1,79 @@
 .right-center {
   width: 100%;
-  height: 940px;
+  height: 59%;
 }
 .right-center > .ant-row {
   width: 100%;
   height: 100%;
+}
+.right-center > .ant-row .right-center-part1 {
+  margin-right: 4%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list {
+  width: 1125px;
+  height: 311px;
+  background: url('img/background/maintain-back.png') no-repeat;
+  background-size: 100% 100%;
+  position: relative;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list {
+  width: 411px;
+  height: 130px;
+  background: url('img/background/maintain-line-back.png') no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  left: 8.5%;
+  top: 53%;
+  color: #FFFFFF;
+  font-size: 8px;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p {
+  transform: rotate(-4deg);
+  position: absolute;
+  left: 0%;
+  top: 0%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p:nth-child(1) {
+  left: 0%;
+  top: 0%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p:nth-child(2) {
+  left: 0%;
+  top: 25%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p:nth-child(3) {
+  left: 0%;
+  top: 54%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list > div:nth-child(2) {
+  position: absolute;
+  right: 50%;
+  top: 0%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list > div:nth-child(3) {
+  position: absolute;
+  right: 0%;
+  top: 0%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list:nth-child(1) {
+  margin-left: -7%;
+  margin-top: -13%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list:nth-child(2) {
+  margin-left: -1%;
+  margin-top: 0.5%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list:nth-child(3) {
+  margin-left: 3%;
+  margin-top: 0.5%;
+}
+.right-center > .ant-row .right-center-part1 .maintain-list:nth-child(4) {
+  margin-left: 3%;
+  margin-top: 0.5%;
+}
+.right-center > .ant-row .right-center-part2 {
+  margin-top: 1%;
+  margin-left: -4%;
 }
 .right-center > .ant-row .right-center-part3 {
   margin-top: 1%;
@@ -24,8 +93,11 @@
   color: #24C5FF;
   padding-left: 77px;
 }
+.right-center > .ant-row .diff-kind {
+  margin-top: 13% !important;
+}
 .right-center > .ant-row .diff-cond {
-  margin-top: 23%;
+  margin-top: 23% !important;
 }
 .right-center > .ant-row .right-center-mess {
   font-size: 20px;
