@@ -5,63 +5,36 @@ import './index.less'
 import ReactEchartsCom from '../../components/ReactEcharts/index'
 import * as echarts from 'echarts'
 const leftBottom = function (props) {
-  const [materialList, setMaterialList] = useState([
-    {
-      number: "缺口数量",
-      startTime: '最晚到达时间',
-      time: '2022/5/20'
-    }, {
-      number: "缺口数量",
-      startTime: '最晚到达时间',
-      time: '2022/5/20'
-    }, {
-      number: "缺口数量",
-      startTime: '最晚到达时间',
-      time: '2022/5/20'
-    }, {
-      number: "缺口数量",
-      startTime: '最晚到达时间',
-      time: '2022/5/20'
-    }, {
-      number: "缺口数量",
-      startTime: '最晚到达时间',
-      time: '2022/5/20'
-    }, {
-      number: "缺口数量",
-      startTime: '最晚到达时间',
-      time: '2022/5/20'
-    }
-  ]);
-  const [finishPlanList, setFinishPlanList] = useState([{
+  const { materialTypeSixList, allData, finishPlanObj,diffAlgorithm} = props;
+  //console.log(diffAlgorithm,'diffAlgorithm');
+  const finishPlanList = [{
     title: "预计交付计划数",
-    value: 8,
-
+    value: finishPlanObj.deliveryNum,
   }, {
     title: "预计延迟计划数",
-    value: 8,
+    value: finishPlanObj.delayNum,
   }, {
     title: "预计提前计划数",
-    value: 8,
-  },])
-  const [order, setOrder] = useState([
+    value: finishPlanObj.aheadNum,
+  },]
+  const order = [
     {
       title: '排产订单号',
-      value: '10086117818'
+      value: allData.orderNO,
     },
     {
       title: '选用排产算法',
-      value: 'EDD或其他'
+      value: allData.selectAlgorithm
     }, {
       title: '是否有保养任务',
-      value: '否'
+      value: allData.isHasMaintenance
     },
     {
       title: '排产目标',
-      value: '设备使用均衡'
+      value: allData.scheduleTarget
     }
-  ])
-  const [diffOption, setDiffOption] = useState({
-
+  ];
+  const diffOption = {
     title: {
       text: '',
       textStyle: {
@@ -123,7 +96,7 @@ const leftBottom = function (props) {
         show: false
       },
       boundaryGap: false,
-      data: ['A', 'B', 'C', 'D', 'E', 'F'],
+      data: diffAlgorithm.X,
     }],
     yAxis: [{
       type: 'value',
@@ -153,7 +126,7 @@ const leftBottom = function (props) {
     }],
     series: [
       {
-        name: '注册总量3',
+        name: '',
         type: 'line',
         smooth: true, //是否平滑
         showAllSymbol: true,
@@ -203,7 +176,7 @@ const leftBottom = function (props) {
             shadowBlur: 100
           }
         },
-        data: [201.55, 308.35, 104.02, 109.55, 119.57, 136.14,],
+        data: diffAlgorithm.Y,
       },
       {
         name: '注册总量2',
@@ -243,28 +216,28 @@ const leftBottom = function (props) {
           show: false
         },
 
-        data: [80.55, 80.55, 80.55, 80.55, 80.55, 80.55],
+        data: [80.55, 80.55, 80.55, 80.55, 80.55, 80.55, 80.55],
       }
     ]
-  });
+  };
   return <div className='left-bottom'>
     <Row>
       <Col span={14}>
 
         <ul className='material-type-list'>
           {
-            materialList.map((item, index) => {
+            materialTypeSixList.map((item, index) => {
               return <li key={index}>
                 <p className='title'>物料类型</p>
                 <p className='number'>
-                  <span>{item.number}</span>
-                  <span></span>
+                  <span>缺口数量</span>
+                  <span>{item.shortNum}</span>
                 </p>
                 <p className='start-time'>
-                  <span>{item.startTime}</span>
-                  <span></span>
+                  <span>最晚到达时间</span>
+                  <span>{item.supplyTime}</span>
                 </p>
-                <p className='time'>{item.time}</p>
+                <p className='time'>{item.supplyTime}</p>
               </li>
             })
           }
@@ -283,7 +256,7 @@ const leftBottom = function (props) {
                 order.map((item, index) => {
                   return <li key={index}>
                     <span>{item.title}</span>
-                    <span>{item.value}</span>
+                    <span>{item.value == false ? '否' : item.value}</span>
                   </li>
                 })
               }

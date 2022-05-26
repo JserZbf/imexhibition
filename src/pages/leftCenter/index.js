@@ -16,6 +16,7 @@ const customDot = (dot, { status, index }) => (
   </Popover>
 );
 const leftCenter = function (props) {
+  const { materialDemandList } = props;
   const [echartsList, setEchartsList] = useState([
     {
       title: {
@@ -157,152 +158,43 @@ const leftCenter = function (props) {
     {
       title: '物料类型',
       dataIndex: 'materialType',
-      key: 'materialType'
+      key: 'materialType',
+      render: (text, record, index) => {
+        if(record.materialType=='blank'){
+          return '毛坯'
+        }else if(record.materialType=='fixture'){
+          return '夹具'
+        }else if(record.materialType=='tray'){
+          return '托盘'
+        }else if(record.materialType=='tool'){
+          return '刀具'
+        }
+      }
     },
     {
       title: '规格类型',
-      dataIndex: 'specificationType',
-      key: 'specificationType'
+      dataIndex: 'Specs',
+      key: 'Specs'
     },
     {
       title: '需求数量',
-      dataIndex: 'needNumber',
-      key: 'needNumber',
+      dataIndex: 'demandNum',
+      key: 'demandNum',
     },
     {
       title: '库存数量',
-      dataIndex: 'inventory',
-      key: 'inventory ',
+      dataIndex: 'stockQuantity',
+      key: 'stockQuantity ',
     },
     {
       title: '物料是否不足',
-      dataIndex: 'materialBool',
-      key: 'materialBool ',
+      dataIndex: 'isAdequate',
+      key: 'isAdequate ',
     },
     {
       title: '物料缺口数量',
-      dataIndex: 'materialGapNumber',
-      key: 'materialGapNumber ',
-    }
-  ];
-
-  const data = [
-    {
-      index: '0',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '1',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '2',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '3',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '4',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '5',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '6',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '7',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '8',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '9',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '10',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '11',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
-    },
-    {
-      index: '12',
-      materialType: '毛坯',
-      specificationType: '物料名称',
-      needNumber: 32,
-      inventory: 11,
-      materialBool: '是',
-      materialGapNumber: 2
+      dataIndex: 'shortNum',
+      key: 'shortNum ',
     }
   ];
   return <div className='left-center'>
@@ -374,7 +266,7 @@ const leftCenter = function (props) {
         </div>
       </Col>
       <Col span={7}>
-        <Table className='table-material' columns={columns} /* scroll={{x:'max-content',y:675}} */ rowKey={'index'} dataSource={data} pagination={false} />
+        <Table className='table-material' columns={columns} scroll={{ x: 'max-content', y: 680 }} rowKey={'Specs'} dataSource={materialDemandList} pagination={false} />
       </Col>
       <Col span={5} push={2}>
         <div className='ehcarts-yield-one'>
@@ -471,4 +363,6 @@ const leftCenter = function (props) {
 
 };
 
-export default connect()(leftCenter)
+export default connect((state) => ({ time: state.leftCenter.time }), (dispatch) => ({
+  getVirtualmeterList: (payload) => dispatch({ type: 'leftCenter/getVirtualmeterList', payload }),
+}))(leftCenter)

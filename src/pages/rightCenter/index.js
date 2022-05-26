@@ -1083,7 +1083,7 @@ const rightCenter = function (props) {
     endAngle: 450,
     min: 0,
     max: 100,
-    radius: '75%',
+    radius: '100%',
     center: ["50%", "50%"],
     title: { show: false },
     detail: { show: false },

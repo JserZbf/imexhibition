@@ -215,6 +215,10 @@
         font-weight: 400;
       }
 
+      .ant-table-thead .ant-table-cell-scrollbar {
+        box-shadow: 0 0px 0 0px #fafafa;
+      }
+
       // 修改选中行样式
       .ant-table-tbody {
 
@@ -267,6 +271,68 @@
       .table-color-even {
         background-color: rgb(19, 147, 147);
       }
+
+      //
+      //修改框架样式关键字
+      //表格头标题的滚动条设置
+      // 为什么设置标题头滚动条呢，因为ant中表格直接引入在umi中，显示滚动条，表头也会显示
+      // 我看了生成后的表格元素，发现它是表头其实也是个表格，然后取表格的thead部分设置，
+      // 表体又是一个表格，然后取tbody设置
+      .ant-table-header {
+        border-right: #2F2F2F;
+
+        //滚动条整体部分
+        &::-webkit-scrollbar {
+          width: 6px; //y轴滚动条粗细
+          height: 6px; //x轴滚动条粗细
+          border-bottom: 1px solid #7B7B7B;
+        }
+
+        //滚动条里面的小方块，能上下左右移动（取决于是垂直滚动条还是水平滚动条）
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+          background: #949494;
+          margin-bottom: 10px;
+        }
+
+        //滚动条的轨道（里面装有thumb）滚动槽
+        &::-webkit-scrollbar-track {
+          -webkit-box-shadow: 0;
+          border-radius: 0;
+          background: #4D4D4B; //滚动槽背景色
+          border-radius: 10px; //滚动条边框半径设置
+        }
+      }
+
+      //表格体的滚动条设置
+      .ant-table-body {
+        border-right: #2F2F2F;
+
+        //滚动条整体部分
+        &::-webkit-scrollbar {
+          width: 6px; //y轴滚动条粗细
+          height: 6px; //x轴滚动条粗细
+          border-bottom: 1px solid #7B7B7B;
+        }
+
+        //滚动条里面的小方块，能上下左右移动（取决于是垂直滚动条还是水平滚动条）
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+          background: #949494;
+          margin-bottom: 10px;
+        }
+
+        //滚动条的轨道（里面装有thumb）滚动槽
+        &::-webkit-scrollbar-track {
+          -webkit-box-shadow: 0;
+          border-radius: 0;
+          background: #4D4D4B; //滚动槽背景色
+          border-radius: 10px; //滚动条边框半径设置
+        }
+      }
+
     }
 
     .ehcarts-yield-one,

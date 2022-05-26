@@ -33,6 +33,7 @@
         "echarts-for-react": "^3.0.2",
         "fr-generator": "^0.5.0",
         "history": "^5.0.0",
+        "http-proxy-middleware": "^2.0.6",
         "isomorphic-fetch": "^2.2.1",
         "js-cookie": "^2.2.1",
         "konva": "^8.1.1",
@@ -72,5 +73,6 @@
         "> 1%",
         "IE 10"
     ],
+    "proxy": "http://ime.sh-smartstate.com.cn",
     "__npminstall_done": false
 }

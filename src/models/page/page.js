@@ -1,23 +1,25 @@
-import { getVirtualmeterList } from 'services/home/home';
+import { getAllData } from 'services/home/home';
 export default {
     namespace: 'page',
     state: {
-        time: 'skr'
-    },
-    effects: {
-        * getVirtualmeterList(_, { call, put }) {
-            try {
-                const { code, data } = yield call(getVirtualmeterList);
-                console.log(code, data)
-            } catch (error) {}
-        },
+        allData: {}
     },
     reducers: {
-        save(state, action) {
+        setAllData(state, action) {
+            const result = action.result
             return {
                 ...state,
-                ...action.payload,
-            };
+                allData: result
+            }
         },
     },
+    effects: {
+        * getAllData({ payload, callback }, { call, put, select }) {
+            try {
+                const res = yield call(getAllData, payload);
+                return res;
+                //yield put({ type: 'setAllData', result: res })
+            } catch (error) {}
+        },
+    }
 };

@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import { connect } from 'dva';
 import './index.less'
 const RightBottom = function (props) {
-  const [infor, setInfor] = useState([
+  const { rightBottomInfor } = props;
+  const infor = [
     {
       title: '可用机床数',
-      value: '40'
+      value: rightBottomInfor.availableNum
     },
     {
       title: '排产实际使用机床数',
-      value: '29'
+      value: rightBottomInfor.ActualUsedNum
     }, {
       title: '排产机床使用率',
-      value: '29/40=72.5%'
+      value: rightBottomInfor.useRate+'%'
     }
 
-  ])
+  ];
   return <div className='right-bottom'>
     <div className='right-top-infor'>
       <div className='jian-tou'></div>
