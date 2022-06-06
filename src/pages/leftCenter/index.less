@@ -346,25 +346,42 @@
       display: flex;
       margin-top: 1.7%;
 
+      .ant-steps-item-description {
+        color: #A5CFE7;
+        margin-left: 20%;
+      }
+
       >div>ul {
         display: flex;
         width: 100%;
         margin-top: 5%;
-
+        margin-left: 3%;
         >.title {
           font-size: 13px;
           font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
           font-weight: normal;
           color: #A5CFE7;
           line-height: 15px;
-          margin: 0% 4.5%
+          margin: 0% 3.5%;
+          width: 14%;
+          >span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space:nowrap;
+            text-align: center;
+          }
+          >span:nth-child(2){
+           margin: 10% 0%;
+          }
         }
 
         .title-button {
           display: flex;
-
+          .active{
+            background-color:#E53737;
+          }
           >span {
-            cursor: pointer;
             width: 55px;
             height: 17px;
             font-size: 8px;
@@ -390,8 +407,8 @@
       >div>.steps {
         width: 70%;
         height: auto;
-        margin-left: -4%;
-        margin-top: 5%;
+        margin-left: -2%;
+        margin-top: -2.2%;
 
         .ant-steps-item-title {
           font-size: 12px;

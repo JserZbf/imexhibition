@@ -28,6 +28,7 @@
         "@antv/layout": "^0.1.10",
         "ant-design-pro": "^2.3.2",
         "antd": "^4.10.0",
+        "axios": "^0.27.2",
         "dva": "^2.6.0-beta.6",
         "echarts": "^5.3.2",
         "echarts-for-react": "^3.0.2",

@@ -2,19 +2,94 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less'
-
+import * as echarts from 'echarts'
 import LeftTop from '../leftTop/index'
 import LeftCenter from '../leftCenter/index'
 import LeftBottom from '../leftBottom/index'
 import RightTop from '../rightTop/index'
 import RightCenter from '../rightCenter/index'
 import RightBottom from '../rightBottom/index'
+// 添加请求拦截器
+import axios from 'axios'
+axios.interceptors.request.use((config) => {
+  config.url = config.url;
+  let headers = {};
+  let token = window.localStorage.getItem('token');
+  if (token) {
+    headers.authorization = 'Bearer ' + token;
+  }
+  return {
+    ...config,
+    headers
+  }
+})
 const Home = function (props) {
   const [allData, setAllData] = useState({});
   const [materialTypeSixList, setMaterialTypeSixList] = useState([]);
   const [rightBottomInfor, setRightBottomInfor] = useState({});
-  const [finishPlanObj,setFinishPlanObj]=useState({});
-  const [diffAlgorithm,setDiffAlgorithm]=useState({})
+  const [finishPlanObj, setFinishPlanObj] = useState({});
+  const [diffAlgorithm, setDiffAlgorithm] = useState({});
+  const [arrName, setArrName] = useState();
+  const [sumValue, setSumValue] = useState();
+  const [objData, setObjData] = useState();
+  const [optionData, setOptionData] = useState({});
+  const [fourWeekOutputStatistics, setFourWeekOutputStatistics] = useState({});
+  const [fourWeekEnergyConsumption, setFourWeekEnergyConsumption] = useState({});
+  const [fourWeekUseTrend, setFourWeekUseTrend] = useState({});
+  const [fourWeekUtilizationRate, setFourWeekUtilizationRate] = useState({});
+  const [leftEchartsPieOne, setLeftEchartsPieOne] = useState({})
+  const [leftEchartsPieTwo, setLeftEchartsPieTwo] = useState({})
+  const [leftEchartsPieThree, setLeftEchartsPieThree] = useState({})
+  const [leftEchartsPieFour, setLeftEchartsPieFour] = useState({})
+  const [leftEchartsPieInfoOne, setLeftEchartsPieInfoOne] = useState({});
+  const [leftEchartsPieInfoTwo, setLeftEchartsPieInfoTwo] = useState({});
+  const [leftEchartsPieInfoThree, setLeftEchartsPieInfoThree] = useState({});
+  const [leftEchartsPieInfoFour, setLeftEchartsPieInfoFour] = useState({});
+  const [rightEchartsStateRatioOne, setRightEchartsStateRatioOne] = useState({})
+  const [rightEchartsDayOutputOne, setRightEchartsDayOutputOne] = useState({})
+  const [rightEchartsStateRatioTwo, setRightEchartsStateRatioTwo] = useState({})
+  const [rightEchartsDayOutputTwo, setRightEchartsDayOutputTwo] = useState({})
+  const [rightEchartsStateRatioThree, setRightEchartsStateRatioThree] = useState({})
+  const [rightEchartsDayOutputThree, setRightEchartsDayOutputThree] = useState({})
+  const [rightEchartsStateRatioFour, setRightEchartsStateRatioFour] = useState({})
+  const [rightEchartsDayOutputFour, setRightEchartsDayOutputFour] = useState({})
+  const [rightEchartsStateRatioFive, setRightEchartsStateRatioFive] = useState({})
+  const [rightEchartsDayOutputFive, setRightEchartsDayOutputFive] = useState({})
+  const [infoOne, setInfoOne] = useState({});
+  const [infoTwo, setInfoTwo] = useState({});
+  const [infoThree, setInfoThree] = useState({});
+  const [infoFour, setInfoFour] = useState({});
+  const [infoFive, setInfoFive] = useState({});
+  const [deviceUseTime, setDeviceUseTime] = useState();
+  ///甘特图变量
+  var ROOT_PATH =
+    'https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
+  // var chartDom = document.getElementById('main');
+  // console.log(chartDom, 'chartDomchartDomchartDomchartDomchartDomchartDomchartDomchartDom');
+  // var myChart = echarts.init(chartDom);
+  var option;
+  var HEIGHT_RATIO = 0.6;
+  var DIM_CATEGORY_INDEX = 0;
+  var DIM_TIME_ARRIVAL = 1;
+  var DIM_TIME_DEPARTURE = 2;
+  var DATA_ZOOM_AUTO_MOVE_THROTTLE = 30;
+  var DATA_ZOOM_X_INSIDE_INDEX = 1;
+  var DATA_ZOOM_Y_INSIDE_INDEX = 3;
+  var DATA_ZOOM_AUTO_MOVE_SPEED = 0.2;
+  var DATA_ZOOM_AUTO_MOVE_DETECT_AREA_WIDTH = 30;
+  var _draggable;
+  var _draggingEl;
+  var _dropShadow;
+  var _draggingCursorOffset = [0, 0];
+  var _draggingTimeLength;
+  var _draggingRecord;
+  var _dropRecord;
+  var _cartesianXBounds = [];
+  var _cartesianYBounds = [];
+  var _rawData;
+  var _autoDataZoomAnimator;
+  var myChart;
+  var ganTey;
   useEffect(() => {
     const obj = {
       "taskId": "202205251042350001",
@@ -164,14 +239,3780 @@ const Home = function (props) {
       setMaterialTypeSixList(res.materialDemandList.slice(0, 6));//物料类型六个卡片
       setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics);//右下角信息
       setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics);//计划完成率相关信息
-      setDiffAlgorithm(res.orderStatisticsInfo.algorithmComparisonData)//不同算法对比信息
+      setDiffAlgorithm(res.orderStatisticsInfo.algorithmComparisonData)//不同算法对比信息图
+      const fourWeekFinishRateTran = res.orderStatisticsInfo.fourWeekFinishRate.X.map((item, index) => {
+        return {
+          name: item,
+          value: res.orderStatisticsInfo.fourWeekFinishRate.Y[index]
+        }
+      })
+      setArrName(getArrayValue(fourWeekFinishRateTran, "name"));
+      setSumValue(eval(getArrayValue(fourWeekFinishRateTran, "value").join('+')));
+      setObjData(array2obj(fourWeekFinishRateTran, "name"));
+      setOptionData(getData(fourWeekFinishRateTran));//最近四周趋势对比图
+      setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics);//aps系统可适应不用加工类型图表
+      setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption);//预计设备不同状态图表
+      setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend);//最近四周使用率趋势图
+      setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate);//近四周设备利用率变化趋势
+      tranOrderCardDetail(res.orderCardDetail);//计划状态卡片四个饼图option
+      tranDeviceCardDetail(res.deviceCardDetail)//每台设备卡片十个折线图option、
+      setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime);//机床可用时间
+      var chartDom = document.getElementById('main');
+      myChart = echarts.init(chartDom);
+      axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
+        console.log(rawData, 'rawData______________', ROOT_PATH);
+        _rawData = rawData.data;
+        myChart.setOption((option = makeOption(res.orderScheduleDetail)));
+        initDrag();
+      });
     })
+
   }, [])
+  const tranOrderCardDetail = (data) => {
+    setLeftEchartsPieInfoOne(data[0]);
+    setLeftEchartsPieInfoTwo(data[1]);
+    setLeftEchartsPieInfoThree(data[2]);
+    setLeftEchartsPieInfoFour(data[3]);
+
+    const echartsList1 = {
+      title: {
+        text: '',
+        x: 'center',
+        y: 'center',
+        textStyle: {
+          fontWeight: 'normal',
+          color: "#0bb6f0",
+          fontSize: 20
+        }
+      },
+      //backgroundColor: '#011128',
+      // backgroundColor:'pink',
+      color: ['#eb644b', '#313443', '#fff'],
+      tooltip: {
+        show: false,
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+        show: false,
+        itemGap: 12,
+        data: ['01', '02']
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          mark: {
+            show: true
+          },
+          dataView: {
+            show: true,
+            readOnly: false
+          },
+          restore: {
+            show: true
+          },
+          saveAsImage: {
+            show: true
+          }
+        }
+      },
+      series: [{
+        name: 'Line 1',
+        type: 'pie',
+        clockWise: false,
+        radius: ['70%', '80%'],
+        itemStyle: {
+          normal: {
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            },
+            shadowBlur: 40,
+            shadowColor: 'rgba(40, 40, 40, 0.5)',
+          }
+        },
+        hoverAnimation: false,
+        data: [{
+          value: data[0].finishNum,
+          name: '01',
+          itemStyle: {
+            normal: {
+              color: '#6879F7',//已完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+          label: {
+            normal: {
+              rich: {
+                a: {
+                  color: '#3a7ad5',
+                  align: 'center',
+                  fontSize: 20,
+                  fontWeight: "bold"
+                },
+                b: {
+                  color: '#fff',
+                  align: 'center',
+                  fontSize: 16
+                }
+              },
+              formatter: function (params) {
+                if (data[0].finishNum <= 0) {
+                  return "{b|100%}\n\n" + "{b|计划产量" + data[0].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[0].finishNum + "件}";
+                } else {
+                  return "{b|100%}\n\n" + "{b|计划产量" + data[0].productNum + "件}" + "\n\n{b|" + (data[0].finishNum / data[0].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[0].finishNum + "件}";
+                }
+
+              },
+              position: 'center',
+              show: true,
+              textStyle: {
+                fontSize: '14',
+                fontWeight: 'normal',
+                color: '#fff'
+              }
+            }
+          },
+        }, {
+          value: data[0].productNum,
+          name: '',
+          itemStyle: {
+            normal: {
+              color: '#071D58',//未完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+        },
+        ]
+      }, {
+        name: 'Line 2',
+        type: 'pie',
+        animation: false,
+        clockWise: false,
+        radius: ['80%', '90%'],
+        itemStyle: {
+          normal: {
+            color: '#7CA9FF',//外层圆环的颜色
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            }
+          },
+          emphasis: {
+            color: 'rgba(44,59,70,1)'//外层圆环的颜色
+          }
+        },
+        hoverAnimation: false,
+        tooltip: {
+          show: false
+        },
+        data: [{
+          value: 100,
+          name: '02',
+        }
+        ]
+      },
+      ]
+    }
+    setLeftEchartsPieOne(echartsList1);
+    const echartsList2 = {
+      title: {
+        text: '',
+        x: 'center',
+        y: 'center',
+        textStyle: {
+          fontWeight: 'normal',
+          color: "#0bb6f0",
+          fontSize: 20
+        }
+      },
+      //backgroundColor: '#011128',
+      // backgroundColor:'pink',
+      color: ['#eb644b', '#313443', '#fff'],
+      tooltip: {
+        show: false,
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+        show: false,
+        itemGap: 12,
+        data: ['01', '02']
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          mark: {
+            show: true
+          },
+          dataView: {
+            show: true,
+            readOnly: false
+          },
+          restore: {
+            show: true
+          },
+          saveAsImage: {
+            show: true
+          }
+        }
+      },
+      series: [{
+        name: 'Line 1',
+        type: 'pie',
+        clockWise: false,
+        radius: ['70%', '80%'],
+        itemStyle: {
+          normal: {
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            },
+            shadowBlur: 40,
+            shadowColor: 'rgba(40, 40, 40, 0.5)',
+          }
+        },
+        hoverAnimation: false,
+        data: [{
+          value: data[1].finishNum,
+          name: '01',
+          itemStyle: {
+            normal: {
+              color: '#6879F7',//已完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+          label: {
+            normal: {
+              rich: {
+                a: {
+                  color: '#3a7ad5',
+                  align: 'center',
+                  fontSize: 20,
+                  fontWeight: "bold"
+                },
+                b: {
+                  color: '#fff',
+                  align: 'center',
+                  fontSize: 16
+                }
+              },
+              formatter: function (params) {
+                if (data[1].finishNum <= 0) {
+                  return "{b|100%}\n\n" + "{b|计划产量" + data[1].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[1].finishNum + "件}";
+                } else {
+                  return "{b|100%}\n\n" + "{b|计划产量" + data[1].productNum + "件}" + "\n\n{b|" + (data[1].finishNum / data[1].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[1].finishNum + "件}";
+                }
+
+              },
+              position: 'center',
+              show: true,
+              textStyle: {
+                fontSize: '14',
+                fontWeight: 'normal',
+                color: '#fff'
+              }
+            }
+          },
+        }, {
+          value: data[1].productNum,
+          name: '',
+          itemStyle: {
+            normal: {
+              color: '#071D58',//未完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          }
+        },
+        ]
+      }, {
+        name: 'Line 2',
+        type: 'pie',
+        animation: false,
+        clockWise: false,
+        radius: ['80%', '90%'],
+        itemStyle: {
+          normal: {
+            color: '#7CA9FF',//外层圆环的颜色
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            }
+          },
+          emphasis: {
+            color: 'rgba(44,59,70,1)'//外层圆环的颜色
+          }
+        },
+        hoverAnimation: false,
+        tooltip: {
+          show: false
+        },
+        data: [{
+          value: 100,
+          name: '02',
+        }
+        ]
+      },
+      ]
+    }
+    setLeftEchartsPieTwo(echartsList2);
+    const echartsList3 = {
+      title: {
+        text: '',
+        x: 'center',
+        y: 'center',
+        textStyle: {
+          fontWeight: 'normal',
+          color: "#0bb6f0",
+          fontSize: 20
+        }
+      },
+      //backgroundColor: '#011128',
+      // backgroundColor:'pink',
+      color: ['#eb644b', '#313443', '#fff'],
+      tooltip: {
+        show: false,
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+        show: false,
+        itemGap: 12,
+        data: ['01', '02']
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          mark: {
+            show: true
+          },
+          dataView: {
+            show: true,
+            readOnly: false
+          },
+          restore: {
+            show: true
+          },
+          saveAsImage: {
+            show: true
+          }
+        }
+      },
+      series: [{
+        name: 'Line 1',
+        type: 'pie',
+        clockWise: false,
+        radius: ['70%', '80%'],
+        itemStyle: {
+          normal: {
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            },
+            shadowBlur: 40,
+            shadowColor: 'rgba(40, 40, 40, 0.5)',
+          }
+        },
+        hoverAnimation: false,
+        data: [{
+          value: data[2].finishNum,
+          name: '01',
+          itemStyle: {
+            normal: {
+              color: '#6879F7',//已完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+          label: {
+            normal: {
+              rich: {
+                a: {
+                  color: '#3a7ad5',
+                  align: 'center',
+                  fontSize: 20,
+                  fontWeight: "bold"
+                },
+                b: {
+                  color: '#fff',
+                  align: 'center',
+                  fontSize: 16
+                }
+              },
+              formatter: function (params) {
+                if (data[2].finishNum <= 0) {
+                  return "{b|100%}\n\n" + "{b|计划产量" + data[2].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[2].finishNum + "件}";
+                } else {
+                  return "{b|100%}\n\n" + "{b|计划产量" + data[2].productNum + "件}" + "\n\n{b|" + (data[2].finishNum / data[2].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[2].finishNum + "件}";
+                }
+
+              },
+              position: 'center',
+              show: true,
+              textStyle: {
+                fontSize: '14',
+                fontWeight: 'normal',
+                color: '#fff'
+              }
+            }
+          },
+        }, {
+          value: data[2].productNum,
+          name: '',
+          itemStyle: {
+            normal: {
+              color: '#071D58',//未完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+        },
+        ]
+      }, {
+        name: 'Line 2',
+        type: 'pie',
+        animation: false,
+        clockWise: false,
+        radius: ['80%', '90%'],
+        itemStyle: {
+          normal: {
+            color: '#7CA9FF',//外层圆环的颜色
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            }
+          },
+          emphasis: {
+            color: 'rgba(44,59,70,1)'//外层圆环的颜色
+          }
+        },
+        hoverAnimation: false,
+        tooltip: {
+          show: false
+        },
+        data: [{
+          value: 100,
+          name: '02',
+        }
+        ]
+      },
+      ]
+    }
+    setLeftEchartsPieThree(echartsList3);
+    const echartsList4 = {
+      title: {
+        text: '',
+        x: 'center',
+        y: 'center',
+        textStyle: {
+          fontWeight: 'normal',
+          color: "#0bb6f0",
+          fontSize: 20
+        }
+      },
+      //backgroundColor: '#011128',
+      // backgroundColor:'pink',
+      color: ['#eb644b', '#313443', '#fff'],
+      tooltip: {
+        show: false,
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+        show: false,
+        itemGap: 12,
+        data: ['01', '02']
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          mark: {
+            show: true
+          },
+          dataView: {
+            show: true,
+            readOnly: false
+          },
+          restore: {
+            show: true
+          },
+          saveAsImage: {
+            show: true
+          }
+        }
+      },
+      series: [{
+        name: 'Line 1',
+        type: 'pie',
+        clockWise: false,
+        radius: ['70%', '80%'],
+        itemStyle: {
+          normal: {
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            },
+            shadowBlur: 40,
+            shadowColor: 'rgba(40, 40, 40, 0.5)',
+          }
+        },
+        label: {
+          normal: {
+            rich: {
+              a: {
+                color: '#3a7ad5',
+                align: 'center',
+                fontSize: 20,
+                fontWeight: "bold"
+              },
+              b: {
+                color: '#fff',
+                align: 'center',
+                fontSize: 16
+              }
+            },
+            formatter: function (params) {
+              if (data[3].finishNum <= 0) {
+                return "{b|100%}\n\n" + "{b|计划产量" + data[3].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[3].finishNum + "件}";
+              } else {
+                return "{b|100%}\n\n" + "{b|计划产量" + data[3].productNum + "件}" + "\n\n{b|" + (data[3].finishNum / data[3].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[3].finishNum + "件}";
+              }
+
+            },
+            position: 'center',
+            show: true,
+            textStyle: {
+              fontSize: '14',
+              fontWeight: 'normal',
+              color: '#fff'
+            }
+          }
+        },
+        hoverAnimation: false,
+        data: [{
+          value: data[3].finishNum,
+          name: '01',
+          itemStyle: {
+            normal: {
+              color: '#6879F7',//已完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+        }, {
+          value: data[3].productNum,
+          name: '',
+          itemStyle: {
+            normal: {
+              color: '#071D58',//未完成的圆环的颜色
+              label: {
+                show: false
+              },
+              labelLine: {
+                show: false
+              }
+            },
+            emphasis: {
+              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
+            }
+          },
+        },
+        ]
+      }, {
+        name: 'Line 2',
+        type: 'pie',
+        animation: false,
+        clockWise: false,
+        radius: ['80%', '90%'],
+        itemStyle: {
+          normal: {
+            color: '#7CA9FF',//外层圆环的颜色
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            }
+          },
+          emphasis: {
+            color: 'rgba(44,59,70,1)'//外层圆环的颜色
+          }
+        },
+        hoverAnimation: false,
+        tooltip: {
+          show: false
+        },
+        data: [{
+          value: 100,
+          name: '02',
+        }
+        ]
+      },
+      ]
+    }
+    setLeftEchartsPieFour(echartsList4);
+  }
+  const tranDeviceCardDetail = (data) => {
+    const info1 = {
+      deviceName: data[0].deviceName,
+      runTimeRate: data[0].runTimeRate,
+      isFinishMaintain: data[0].isFinishMaintain
+    }
+    setInfoOne(info1);
+    const info2 = {
+      deviceName: data[1].deviceName,
+      runTimeRate: data[1].runTimeRate,
+      isFinishMaintain: data[1].isFinishMaintain
+    }
+    setInfoTwo(info2);
+    const info3 = {
+      deviceName: data[2].deviceName,
+      runTimeRate: data[2].runTimeRate,
+      isFinishMaintain: data[2].isFinishMaintain
+    }
+    setInfoThree(info3);
+    const info4 = {
+      deviceName: data[3].deviceName,
+      runTimeRate: data[3].runTimeRate,
+      isFinishMaintain: data[3].isFinishMaintain
+    }
+    setInfoFour(info4);
+    const info5 = {
+      deviceName: data[4].deviceName,
+      runTimeRate: data[4].runTimeRate,
+      isFinishMaintain: data[4].isFinishMaintain
+    }
+    setInfoFive(info5);
+    const echartsListLeft1 = {
+      tooltip: {
+        trigger: 'item',
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: {
+        data: data[0].dayOutput.X,
+        show: true,
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#3966EA',
+            width: 1
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          interval: 1,
+          textStyle: {
+            color: '#fff',
+            fontSize: 12,
+            padding: 16,
+          },
+          margin: 5, //刻度标签与轴线之间的距离。
+        },
+
+      },
+      yAxis: [
+        {
+          name: '排产每日产量',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{ //三个最低下的圆片
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, 0],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#3966EA'
+        },
+        "data": data[0].dayOutput.X.map(item => {
+          return item = 0.5;
+        })
+      },
+      //下半截柱状图
+      {
+        name: '2020',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        itemStyle: { //lenged文本
+          opacity: .7,
+          color: '#2D529D'
+        },
+
+        data: data[0].dayOutput.Y
+      },
+
+      { // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        stack: '广告',
+        itemStyle: {
+          color: 'transparent'
+        },
+        data: data[0].dayOutput.Y
+      },
+
+      {
+        "name": "", //头部
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -3],
+        "z": 12,
+        "symbolPosition": "end",
+        itemStyle: {
+          color: '#163F7A',
+          opacity: 1,
+        },
+        "data": data[0].dayOutput.Y
+      },
+
+      {
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -10],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#E567FF'
+        },
+        "symbolPosition": "end",
+        data: data[0].dayOutput.Y
+      },
+      {
+        name: '2019',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        z: 0,
+        itemStyle: {
+          color: '#163F7A',
+          opacity: .7,
+        },
+        data: data[0].dayOutput.Y
+      }
+      ]
+    }
+    setRightEchartsDayOutputOne(echartsListLeft1);
+    const echartsListRight1 = {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'transparent',
+        axisPointer: {
+          lineStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0,
+                color: 'rgba(126,199,255,0)' // 0% 处的颜色
+              }, {
+                offset: 0.5,
+                color: 'rgba(126,199,255,1)' // 100% 处的颜色
+              }, {
+                offset: 1,
+                color: 'rgba(126,199,255,0)' // 100% 处的颜色
+              }],
+              global: false // 缺省为 false
+            }
+          },
+        }
+      },
+      legend: {
+        align: "left",
+        right: '0%',
+        top: '0%',
+        type: 'plain',
+        textStyle: {
+          color: '#fff',
+          fontSize: 16
+        },
+        // icon:'rect',
+        itemGap: 25,
+        itemWidth: 18,
+        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
+
+        data: [
+          // {
+          //     name: '上学'
+          // },
+          // {
+          //     name: '到校'
+          // },
+          // {
+          //     name: '放学'
+          // }
+        ]
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: [{
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { //坐标轴轴线相关设置。数学上的x轴
+          show: true,
+          lineStyle: {
+            color: '#fffff',
+            width: 2,
+          },
+        },
+        axisLabel: { //坐标轴刻度标签的相关设置
+          textStyle: {
+            color: '#fffff',
+            padding: 16,
+            fontSize: 14
+          },
+          formatter: function (data) {
+            return data
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ''
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+        data: data[0].stateRatio.X
+      }],
+      yAxis: [
+        {
+          name: '状态占比',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{
+        name: '待机时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "#61D1FF"
+            },
+            {
+              offset: 1,
+              color: "#E436AA"
+            }
+            ], false), // 线条颜色
+          },
+          borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: "#61D1FF"
+          },
+          {
+            offset: 1,
+            color: "#E436AA"
+          }
+          ], false),
+        },
+        itemStyle: {
+          color: "red",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(135, 54, 228, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(97, 209, 255, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[0].stateRatio.Y1
+      }, {
+        name: '故障维修时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(228, 54, 170, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(40, 107, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[0].stateRatio.Y2
+      }, {
+        name: '加工时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(160, 54, 228, 1)"
+            },
+            {
+              offset: 0.5,
+              color: "rgba(83, 132, 222, 1)"
+            }, {
+              offset: 1,
+              color: "rgba(40, 182, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[0].stateRatio.Y3
+      }]
+    }
+    setRightEchartsStateRatioOne(echartsListRight1);
+    const echartsListLeft2 = {
+      tooltip: {
+        trigger: 'item',
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: {
+        data: data[1].dayOutput.X,
+        show: true,
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#3966EA',
+            width: 1
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          interval: 1,
+          textStyle: {
+            color: '#fff',
+            fontSize: 12,
+            padding: 16,
+          },
+          margin: 5, //刻度标签与轴线之间的距离。
+        },
+
+      },
+      yAxis: [
+        {
+          name: '排产每日产量',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{ //三个最低下的圆片
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, 0],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#3966EA'
+        },
+        "data": data[1].dayOutput.X.map(item => {
+          return item = 0.5;
+        })
+      },
+      //下半截柱状图
+      {
+        name: '2020',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        itemStyle: { //lenged文本
+          opacity: .7,
+          color: '#2D529D'
+        },
+
+        data: data[1].dayOutput.Y
+      },
+
+      { // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        stack: '广告',
+        itemStyle: {
+          color: 'transparent'
+        },
+        data: data[1].dayOutput.Y
+      },
+
+      {
+        "name": "", //头部
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -3],
+        "z": 12,
+        "symbolPosition": "end",
+        itemStyle: {
+          color: '#163F7A',
+          opacity: 1,
+        },
+        "data": data[1].dayOutput.Y
+      },
+
+      {
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -10],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#E567FF'
+        },
+        "symbolPosition": "end",
+        data: data[1].dayOutput.Y
+      },
+      {
+        name: '2019',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        z: 0,
+        itemStyle: {
+          color: '#163F7A',
+          opacity: .7,
+        },
+        data: data[1].dayOutput.Y
+      }
+      ]
+    }
+    setRightEchartsDayOutputTwo(echartsListLeft2);
+    const echartsListRight2 = {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'transparent',
+        axisPointer: {
+          lineStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0,
+                color: 'rgba(126,199,255,0)' // 0% 处的颜色
+              }, {
+                offset: 0.5,
+                color: 'rgba(126,199,255,1)' // 100% 处的颜色
+              }, {
+                offset: 1,
+                color: 'rgba(126,199,255,0)' // 100% 处的颜色
+              }],
+              global: false // 缺省为 false
+            }
+          },
+        }
+      },
+      legend: {
+        align: "left",
+        right: '0%',
+        top: '0%',
+        type: 'plain',
+        textStyle: {
+          color: '#fff',
+          fontSize: 16
+        },
+        // icon:'rect',
+        itemGap: 25,
+        itemWidth: 18,
+        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
+
+        data: [
+          // {
+          //     name: '上学'
+          // },
+          // {
+          //     name: '到校'
+          // },
+          // {
+          //     name: '放学'
+          // }
+        ]
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: [{
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { //坐标轴轴线相关设置。数学上的x轴
+          show: true,
+          lineStyle: {
+            color: '#fffff',
+            width: 2,
+          },
+        },
+        axisLabel: { //坐标轴刻度标签的相关设置
+          textStyle: {
+            color: '#fffff',
+            padding: 16,
+            fontSize: 14
+          },
+          formatter: function (data) {
+            return data
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ''
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+        data: data[1].stateRatio.X
+      }],
+      yAxis: [
+        {
+          name: '状态占比',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{
+        name: '待机时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "#61D1FF"
+            },
+            {
+              offset: 1,
+              color: "#E436AA"
+            }
+            ], false), // 线条颜色
+          },
+          borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: "#61D1FF"
+          },
+          {
+            offset: 1,
+            color: "#E436AA"
+          }
+          ], false),
+        },
+        itemStyle: {
+          color: "red",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(135, 54, 228, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(97, 209, 255, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[1].stateRatio.Y1
+      }, {
+        name: '故障维修时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(228, 54, 170, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(40, 107, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[1].stateRatio.Y2
+      }, {
+        name: '加工时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(160, 54, 228, 1)"
+            },
+            {
+              offset: 0.5,
+              color: "rgba(83, 132, 222, 1)"
+            }, {
+              offset: 1,
+              color: "rgba(40, 182, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[1].stateRatio.Y3
+      }]
+    }
+    setRightEchartsStateRatioTwo(echartsListRight2);
+    const echartsListLeft3 = {
+      tooltip: {
+        trigger: 'item',
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: {
+        data: data[2].dayOutput.X,
+        show: true,
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#3966EA',
+            width: 1
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          interval: 1,
+          textStyle: {
+            color: '#fff',
+            fontSize: 12,
+            padding: 16,
+          },
+          margin: 5, //刻度标签与轴线之间的距离。
+        },
+
+      },
+      yAxis: [
+        {
+          name: '排产每日产量',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{ //三个最低下的圆片
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, 0],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#3966EA'
+        },
+        "data": data[2].dayOutput.X.map(item => {
+          return item = 0.5;
+        })
+      },
+      //下半截柱状图
+      {
+        name: '2020',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        itemStyle: { //lenged文本
+          opacity: .7,
+          color: '#2D529D'
+        },
+
+        data: data[2].dayOutput.Y
+      },
+
+      { // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        stack: '广告',
+        itemStyle: {
+          color: 'transparent'
+        },
+        data: data[2].dayOutput.Y
+      },
+
+      {
+        "name": "", //头部
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -3],
+        "z": 12,
+        "symbolPosition": "end",
+        itemStyle: {
+          color: '#163F7A',
+          opacity: 1,
+        },
+        "data": data[2].dayOutput.Y
+      },
+
+      {
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -10],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#E567FF'
+        },
+        "symbolPosition": "end",
+        data: data[2].dayOutput.Y
+      },
+      {
+        name: '2019',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        z: 0,
+        itemStyle: {
+          color: '#163F7A',
+          opacity: .7,
+        },
+        data: data[2].dayOutput.Y
+      }
+      ]
+    }
+    setRightEchartsDayOutputThree(echartsListLeft3);
+    const echartsListRight3 = {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'transparent',
+        axisPointer: {
+          lineStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0,
+                color: 'rgba(126,199,255,0)' // 0% 处的颜色
+              }, {
+                offset: 0.5,
+                color: 'rgba(126,199,255,1)' // 100% 处的颜色
+              }, {
+                offset: 1,
+                color: 'rgba(126,199,255,0)' // 100% 处的颜色
+              }],
+              global: false // 缺省为 false
+            }
+          },
+        }
+      },
+      legend: {
+        align: "left",
+        right: '0%',
+        top: '0%',
+        type: 'plain',
+        textStyle: {
+          color: '#fff',
+          fontSize: 16
+        },
+        // icon:'rect',
+        itemGap: 25,
+        itemWidth: 18,
+        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
+
+        data: [
+          // {
+          //     name: '上学'
+          // },
+          // {
+          //     name: '到校'
+          // },
+          // {
+          //     name: '放学'
+          // }
+        ]
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: [{
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { //坐标轴轴线相关设置。数学上的x轴
+          show: true,
+          lineStyle: {
+            color: '#fffff',
+            width: 2,
+          },
+        },
+        axisLabel: { //坐标轴刻度标签的相关设置
+          textStyle: {
+            color: '#fffff',
+            padding: 16,
+            fontSize: 14
+          },
+          formatter: function (data) {
+            return data
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ''
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+        data: data[2].stateRatio.X
+      }],
+      yAxis: [
+        {
+          name: '状态占比',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{
+        name: '待机时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "#61D1FF"
+            },
+            {
+              offset: 1,
+              color: "#E436AA"
+            }
+            ], false), // 线条颜色
+          },
+          borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: "#61D1FF"
+          },
+          {
+            offset: 1,
+            color: "#E436AA"
+          }
+          ], false),
+        },
+        itemStyle: {
+          color: "red",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(135, 54, 228, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(97, 209, 255, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[2].stateRatio.Y1
+      }, {
+        name: '故障维修时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(228, 54, 170, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(40, 107, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[2].stateRatio.Y2
+      }, {
+        name: '加工时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(160, 54, 228, 1)"
+            },
+            {
+              offset: 0.5,
+              color: "rgba(83, 132, 222, 1)"
+            }, {
+              offset: 1,
+              color: "rgba(40, 182, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[2].stateRatio.Y3
+      }]
+    }
+    setRightEchartsStateRatioThree(echartsListRight3);
+    const echartsListLeft4 = {
+      tooltip: {
+        trigger: 'item',
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: {
+        data: data[3].dayOutput.X,
+        show: true,
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#3966EA',
+            width: 1
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          interval: 1,
+          textStyle: {
+            color: '#fff',
+            fontSize: 12,
+            padding: 16,
+          },
+          margin: 5, //刻度标签与轴线之间的距离。
+        },
+
+      },
+      yAxis: [
+        {
+          name: '排产每日产量',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{ //三个最低下的圆片
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, 0],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#3966EA'
+        },
+        "data": data[3].dayOutput.X.map(item => {
+          return item = 0.5;
+        })
+      },
+      //下半截柱状图
+      {
+        name: '2020',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        itemStyle: { //lenged文本
+          opacity: .7,
+          color: '#2D529D'
+        },
+
+        data: data[3].dayOutput.Y
+      },
+
+      { // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        stack: '广告',
+        itemStyle: {
+          color: 'transparent'
+        },
+        data: data[3].dayOutput.Y
+      },
+
+      {
+        "name": "", //头部
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -3],
+        "z": 12,
+        "symbolPosition": "end",
+        itemStyle: {
+          color: '#163F7A',
+          opacity: 1,
+        },
+        "data": data[3].dayOutput.Y
+      },
+
+      {
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -10],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#E567FF'
+        },
+        "symbolPosition": "end",
+        data: data[3].dayOutput.Y
+      },
+      {
+        name: '2019',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        z: 0,
+        itemStyle: {
+          color: '#163F7A',
+          opacity: .7,
+        },
+        data: data[3].dayOutput.Y
+      }
+      ]
+    }
+    setRightEchartsDayOutputFour(echartsListLeft4);
+    const echartsListRight4 = {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'transparent',
+        axisPointer: {
+          lineStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0,
+                color: 'rgba(126,199,255,0)' // 0% 处的颜色
+              }, {
+                offset: 0.5,
+                color: 'rgba(126,199,255,1)' // 100% 处的颜色
+              }, {
+                offset: 1,
+                color: 'rgba(126,199,255,0)' // 100% 处的颜色
+              }],
+              global: false // 缺省为 false
+            }
+          },
+        }
+      },
+      legend: {
+        align: "left",
+        right: '0%',
+        top: '0%',
+        type: 'plain',
+        textStyle: {
+          color: '#fff',
+          fontSize: 16
+        },
+        // icon:'rect',
+        itemGap: 25,
+        itemWidth: 18,
+        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
+
+        data: [
+          // {
+          //     name: '上学'
+          // },
+          // {
+          //     name: '到校'
+          // },
+          // {
+          //     name: '放学'
+          // }
+        ]
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: [{
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { //坐标轴轴线相关设置。数学上的x轴
+          show: true,
+          lineStyle: {
+            color: '#fffff',
+            width: 2,
+          },
+        },
+        axisLabel: { //坐标轴刻度标签的相关设置
+          textStyle: {
+            color: '#fffff',
+            padding: 16,
+            fontSize: 14
+          },
+          formatter: function (data) {
+            return data
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ''
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+        data: data[3].stateRatio.X
+      }],
+      yAxis: [
+        {
+          name: '状态占比',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{
+        name: '待机时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "#61D1FF"
+            },
+            {
+              offset: 1,
+              color: "#E436AA"
+            }
+            ], false), // 线条颜色
+          },
+          borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: "#61D1FF"
+          },
+          {
+            offset: 1,
+            color: "#E436AA"
+          }
+          ], false),
+        },
+        itemStyle: {
+          color: "red",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(135, 54, 228, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(97, 209, 255, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[3].stateRatio.Y1
+      }, {
+        name: '故障维修时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(228, 54, 170, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(40, 107, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[3].stateRatio.Y2
+      }, {
+        name: '加工时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(160, 54, 228, 1)"
+            },
+            {
+              offset: 0.5,
+              color: "rgba(83, 132, 222, 1)"
+            }, {
+              offset: 1,
+              color: "rgba(40, 182, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[3].stateRatio.Y3
+      }]
+    }
+    setRightEchartsStateRatioFour(echartsListRight4);
+    const echartsListLeft5 = {
+      tooltip: {
+        trigger: 'item',
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: {
+        data: data[4].dayOutput.X,
+        show: true,
+        axisTick: {
+          show: false
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#3966EA',
+            width: 1
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          interval: 1,
+          textStyle: {
+            color: '#fff',
+            fontSize: 12,
+            padding: 16,
+          },
+          margin: 5, //刻度标签与轴线之间的距离。
+        },
+
+      },
+      yAxis: [
+        {
+          name: '排产每日产量',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{ //三个最低下的圆片
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, 0],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#3966EA'
+        },
+        "data": data[4].dayOutput.X.map(item => {
+          return item = 0.5;
+        })
+      },
+      //下半截柱状图
+      {
+        name: '2020',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        itemStyle: { //lenged文本
+          opacity: .7,
+          color: '#2D529D'
+        },
+
+        data: data[4].dayOutput.Y
+      },
+
+      { // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        stack: '广告',
+        itemStyle: {
+          color: 'transparent'
+        },
+        data: data[4].dayOutput.Y
+      },
+
+      {
+        "name": "", //头部
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -3],
+        "z": 12,
+        "symbolPosition": "end",
+        itemStyle: {
+          color: '#163F7A',
+          opacity: 1,
+        },
+        "data": data[4].dayOutput.Y
+      },
+
+      {
+        "name": "",
+        "type": "pictorialBar",
+        "symbolSize": [15, 5],
+        "symbolOffset": [0, -10],
+        "z": 12,
+        itemStyle: {
+          opacity: 1,
+          color: '#E567FF'
+        },
+        "symbolPosition": "end",
+        data: data[4].dayOutput.Y
+      },
+      {
+        name: '2019',
+        type: 'bar',
+        barWidth: 15,
+        barGap: '-100%',
+        z: 0,
+        itemStyle: {
+          color: '#163F7A',
+          opacity: .7,
+        },
+        data: data[4].dayOutput.Y
+      }
+      ]
+    }
+    setRightEchartsDayOutputFive(echartsListLeft5);
+    const echartsListRight5 = {
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'transparent',
+        axisPointer: {
+          lineStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0,
+                color: 'rgba(126,199,255,0)' // 0% 处的颜色
+              }, {
+                offset: 0.5,
+                color: 'rgba(126,199,255,1)' // 100% 处的颜色
+              }, {
+                offset: 1,
+                color: 'rgba(126,199,255,0)' // 100% 处的颜色
+              }],
+              global: false // 缺省为 false
+            }
+          },
+        }
+      },
+      legend: {
+        align: "left",
+        right: '0%',
+        top: '0%',
+        type: 'plain',
+        textStyle: {
+          color: '#fff',
+          fontSize: 16
+        },
+        // icon:'rect',
+        itemGap: 25,
+        itemWidth: 18,
+        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
+
+        data: [
+          // {
+          //     name: '上学'
+          // },
+          // {
+          //     name: '到校'
+          // },
+          // {
+          //     name: '放学'
+          // }
+        ]
+      },
+      grid: {
+        top: '30%',
+        left: '20%',
+        right: '25%',
+        bottom: '30%',
+        // containLabel: true
+      },
+      xAxis: [{
+        type: 'category',
+        boundaryGap: false,
+        axisLine: { //坐标轴轴线相关设置。数学上的x轴
+          show: true,
+          lineStyle: {
+            color: '#fffff',
+            width: 2,
+          },
+        },
+        axisLabel: { //坐标轴刻度标签的相关设置
+          textStyle: {
+            color: '#fffff',
+            padding: 16,
+            fontSize: 14
+          },
+          formatter: function (data) {
+            return data
+          }
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ''
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+        data: data[4].stateRatio.X
+      }],
+      yAxis: [
+        {
+          name: '状态占比',
+          nameTextStyle: {
+            color: "#FFFFFF",
+            fontSize: 22,
+            padding: 10
+          },
+          min: 0,
+          splitLine: {
+            show: false,
+            lineStyle: {
+              color: '#192a44'
+            },
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#FFFFFF"
+            }
+
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#FFFFFF',
+              padding: 16
+            },
+            formatter: function (value) {
+              if (value === 0) {
+                return value
+              }
+              return value
+            }
+          },
+          axisTick: {
+            show: false,
+          },
+        }],
+      series: [{
+        name: '待机时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "#61D1FF"
+            },
+            {
+              offset: 1,
+              color: "#E436AA"
+            }
+            ], false), // 线条颜色
+          },
+          borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: "#61D1FF"
+          },
+          {
+            offset: 1,
+            color: "#E436AA"
+          }
+          ], false),
+        },
+        itemStyle: {
+          color: "red",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(135, 54, 228, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(97, 209, 255, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[4].stateRatio.Y1
+      }, {
+        name: '故障维修时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(228, 54, 170, 1)"
+            },
+            {
+              offset: 1,
+              color: "rgba(40, 107, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[4].stateRatio.Y2
+      }, {
+        name: '加工时间',
+        type: 'line',
+        symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
+        showAllSymbol: true,
+        symbolSize: 0,
+        smooth: true,
+        lineStyle: {
+          normal: {
+            width: 0,
+            color: "rgba(10,219,250,1)", // 线条颜色
+          },
+          borderColor: 'rgba(0,0,0,.4)',
+        },
+        itemStyle: {
+          color: "rgba(10,219,250,1)",
+          borderColor: "#646ace",
+          borderWidth: 2
+
+        },
+        tooltip: {
+          show: true
+        },
+        areaStyle: { //区域填充样式
+          normal: {
+            //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+              offset: 0,
+              color: "rgba(160, 54, 228, 1)"
+            },
+            {
+              offset: 0.5,
+              color: "rgba(83, 132, 222, 1)"
+            }, {
+              offset: 1,
+              color: "rgba(40, 182, 240, 1)"
+            }
+            ], false),
+            //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
+            shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+          }
+        },
+        data: data[4].stateRatio.Y3
+      }]
+    }
+    setRightEchartsStateRatioFive(echartsListRight5);
+  }
+  function getArrayValue(array, key) {
+    var key = key || "value";
+    var res = [];
+    if (array) {
+      array.forEach(function (t) {
+        res.push(t[key]);
+      });
+    }
+    console.log(res, 'arrName');
+    return res;
+
+  }
+
+  function array2obj(array, key) {
+    var resObj = {};
+    for (var i = 0; i < array.length; i++) {
+      resObj[array[i][key]] = array[i];
+    }
+    return resObj;
+  }
+
+  function getData(data) {
+    var color = [
+      ['rgba(41, 143, 255, 0.55)'],
+      ['rgba(37, 121, 241, 1)'],
+      ['rgba(255, 144, 35, 0.47)'],
+      ['rgba(255, 144, 35, 1)'],
+      ['rgba(41, 143, 255, 0.55)'],
+    ];
+    var radius = [
+      {
+        value1: '70%',
+        value2: '80%',
+      },
+      {
+        value1: '55%',
+        value2: '65%',
+      },
+      {
+        value1: '40%',
+        value2: '50%',
+      },
+      {
+        value1: '25%',
+        value2: '35%',
+      },
+      {
+        value1: '0%',
+        value2: '20%',
+      }
+    ];
+    var res = {
+      series: [{
+        name: '刻度线',
+        type: 'gauge',
+        startAngle: 90,
+        endAngle: 450,
+        min: 0,
+        max: 100,
+        radius: '90%',
+        center: ["50%", "50%"],
+        title: { show: false },
+        detail: { show: false },
+        axisLine: {
+          //length: '100%',
+          show: true,
+
+        },
+        axisTick: { length: 0, },
+        splitLine: {
+          length: '100%',
+          show: true,
+          lineStyle: {
+            color: 'rgba(36, 143, 255, 1)',
+            width: 1,
+            type: 'solid',
+          },
+        },
+        axisLabel: { show: false },
+        pointer: { show: false, },
+        data: [{ value: 0, }],
+      }, {
+        name: '刻度值',
+        type: 'gauge',
+        startAngle: 90,
+        endAngle: 450,
+        min: 0,
+        max: 100,
+        radius: '100%',
+        center: ["50%", "50%"],
+        title: { show: false },
+        detail: { show: false },
+        axisLine: {
+          show: false,
+        },
+        axisTick: { length: 0, },
+        splitLine: { show: false, },
+        axisLabel: {
+          color: '#fffff',
+          fontSize: 12,
+          verticalAlign: 'top',
+          align: 'left',
+          margin: 0
+        },
+        pointer: { show: false, },
+        data: [{ value: 0, }]
+      }],
+      legend: [],
+    };
+    for (let i = 0; i < data.length; i++) {
+      // if (data[i].value < 60) {
+      var itemColor = {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [{
+          offset: 0,
+          color: color[i][0] // 0% 处的颜色
+        }, {
+          offset: 1,
+          color: color[i][0] // 100% 处的颜色
+        }],
+        global: false // 缺省为 false
+      };
+      // } 
+      /* else {
+          if (data[i].value < 80) {
+              var itemColor = {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [{
+                      offset: 0,
+                      color: color[1][0] // 0% 处的颜色
+                  }, {
+                      offset: 0.5,
+                      color: color[1][1] // 100% 处的颜色
+                  }, {
+                      offset: 1,
+                      color: color[1][1] // 100% 处的颜色
+                  }],
+                  global: false // 缺省为 false
+              }
+          } else {
+              if (data[i].value < 100) {
+                  var itemColor = {
+                      type: 'linear',
+                      x: 0,
+                      y: 0,
+                      x2: 0,
+                      y2: 1,
+                      colorStops: [{
+                          offset: 0,
+                          color: color[0][0] // 0% 处的颜色
+                      }, {
+                          offset: 2 / 3,
+                          color: color[0][1] // 100% 处的颜色
+                      }, {
+                          offset: 1,
+                          color: color[0][1] // 100% 处的颜色
+                      }],
+                      global: false // 缺省为 false
+                  }
+              }
+          }
+      } */
+      res.series.push({
+        name: '',
+        type: 'pie',
+        clockWise: false, //顺时加载
+        hoverAnimation: false, //鼠标移入变大
+        radius: [radius[i].value1, radius[i].value2],
+        center: ["50%", "50%"],
+        label: {
+          show: false
+        },
+        itemStyle: {
+          label: {
+            show: false,
+          },
+          labelLine: {
+            show: false
+          },
+          normal: {
+            color: itemColor,
+          }
+
+        },
+        data: [{
+          value: data[i].value,
+          name: data[i].name
+        }, {
+          value: 400 / 3 - data[i].value,
+          name: '',
+          itemStyle: {
+            color: "rgba(0,0,0,0)",
+            borderWidth: 0
+          },
+          tooltip: {
+            show: false
+          },
+          hoverAnimation: false
+        }]
+      });
+      res.series.push({
+        name: '',
+        type: 'pie',
+        silent: true,
+        z: 1,
+        clockWise: false, //顺时加载
+        hoverAnimation: false, //鼠标移入变大
+        radius: [radius[i].value1, radius[i].value2],
+        center: ["50%", "50%"],
+        label: {
+          show: false
+        },
+        itemStyle: {
+          label: {
+            show: false,
+          },
+          labelLine: {
+            show: false
+          },
+          borderWidth: 5,
+        },
+        data: [{
+          value: 7.5,
+          itemStyle: {
+            color: "#E3F0FF",
+            borderWidth: 0
+          },
+          tooltip: {
+            show: false
+          },
+          hoverAnimation: false
+        }, {
+          value: 2.5,
+          name: '',
+          itemStyle: {
+            color: "rgba(0,0,0,0)",
+            borderWidth: 0
+          },
+          tooltip: {
+            show: false
+          },
+          hoverAnimation: false
+        }]
+      });
+    }
+    return res;
+  }
+  const nan1 = {
+    legend: [{
+      show: true,
+      top: '15%',
+      left: "50%",
+      data: arrName,
+      width: 100,
+      itemGap: 28,
+      itemWidth: 0,
+      icon: 'none',
+      formatter: function (name) {
+        return "{title|" + name + "}{value| " + "%} "
+      },
+      textStyle: {
+        rich: {
+          title: {
+            fontSize: '12px',
+            fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
+            fontWeight: 'normal',
+            color: '#FFFFFF'
+          },
+          // value: {
+          //   fontSize: '12px',
+          //   fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
+          //   fontWeight: 'normal',
+          //   color: '#FFFFFF'
+          // }
+        }
+      },
+    }],
+    tooltip: {
+      show: true,
+      trigger: "item",
+      confine: true,
+      formatter: function (param) {
+        return param.name + ' : ' + param.value + ' ( ' + (objData[param.name].value / sumValue * 100).toFixed(2) + "% ）"
+      },
+      textStyle: {
+        rich: {
+          title: {
+            fontSize: 20,
+            lineHeight: 30,
+            color: "#6D7383"
+          },
+          value: {
+            fontSize: 18,
+            lineHeight: 20,
+            color: "#4DA1FF"
+          }
+        }
+      },
+    },
+    series: optionData.series
+  };
+  function makeOption(data1) {
+
+    return {
+      tooltip: {},
+      animation: false,
+      toolbox: {//左侧编辑
+        show: false,
+        left: 20,
+        top: 0,
+        itemSize: 20,
+        feature: {
+          myDrag: {
+            show: true,
+            title: 'Make bars\ndraggable',
+            icon: 'pafth://M990.55 380.08 q11.69 0 19.88 8.19 q7.02 7.01 7.02 18.71 l0 480.65 q-1.17 43.27 -29.83 71.93 q-28.65 28.65 -71.92 29.82 l-813.96 0 q-43.27 -1.17 -72.5 -30.41 q-28.07 -28.07 -29.24 -71.34 l0 -785.89 q1.17 -43.27 29.24 -72.5 q29.23 -29.24 72.5 -29.24 l522.76 0 q11.7 0 18.71 7.02 q8.19 8.18 8.19 18.71 q0 11.69 -7.6 19.29 q-7.6 7.61 -19.3 7.61 l-518.08 0 q-22.22 1.17 -37.42 16.37 q-15.2 15.2 -15.2 37.42 l0 775.37 q0 23.39 15.2 38.59 q15.2 15.2 37.42 15.2 l804.6 0 q22.22 0 37.43 -15.2 q15.2 -15.2 16.37 -38.59 l0 -474.81 q0 -11.7 7.02 -18.71 q8.18 -8.19 18.71 -8.19 l0 0 ZM493.52 723.91 l-170.74 -170.75 l509.89 -509.89 q23.39 -23.39 56.13 -21.05 q32.75 1.17 59.65 26.9 l47.94 47.95 q25.73 26.89 27.49 59.64 q1.75 32.75 -21.64 57.3 l-508.72 509.9 l0 0 ZM870.09 80.69 l-56.13 56.14 l94.72 95.9 l56.14 -57.31 q8.19 -9.35 8.19 -21.05 q-1.17 -12.86 -10.53 -22.22 l-47.95 -49.12 q-10.52 -9.35 -23.39 -9.35 q-11.69 -1.17 -21.05 7.01 l0 0 ZM867.75 272.49 l-93.56 -95.9 l-380.08 380.08 l94.73 94.73 l378.91 -378.91 l0 0 ZM322.78 553.16 l38.59 39.77 l-33.92 125.13 l125.14 -33.92 l38.59 38.6 l-191.79 52.62 q-5.85 1.17 -12.28 0 q-6.44 -1.17 -11.11 -5.84 q-4.68 -4.68 -5.85 -11.7 q-2.34 -5.85 0 -11.69 l52.63 -192.97 l0 0 Z',
+            onclick: onDragSwitchClick
+          }
+        }
+      },
+      title: {
+        show: false,
+        text: 'Gantt of Airport Flight',
+        left: 'center'
+      },
+      dataZoom: [
+        {
+          type: 'slider',
+          xAxisIndex: 0,
+          filterMode: 'weakFilter',
+          height: 20,
+          bottom: 0,
+          start: 0,
+          end: 26,
+          handleIcon:
+            'path://M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          showDetail: false
+        },
+        {
+          type: 'inside',
+          id: 'insideX',
+          xAxisIndex: 0,
+          filterMode: 'weakFilter',
+          start: 0,
+          end: 26,
+          zoomOnMouseWheel: false,
+          moveOnMouseMove: true
+        },
+        {
+          type: 'slider',
+          yAxisIndex: 0,
+          zoomLock: true,
+          width: 10,
+          right: 10,
+          top: 70,
+          bottom: 20,
+          start: 95,
+          end: 100,
+          handleSize: 0,
+          showDetail: false
+        },
+        {
+          type: 'inside',
+          id: 'insideY',
+          yAxisIndex: 0,
+          start: 95,
+          end: 100,
+          zoomOnMouseWheel: false,
+          moveOnMouseMove: true,
+          moveOnMouseWheel: true
+        }
+      ],
+      grid: {
+        show: true,
+        top: '10%',
+        bottom: '10%',
+        left: '10%',
+        right: '10%',
+        backgroundColor: 'transparent',
+        borderWidth: 0
+      },
+      xAxis: {
+        type: 'time',
+        position: 'bottom',
+        splitLine: {
+          lineStyle: {
+            color: ['#E9EDFF']
+          }
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          lineStyle: {
+            color: '#929ABA'
+          }
+        },
+        axisLabel: {
+          color: '#929ABA',
+          inside: false,
+          align: 'center'
+        }
+      },
+      yAxis: {
+        axisTick: { show: false },
+        splitLine: { show: false },
+        axisLine: { show: false },
+        axisLabel: { show: false },
+        min: 0,
+        max: _rawData.parkingApron.data.length
+      },
+      series: [
+        {//内容值
+          id: 'flightData',
+          type: 'custom',
+          renderItem: renderGanttItem,
+          dimensions: _rawData.flight.dimensions,
+          encode: {
+            x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
+            y: DIM_CATEGORY_INDEX,
+            tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE]
+          },
+          data: _rawData.flight.data
+        },
+        {//y1轴值
+          type: 'custom',
+          renderItem: renderAxisLabelItem,
+          //dimensions: _rawData.parkingApron.dimensions,
+          encode: {
+            x: -1,
+            y: 0
+          },
+          data: _rawData.parkingApron.data.map(function (item, index) {
+            // console.log(item, index, '[index].concat(item)');
+            //  console.log([index].concat(item),'[index].concat(item)');
+            // console.log( _rawData.flight.data,' _rawData.flight.data');
+            return [index].concat(item);
+          }),
+          // data: data1.map((item, index) => {
+          //   // console.log([index].concat(item.machineName,'W',false), 'demoXXXXX');
+          //   return [index].concat('678', 'W', false);
+          // })
+        },
+        {//y2轴值
+          type: 'custom',
+          renderItem: renderAxisLabelItems,
+          dimensions: _rawData.parkingApron.dimensions,
+          encode: {
+            x: -1,
+            y: 0
+          },
+          data: _rawData.parkingApron.data.map(function (item, index) {
+            // console.log(item, index, '[index].concat(item)');
+            return [index].concat(item);
+            // return item[0]
+          })
+        }
+      ]
+    };
+  }
+  function renderGanttItem(params, api) {
+    var categoryIndex = api.value(DIM_CATEGORY_INDEX);
+    var timeArrival = api.coord([api.value(DIM_TIME_ARRIVAL), categoryIndex]);
+    var timeDeparture = api.coord([api.value(DIM_TIME_DEPARTURE), categoryIndex]);
+    var coordSys = params.coordSys;
+    _cartesianXBounds[0] = coordSys.x;
+    _cartesianXBounds[1] = coordSys.x + coordSys.width;
+    _cartesianYBounds[0] = coordSys.y;
+    _cartesianYBounds[1] = coordSys.y + coordSys.height;
+    var barLength = timeDeparture[0] - timeArrival[0];
+    // Get the heigth corresponds to length 1 on y axis.
+    var barHeight = api.size([0, 1])[1] * HEIGHT_RATIO;
+    var x = timeArrival[0];
+    var y = timeArrival[1] - barHeight;
+    var flightNumber = api.value(3) + '';
+    var flightNumberWidth = echarts.format.getTextRect(flightNumber).width;
+    var text =
+      barLength > flightNumberWidth + 40 && x + barLength >= 180
+        ? flightNumber
+        : '';
+    var rectNormal = clipRectByRect(params, {
+      x: x,
+      y: y,
+      width: barLength,
+      height: barHeight
+    });
+    var rectVIP = clipRectByRect(params, {
+      x: x,
+      y: y,
+      width: barLength / 2,
+      height: barHeight
+    });
+    var rectText = clipRectByRect(params, {
+      x: x,
+      y: y,
+      width: barLength,
+      height: barHeight
+    });
+    return {
+      type: 'group',
+      children: [
+        {
+          type: 'rect',
+          ignore: !rectNormal,
+          shape: rectNormal,
+          style: api.style()
+        },
+        {
+          type: 'rect',
+          ignore: !rectVIP && !api.value(4),
+          shape: rectVIP,
+          style: api.style({ fill: '#ddb30b' })
+        },
+        {
+          type: 'rect',
+          ignore: !rectText,
+          shape: rectText,
+          style: api.style({
+            fill: 'transparent',
+            stroke: 'transparent',
+            text: text,
+            textFill: '#fff'
+          })
+        }
+      ]
+    };
+  }
+  function renderAxisLabelItem(params, api) {
+    // console.log(params, api, 'O______________E');
+    //Fconsole.log(api.value(0), 'api.value(0)');
+    //console.log( api.coord([0, api.value(0)]), 'api.coord([0, api.value(0)])');
+    var y = api.coord([0, api.value(0)])[1];
+    console.log(api.value(1), 'api.value(1)ST');
+    console.log(api.value(2), 'api.value(2)ST');
+    if (y < params.coordSys.y + 5) {
+      return;
+    }
+    return {
+      type: 'group',
+      position: [100, y],
+      children: [
+        {
+          type: 'path',
+          shape: {
+            d: 'M0,0 L0,-20 L30,-20 C42,-20 38,-1 50,-1 L70,-1 L70,0 Z',
+            x: 0,
+            y: -20,
+            width: 90,
+            height: 20,
+            layout: 'cover'
+          },
+          style: {
+            fill: '#368c6c'
+          }
+        },
+        {
+          type: 'text',
+          style: {
+            x: 24,
+            y: -3,
+            text: api.value(1),
+            textVerticalAlign: 'bottom',
+            textAlign: 'center',
+            textFill: '#fff'
+          }
+        },
+        {
+          type: 'text',
+          style: {
+            x: 75,
+            y: -2,
+            textVerticalAlign: 'bottom',
+            textAlign: 'center',
+            text: api.value(2),
+            textFill: '#000'
+          }
+        }
+      ]
+    };
+  }
+  function renderAxisLabelItems(params, api) {
+    // console.log(params, api, 'O______________E');
+    //Fconsole.log(api.value(0), 'api.value(0)');
+    //console.log( api.coord([0, api.value(0)]), 'api.coord([0, api.value(0)])');
+    var y = api.coord([0, api.value(0)])[1];
+    console.log(api.value(1), 'api.value(1)');
+    console.log(api.value(2), 'api.value(2)');
+    //console.log(y, 'yyyyyyyyyyyyyyy-yyyyyyyy');
+    if (y < params.coordSys.y + 5) {
+      return;
+    }
+    return {
+      type: 'group',
+      position: [2150, y],
+      children: [
+        {
+          type: 'path',
+          shape: {
+            d: 'M0,0 L0,-20 L30,-20 C42,-20 38,-1 50,-1 L70,-1 L70,0 Z',
+            x: 0,
+            y: -20,
+            width: 90,
+            height: 20,
+            layout: 'cover'
+          },
+          style: {
+            fill: '#368c6c'
+          }
+        },
+        {
+          type: 'text',
+          style: {
+            x: 24,
+            y: -3,
+            text: api.value(1),
+            textVerticalAlign: 'bottom',
+            textAlign: 'center',
+            textFill: '#fff'
+          }
+        },
+        {
+          type: 'text',
+          style: {
+            x: 75,
+            y: -2,
+            textVerticalAlign: 'bottom',
+            textAlign: 'center',
+            text: api.value(2),
+            textFill: '#fff'
+          }
+        }
+      ]
+    };
+  }
+  function clipRectByRect(params, rect) {
+    return echarts.graphic.clipRectByRect(rect, {
+      x: params.coordSys.x,
+      y: params.coordSys.y,
+      width: params.coordSys.width,
+      height: params.coordSys.height
+    });
+  }
+  // -------------
+  //  Enable Drag
+  // -------------
+  function onDragSwitchClick(model, api, type) {
+    _draggable = !_draggable;
+    myChart.setOption({
+      dataZoom: [
+        {
+          id: 'insideX',
+          disabled: _draggable
+        },
+        {
+          id: 'insideY',
+          disabled: _draggable
+        }
+      ]
+    });
+    this.model.setIconStatus(type, _draggable ? 'emphasis' : 'normal');
+  }
+  function initDrag() {
+    console.log('lineINITDRAg');
+    _autoDataZoomAnimator = makeAnimator(dispatchDataZoom);
+    myChart.on('mousedown', function (param) {
+      if (!_draggable || !param || param.seriesIndex == null) {
+        return;
+      }
+      // Drag start
+      _draggingRecord = {
+        dataIndex: param.dataIndex,
+        categoryIndex: param.value[DIM_CATEGORY_INDEX],
+        timeArrival: param.value[DIM_TIME_ARRIVAL],
+        timeDeparture: param.value[DIM_TIME_DEPARTURE]
+      };
+      var style = {
+        lineWidth: 2,
+        fill: 'rgba(255,0,0,0.1)',
+        stroke: 'rgba(255,0,0,0.8)',
+        lineDash: [6, 3]
+      };
+      _draggingEl = addOrUpdateBar(_draggingEl, _draggingRecord, style, 100);
+      _draggingCursorOffset = [
+        _draggingEl.position[0] - param.event.offsetX,
+        _draggingEl.position[1] - param.event.offsetY
+      ];
+      _draggingTimeLength =
+        _draggingRecord.timeDeparture - _draggingRecord.timeArrival;
+    });
+    myChart.getZr().on('mousemove', function (event) {
+      if (!_draggingEl) {
+        return;
+      }
+      var cursorX = event.offsetX;
+      var cursorY = event.offsetY;
+      // Move _draggingEl.
+      _draggingEl.attr('position', [
+        _draggingCursorOffset[0] + cursorX,
+        _draggingCursorOffset[1] + cursorY
+      ]);
+      prepareDrop();
+      autoDataZoomWhenDraggingOutside(cursorX, cursorY);
+    });
+    myChart.getZr().on('mouseup', function () {
+      // Drop
+      if (_draggingEl && _dropRecord) {
+        updateRawData() &&
+          myChart.setOption({
+            series: {
+              id: 'flightData',
+              data: _rawData.flight.data
+            }
+          });
+      }
+      dragRelease();
+    });
+    myChart.getZr().on('globalout', dragRelease);
+    function dragRelease() {
+      _autoDataZoomAnimator.stop();
+      if (_draggingEl) {
+        //myChart.getZr().remove(_draggingEl);
+        _draggingEl = null;
+      }
+      if (_dropShadow) {
+        //myChart.getZr().remove(_dropShadow);
+        _dropShadow = null;
+      }
+      _dropRecord = _draggingRecord = null;
+    }
+    function addOrUpdateBar(el, itemData, style, z) {
+      var pointArrival = myChart.convertToPixel('grid', [
+        itemData.timeArrival,
+        itemData.categoryIndex
+      ]);
+      var pointDeparture = myChart.convertToPixel('grid', [
+        itemData.timeDeparture,
+        itemData.categoryIndex
+      ]);
+      var barLength = pointDeparture[0] - pointArrival[0];
+      var barHeight =
+        Math.abs(
+          myChart.convertToPixel('grid', [0, 0])[1] -
+          myChart.convertToPixel('grid', [0, 1])[1]
+        ) * HEIGHT_RATIO;
+      if (!el) {
+        el = new echarts.graphic.Rect({
+          shape: { x: 0, y: 0, width: 0, height: 0 },
+          style: style,
+          z: z
+        });
+        myChart.getZr().add(el);
+      }
+      el.attr({
+        shape: { x: 0, y: 0, width: barLength, height: barHeight },
+        position: [pointArrival[0], pointArrival[1] - barHeight]
+      });
+      return el;
+    }
+    function prepareDrop() {
+      // Check droppable place.
+      var xPixel = _draggingEl.shape.x + _draggingEl.position[0];
+      var yPixel = _draggingEl.shape.y + _draggingEl.position[1];
+      var cursorData = myChart.convertFromPixel('grid', [xPixel, yPixel]);
+      if (cursorData) {
+        // Make drop shadow and _dropRecord
+        _dropRecord = {
+          categoryIndex: Math.floor(cursorData[1]),
+          timeArrival: cursorData[0],
+          timeDeparture: cursorData[0] + _draggingTimeLength
+        };
+        var style = { fill: 'rgba(0,0,0,0.4)' };
+        _dropShadow = addOrUpdateBar(_dropShadow, _dropRecord, style, 99);
+      }
+    }
+    // This is some business logic, don't care about it.
+    function updateRawData() {
+      var flightData = _rawData.flight.data;
+      var movingItem = flightData[_draggingRecord.dataIndex];
+      // Check conflict
+      for (var i = 0; i < flightData.length; i++) {
+        var dataItem = flightData[i];
+        if (
+          dataItem !== movingItem &&
+          _dropRecord.categoryIndex === dataItem[DIM_CATEGORY_INDEX] &&
+          _dropRecord.timeArrival < dataItem[DIM_TIME_DEPARTURE] &&
+          _dropRecord.timeDeparture > dataItem[DIM_TIME_ARRIVAL]
+        ) {
+          alert('Conflict! Find a free space to settle the bar!');
+          return;
+        }
+      }
+      // No conflict.
+      movingItem[DIM_CATEGORY_INDEX] = _dropRecord.categoryIndex;
+      movingItem[DIM_TIME_ARRIVAL] = _dropRecord.timeArrival;
+      movingItem[DIM_TIME_DEPARTURE] = _dropRecord.timeDeparture;
+      return true;
+    }
+    function autoDataZoomWhenDraggingOutside(cursorX, cursorY) {
+      // When cursor is outside the cartesian and being dragging,
+      // auto move the dataZooms.
+      var cursorDistX = getCursorCartesianDist(cursorX, _cartesianXBounds);
+      var cursorDistY = getCursorCartesianDist(cursorY, _cartesianYBounds);
+      if (cursorDistX !== 0 || cursorDistY !== 0) {
+        _autoDataZoomAnimator.start({
+          cursorDistX: cursorDistX,
+          cursorDistY: cursorDistY
+        });
+      } else {
+        _autoDataZoomAnimator.stop();
+      }
+    }
+    function dispatchDataZoom(params) {
+      var option = myChart.getOption();
+      var optionInsideX = option.dataZoom[DATA_ZOOM_X_INSIDE_INDEX];
+      var optionInsideY = option.dataZoom[DATA_ZOOM_Y_INSIDE_INDEX];
+      var batch = [];
+      prepareBatch(
+        batch,
+        'insideX',
+        optionInsideX.start,
+        optionInsideX.end,
+        params.cursorDistX
+      );
+      prepareBatch(
+        batch,
+        'insideY',
+        optionInsideY.start,
+        optionInsideY.end,
+        -params.cursorDistY
+      );
+      batch.length &&
+        myChart.dispatchAction({
+          type: 'dataZoom',
+          batch: batch
+        });
+      function prepareBatch(batch, id, start, end, cursorDist) {
+        if (cursorDist === 0) {
+          return;
+        }
+        var sign = cursorDist / Math.abs(cursorDist);
+        var size = end - start;
+        var delta = DATA_ZOOM_AUTO_MOVE_SPEED * sign;
+        start += delta;
+        end += delta;
+        if (end > 100) {
+          end = 100;
+          start = end - size;
+        }
+        if (start < 0) {
+          start = 0;
+          end = start + size;
+        }
+        batch.push({
+          dataZoomId: id,
+          start: start,
+          end: end
+        });
+      }
+    }
+    function getCursorCartesianDist(cursorXY, bounds) {
+      var dist0 = cursorXY - (bounds[0] + DATA_ZOOM_AUTO_MOVE_DETECT_AREA_WIDTH);
+      var dist1 = cursorXY - (bounds[1] - DATA_ZOOM_AUTO_MOVE_DETECT_AREA_WIDTH);
+      return dist0 * dist1 <= 0
+        ? 0 // cursor is in cartesian
+        : dist0 < 0
+          ? dist0 // cursor is at left/top of cartesian
+          : dist1; // cursor is at right/bottom of cartesian
+    }
+    function makeAnimator(callback) {
+      var requestId;
+      var callbackParams;
+      // Use throttle to prevent from calling dispatchAction frequently.
+      callback = echarts.throttle(callback, DATA_ZOOM_AUTO_MOVE_THROTTLE);
+      function onFrame() {
+        callback(callbackParams);
+        requestId = requestAnimationFrame(onFrame);
+      }
+      return {
+        start: function (params) {
+          callbackParams = params;
+          if (requestId == null) {
+            onFrame();
+          }
+        },
+        stop: function () {
+          if (requestId != null) {
+            cancelAnimationFrame(requestId);
+          }
+          requestId = callbackParams = null;
+        }
+      };
+    }
+  }
   return <div className='wrap'>
     <Row>
       <Col span={8}>
         <LeftTop />
-        <LeftCenter materialDemandList={allData.materialDemandList} />
+        <LeftCenter
+          materialDemandList={allData.materialDemandList}
+          leftEchartsPieInfoOne={leftEchartsPieInfoOne}
+          leftEchartsPieInfoTwo={leftEchartsPieInfoTwo}
+          leftEchartsPieInfoThree={leftEchartsPieInfoThree}
+          leftEchartsPieInfoFour={leftEchartsPieInfoFour}
+          leftEchartsPieOne={leftEchartsPieOne}
+          leftEchartsPieTwo={leftEchartsPieTwo}
+          leftEchartsPieThree={leftEchartsPieThree}
+          leftEchartsPieFour={leftEchartsPieFour} />
         <LeftBottom allData={allData} finishPlanObj={finishPlanObj} diffAlgorithm={diffAlgorithm} materialTypeSixList={materialTypeSixList} />
       </Col>
       <Col span={8} className='center-middle'>
@@ -199,10 +4040,33 @@ const Home = function (props) {
           <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
           <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>
         </div>
+        <div id='main'>
+
+        </div>
       </Col>
       <Col span={8}>
-        <RightTop />
-        <RightCenter />
+        <RightTop allData={allData} deviceUseTime={deviceUseTime} />
+        <RightCenter nan1={nan1}
+          fourWeekOutputStatistics={fourWeekOutputStatistics}
+          fourWeekEnergyConsumption={fourWeekEnergyConsumption}
+          fourWeekUseTrend={fourWeekUseTrend}
+          fourWeekUtilizationRate={fourWeekUtilizationRate}
+          rightEchartsDayOutputOne={rightEchartsDayOutputOne}
+          rightEchartsStateRatioOne={rightEchartsStateRatioOne}
+          rightEchartsStateRatioTwo={rightEchartsStateRatioTwo}
+          rightEchartsDayOutputTwo={rightEchartsDayOutputTwo}
+          rightEchartsStateRatioThree={rightEchartsStateRatioThree}
+          rightEchartsDayOutputThree={rightEchartsDayOutputThree}
+          rightEchartsStateRatioFour={rightEchartsStateRatioFour}
+          rightEchartsDayOutputFour={rightEchartsDayOutputFour}
+          rightEchartsStateRatioFive={rightEchartsStateRatioFive}
+          rightEchartsDayOutputFive={rightEchartsDayOutputFive}
+          infoOne={infoOne}
+          infoTwo={infoTwo}
+          infoThree={infoThree}
+          infoFour={infoFour}
+          infoFive={infoFive}
+        />
         <RightBottom rightBottomInfor={rightBottomInfor} />
       </Col>
     </Row>

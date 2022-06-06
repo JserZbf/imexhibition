@@ -138,3 +138,12 @@
   left: 16%;
   top: 64%;
 }
+.wrap > .ant-row .center-middle #main {
+  width: 2316px;
+  height: 1218px;
+  background: url("img/background/gan-te-tu-back.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  right: 18.5%;
+  top: 19%;
+}

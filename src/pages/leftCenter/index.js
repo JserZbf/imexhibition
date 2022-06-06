@@ -1,151 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Steps, Popover, Table } from 'antd';
+import { Row, Col, Steps, Popover, Table, Tooltip } from 'antd';
 const { Step } = Steps;
 import './index.less'
 import ReactEchartsCom from '../../components/ReactEcharts/index'
-const customDot = (dot, { status, index }) => (
-  <Popover
-    content={
-      <span>
-        step {index} status: {status}
-      </span>
-    }
-  >
-    {dot}
-  </Popover>
-);
 const leftCenter = function (props) {
-  const { materialDemandList } = props;
-  const [echartsList, setEchartsList] = useState([
-    {
-      title: {
-        text: '75%',
-        x: 'center',
-        y: 'center',
-        textStyle: {
-          fontWeight: 'normal',
-          color: "#0bb6f0",
-          fontSize: 20
-        }
-      },
-      //backgroundColor: '#011128',
-      // backgroundColor:'pink',
-      color: ['#eb644b', '#313443', '#fff'],
-      tooltip: {
-        show: false,
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-      },
-      legend: {
-        show: false,
-        itemGap: 12,
-        data: ['01', '02']
-      },
-      toolbox: {
-        show: false,
-        feature: {
-          mark: {
-            show: true
-          },
-          dataView: {
-            show: true,
-            readOnly: false
-          },
-          restore: {
-            show: true
-          },
-          saveAsImage: {
-            show: true
-          }
-        }
-      },
-      series: [{
-        name: 'Line 1',
-        type: 'pie',
-        clockWise: false,
-        radius: ['70%', '80%'],
-        itemStyle: {
-          normal: {
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            },
-            shadowBlur: 40,
-            shadowColor: 'rgba(40, 40, 40, 0.5)',
-          }
-        },
-        hoverAnimation: false,
-        data: [{
-          value: 25,
-          name: '01',
-          itemStyle: {
-            normal: {
-              color: '#6879F7',//已完成的圆环的颜色
-              label: {
-                show: false
-              },
-              labelLine: {
-                show: false
-              }
-            },
-            emphasis: {
-              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
-            }
-          },
-        }, {
-          value: 75,
-          name: 'invisible',
-          itemStyle: {
-            normal: {
-              color: '#071D58',//未完成的圆环的颜色
-              label: {
-                show: false
-              },
-              labelLine: {
-                show: false
-              }
-            },
-            emphasis: {
-              color: 'rgba(44,59,70,1)'//未完成的圆环的颜色
-            }
-          },
-        },
-        ]
-      }, {
-        name: 'Line 2',
-        type: 'pie',
-        animation: false,
-        clockWise: false,
-        radius: ['80%', '90%'],
-        itemStyle: {
-          normal: {
-            color: '#7CA9FF',//外层圆环的颜色
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            }
-          },
-          emphasis: {
-            color: 'rgba(44,59,70,1)'//外层圆环的颜色
-          }
-        },
-        hoverAnimation: false,
-        tooltip: {
-          show: false
-        },
-        data: [{
-          value: 100,
-          name: '02',
-        }
-        ]
-      },
-      ]
-    },
-  ]);
+  const { materialDemandList, leftEchartsPieOne, leftEchartsPieTwo, leftEchartsPieThree,
+    leftEchartsPieFour, leftEchartsPieInfoOne, leftEchartsPieInfoTwo, leftEchartsPieInfoThree,
+    leftEchartsPieInfoFour } = props;
   const columns = [
     {
       title: '序号',
@@ -160,13 +22,13 @@ const leftCenter = function (props) {
       dataIndex: 'materialType',
       key: 'materialType',
       render: (text, record, index) => {
-        if(record.materialType=='blank'){
+        if (record.materialType == 'blank') {
           return '毛坯'
-        }else if(record.materialType=='fixture'){
+        } else if (record.materialType == 'fixture') {
           return '夹具'
-        }else if(record.materialType=='tray'){
+        } else if (record.materialType == 'tray') {
           return '托盘'
-        }else if(record.materialType=='tool'){
+        } else if (record.materialType == 'tool') {
           return '刀具'
         }
       }
@@ -197,6 +59,56 @@ const leftCenter = function (props) {
       key: 'shortNum ',
     }
   ];
+  const customDotOne = (dot, { status, index }) => (
+    <Popover
+      content={
+        // <span>
+        //   step {index} status: {status}
+        // </span>
+        <span>
+          step {index} status: {status}
+        </span>
+      }
+    >
+      {dot}
+    </Popover>
+  );
+  const customDotTwo = (dot, { status, index }) => (
+    //console.log(dot, status, index, 'dot,status,index)'),
+    <Popover
+      content={
+        <span>
+          step {index} status: {status}
+        </span>
+      }
+    >
+      {dot}
+    </Popover>
+  );
+  const customDotThree = (dot, { status, index }) => (
+    //console.log(dot, status, index, 'dot,status,index)'),
+    <Popover
+      content={
+        <span>
+          step {index} status: {status}
+        </span>
+      }
+    >
+      {dot}
+    </Popover>
+  );
+  const customDotFour = (dot, { status, index }) => (
+    // console.log(dot, status, index, 'dot,status,index)'),
+    <Popover
+      content={
+        <span>
+          step {index} status: {status}
+        </span>
+      }
+    >
+      {dot}
+    </Popover>
+  );
   return <div className='left-center'>
     <Row>
       <Col span={9}>
@@ -270,90 +182,135 @@ const leftCenter = function (props) {
       </Col>
       <Col span={5} push={2}>
         <div className='ehcarts-yield-one'>
-          <ReactEchartsCom option={echartsList[0]} />
+          <ReactEchartsCom option={leftEchartsPieOne} />
           <div>
             <ul>
-              <li className='title'>计划编号</li>
-              <li className='title'>产品名称</li>
-              <li className='title'>计划等级</li>
+              <li className='title'>
+                <span>计划编号</span>
+                <Tooltip title={leftEchartsPieInfoOne.planNO}>
+                  <span>{leftEchartsPieInfoOne.planNO}</span>
+                </Tooltip>
+
+              </li>
+              <li className='title'>
+                <span>产品名称</span>
+                <span>{leftEchartsPieInfoOne.productName}</span>
+              </li>
+              <li className='title'>
+                <span>计划等级</span>
+                <span>{leftEchartsPieInfoOne.planLevel}</span>
+              </li>
               <li className='title'>状态</li>
               <li className='title-button'>
-                <span>加工中</span>
-                <span>未加工</span>
-                <span>已加工</span>
+                <span className={leftEchartsPieInfoOne.state == '加工中' ? 'active' : ''}>加工中</span>
+                <span className={leftEchartsPieInfoOne.state == '未加工' ? 'active' : ''}>未加工</span>
+                <span className={leftEchartsPieInfoOne.state == '已加工' ? 'active' : ''}>已加工</span>
               </li>
             </ul>
-            <Steps className='steps' current={3} progressDot={customDot}>
-              <Step title="计划开始时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="超期完成时间" description="" />
+            <Steps className='steps' current={3} progressDot={customDotOne}>
+              <Step title="计划开始时间" description={leftEchartsPieInfoOne.planStart} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoOne.planEnd} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoOne.planEnd} />
+              <Step title="超期完成时间" description={leftEchartsPieInfoOne.delayMinutes} />
             </Steps>
           </div>
         </div>
         <div className='ehcarts-yield-two'>
-          <ReactEchartsCom option={echartsList[0]} />
+          <ReactEchartsCom option={leftEchartsPieTwo} />
           <div>
             <ul>
-              <li className='title'>计划编号</li>
-              <li className='title'>产品名称</li>
-              <li className='title'>计划等级</li>
+              <li className='title'>
+                <span>计划编号</span>
+                <Tooltip title={leftEchartsPieInfoTwo.planNO}>
+                  <span>{leftEchartsPieInfoTwo.planNO}</span>
+                </Tooltip>
+              </li>
+              <li className='title'>
+                <span>产品名称</span>
+                <span>{leftEchartsPieInfoTwo.productName}</span>
+              </li>
+              <li className='title'>
+                <span>计划等级</span>
+                <span>{leftEchartsPieInfoTwo.planLevel}</span>
+              </li>
               <li className='title'>状态</li>
               <li className='title-button'>
-                <span>加工中</span>
-                <span>未加工</span>
-                <span>已加工</span>
+                <span className={leftEchartsPieInfoTwo.state == '加工中' ? 'active' : ''}>加工中</span>
+                <span className={leftEchartsPieInfoTwo.state == '未加工' ? 'active' : ''}>未加工</span>
+                <span className={leftEchartsPieInfoTwo.state == '已加工' ? 'active' : ''}>已加工</span>
               </li>
             </ul>
-            <Steps className='steps' current={3} progressDot={customDot}>
-              <Step title="计划开始时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="超期完成时间" description="" />
+            <Steps className='steps' current={3} progressDot={customDotTwo}>
+              <Step title="计划开始时间" description={leftEchartsPieInfoTwo.planStart} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoTwo.planEnd} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoTwo.planEnd} />
+              <Step title="超期完成时间" description={leftEchartsPieInfoTwo.delayMinutes} />
             </Steps>
           </div>
         </div>
         <div className='ehcarts-yield-three'>
-          <ReactEchartsCom option={echartsList[0]} />
+          <ReactEchartsCom option={leftEchartsPieThree} />
           <div>
             <ul>
-              <li className='title'>计划编号</li>
-              <li className='title'>产品名称</li>
-              <li className='title'>计划等级</li>
+              <li className='title'>
+                <span>计划编号</span>
+                <Tooltip title={leftEchartsPieInfoThree.planNO}>
+                  <span>{leftEchartsPieInfoThree.planNO}</span>
+                </Tooltip>
+              </li>
+              <li className='title'>
+                <span>产品名称</span>
+                <span>{leftEchartsPieInfoThree.productName}</span>
+              </li>
+              <li className='title'>
+                <span>计划等级</span>
+                <span>{leftEchartsPieInfoThree.planLevel}</span>
+              </li>
               <li className='title'>状态</li>
               <li className='title-button'>
-                <span>加工中</span>
-                <span>未加工</span>
-                <span>已加工</span>
+                <span className={leftEchartsPieInfoThree.state == '加工中' ? 'active' : ''}>加工中</span>
+                <span className={leftEchartsPieInfoThree.state == '未加工' ? 'active' : ''}>未加工</span>
+                <span className={leftEchartsPieInfoThree.state == '已加工' ? 'active' : ''}>已加工</span>
               </li>
             </ul>
-            <Steps className='steps' current={3} progressDot={customDot}>
-              <Step title="计划开始时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="超期完成时间" description="" />
+            <Steps className='steps' current={3} progressDot={customDotThree}>
+              <Step title="计划开始时间" description={leftEchartsPieInfoThree.planStart} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoThree.planEnd} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoThree.planEnd} />
+              <Step title="超期完成时间" description={leftEchartsPieInfoThree.delayMinutes} />
             </Steps>
           </div>
         </div>
         <div className='ehcarts-yield-four'>
-          <ReactEchartsCom option={echartsList[0]} />
+          <ReactEchartsCom option={leftEchartsPieFour} />
           <div>
             <ul>
-              <li className='title'>计划编号</li>
-              <li className='title'>产品名称</li>
-              <li className='title'>计划等级</li>
+              <li className='title'>
+                <span>计划编号</span>
+                <Tooltip title={leftEchartsPieInfoFour.planNO}>
+                  <span>{leftEchartsPieInfoFour.planNO}</span>
+                </Tooltip>
+              </li>
+              <li className='title'>
+                <span>产品名称</span>
+                <span>{leftEchartsPieInfoFour.productName}</span>
+              </li>
+              <li className='title'>
+                <span>计划等级</span>
+                <p>{leftEchartsPieInfoFour.planLevel}</p>
+              </li>
               <li className='title'>状态</li>
               <li className='title-button'>
-                <span>加工中</span>
-                <span>未加工</span>
-                <span>已加工</span>
+                <span className={leftEchartsPieInfoFour.state == '加工中' ? 'active' : ''}>加工中</span>
+                <span className={leftEchartsPieInfoFour.state == '未加工' ? 'active' : ''}>未加工</span>
+                <span className={leftEchartsPieInfoFour.state == '已加工' ? 'active' : ''}>已加工</span>
               </li>
             </ul>
-            <Steps className='steps' current={3} progressDot={customDot}>
-              <Step title="计划开始时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="最晚结束时间" description="" />
-              <Step title="超期完成时间" description="" />
+            <Steps className='steps' current={3} progressDot={customDotFour}>
+              <Step title="计划开始时间" description={leftEchartsPieInfoFour.planStart} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoFour.planEnd} />
+              <Step title="最晚结束时间" description={leftEchartsPieInfoFour.planEnd} />
+              <Step title="超期完成时间" description={leftEchartsPieInfoFour.delayMinutes} />
             </Steps>
           </div>
         </div>

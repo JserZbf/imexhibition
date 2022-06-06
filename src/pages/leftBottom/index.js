@@ -27,7 +27,7 @@ const leftBottom = function (props) {
       value: allData.selectAlgorithm
     }, {
       title: '是否有保养任务',
-      value: allData.isHasMaintenance
+      value: allData.isHasMaintenance?'是':'否'
     },
     {
       title: '排产目标',
@@ -179,7 +179,7 @@ const leftBottom = function (props) {
         data: diffAlgorithm.Y,
       },
       {
-        name: '注册总量2',
+        name: '',
         type: 'line',
         smooth: true, //是否平滑
         showAllSymbol: true,
@@ -230,11 +230,11 @@ const leftBottom = function (props) {
               return <li key={index}>
                 <p className='title'>物料类型</p>
                 <p className='number'>
-                  <span>缺口数量</span>
+                  <span>缺口数量:</span>
                   <span>{item.shortNum}</span>
                 </p>
                 <p className='start-time'>
-                  <span>最晚到达时间</span>
+                  <span>最晚到达时间:</span>
                   <span>{item.supplyTime}</span>
                 </p>
                 <p className='time'>{item.supplyTime}</p>
@@ -256,7 +256,7 @@ const leftBottom = function (props) {
                 order.map((item, index) => {
                   return <li key={index}>
                     <span>{item.title}</span>
-                    <span>{item.value == false ? '否' : item.value}</span>
+                    <span>{item.value}</span>
                   </li>
                 })
               }
