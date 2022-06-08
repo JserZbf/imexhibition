@@ -257,14 +257,14 @@ const Home = function (props) {
       tranOrderCardDetail(res.orderCardDetail);//计划状态卡片四个饼图option
       tranDeviceCardDetail(res.deviceCardDetail)//每台设备卡片十个折线图option、
       setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime);//机床可用时间
-      var chartDom = document.getElementById('main');
-      myChart = echarts.init(chartDom);
-      axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
-        console.log(rawData, 'rawData______________', ROOT_PATH);
-        _rawData = rawData.data;
-        myChart.setOption((option = makeOption(res.orderScheduleDetail)));
-        initDrag();
-      });
+      // var chartDom = document.getElementById('main');
+      // myChart = echarts.init(chartDom);
+      // axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
+      //   console.log(rawData, 'rawData______________', ROOT_PATH);
+      //   _rawData = rawData.data;
+      //   myChart.setOption((option = makeOption(res.orderScheduleDetail)));
+      //   initDrag();
+      // });
     })
 
   }, [])
@@ -3407,7 +3407,7 @@ const Home = function (props) {
     series: optionData.series
   };
   function makeOption(data1) {
-
+    console.log(data1, 'data1');
     return {
       tooltip: {},
       animation: false,
@@ -3487,14 +3487,15 @@ const Home = function (props) {
         backgroundColor: 'transparent',
         borderWidth: 0
       },
-      xAxis: {
-        type: 'time',
+      xAxis: [{
+        type: 'category',
         position: 'bottom',
         splitLine: {
           lineStyle: {
             color: ['#E9EDFF']
-          }
+          },
         },
+        //data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         axisLine: {
           show: false
         },
@@ -3506,9 +3507,9 @@ const Home = function (props) {
         axisLabel: {
           color: '#929ABA',
           inside: false,
-          align: 'center'
+          align: 'center',
         }
-      },
+      }],
       yAxis: {
         axisTick: { show: false },
         splitLine: { show: false },
@@ -3528,26 +3529,27 @@ const Home = function (props) {
             y: DIM_CATEGORY_INDEX,
             tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE]
           },
-          data: _rawData.flight.data
+          // var data3 = [[311, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'YS121'],
+          // [317, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'Y3683'],
+          // ]
+          data: data1.map((item, index) => {
+            return [index + 150].concat(item.startTime, item.endTime, item.machineName);
+          })
         },
         {//y1轴值
           type: 'custom',
           renderItem: renderAxisLabelItem,
-          //dimensions: _rawData.parkingApron.dimensions,
+          dimensions: _rawData.parkingApron.dimensions,
           encode: {
             x: -1,
             y: 0
           },
-          data: _rawData.parkingApron.data.map(function (item, index) {
-            // console.log(item, index, '[index].concat(item)');
-            //  console.log([index].concat(item),'[index].concat(item)');
-            // console.log( _rawData.flight.data,' _rawData.flight.data');
-            return [index].concat(item);
-          }),
-          // data: data1.map((item, index) => {
-          //   // console.log([index].concat(item.machineName,'W',false), 'demoXXXXX');
-          //   return [index].concat('678', 'W', false);
-          // })
+          // data: _rawData.parkingApron.data.map(function (item, index) {
+          //   return [index].concat(item);
+          // }),
+          data: data1.map((item, index) => {
+            return [index + 150].concat(item.machineName);
+          })
         },
         {//y2轴值
           type: 'custom',
@@ -3557,16 +3559,15 @@ const Home = function (props) {
             x: -1,
             y: 0
           },
-          data: _rawData.parkingApron.data.map(function (item, index) {
-            // console.log(item, index, '[index].concat(item)');
-            return [index].concat(item);
-            // return item[0]
+          data: data1.map(function (item, index) {
+            return [index + 150].concat(item.productName);
           })
         }
       ]
     };
   }
   function renderGanttItem(params, api) {
+    // console.log(params, api,'line________line');
     var categoryIndex = api.value(DIM_CATEGORY_INDEX);
     var timeArrival = api.coord([api.value(DIM_TIME_ARRIVAL), categoryIndex]);
     var timeDeparture = api.coord([api.value(DIM_TIME_DEPARTURE), categoryIndex]);
@@ -3617,7 +3618,7 @@ const Home = function (props) {
           type: 'rect',
           ignore: !rectVIP && !api.value(4),
           shape: rectVIP,
-          style: api.style({ fill: '#ddb30b' })
+          style: api.style()
         },
         {
           type: 'rect',
@@ -3634,12 +3635,7 @@ const Home = function (props) {
     };
   }
   function renderAxisLabelItem(params, api) {
-    // console.log(params, api, 'O______________E');
-    //Fconsole.log(api.value(0), 'api.value(0)');
-    //console.log( api.coord([0, api.value(0)]), 'api.coord([0, api.value(0)])');
     var y = api.coord([0, api.value(0)])[1];
-    console.log(api.value(1), 'api.value(1)ST');
-    console.log(api.value(2), 'api.value(2)ST');
     if (y < params.coordSys.y + 5) {
       return;
     }
@@ -3648,20 +3644,6 @@ const Home = function (props) {
       position: [100, y],
       children: [
         {
-          type: 'path',
-          shape: {
-            d: 'M0,0 L0,-20 L30,-20 C42,-20 38,-1 50,-1 L70,-1 L70,0 Z',
-            x: 0,
-            y: -20,
-            width: 90,
-            height: 20,
-            layout: 'cover'
-          },
-          style: {
-            fill: '#368c6c'
-          }
-        },
-        {
           type: 'text',
           style: {
             x: 24,
@@ -3669,31 +3651,14 @@ const Home = function (props) {
             text: api.value(1),
             textVerticalAlign: 'bottom',
             textAlign: 'center',
-            textFill: '#fff'
+            textFill: '#FFFFFF'
           }
         },
-        {
-          type: 'text',
-          style: {
-            x: 75,
-            y: -2,
-            textVerticalAlign: 'bottom',
-            textAlign: 'center',
-            text: api.value(2),
-            textFill: '#000'
-          }
-        }
       ]
     };
   }
   function renderAxisLabelItems(params, api) {
-    // console.log(params, api, 'O______________E');
-    //Fconsole.log(api.value(0), 'api.value(0)');
-    //console.log( api.coord([0, api.value(0)]), 'api.coord([0, api.value(0)])');
     var y = api.coord([0, api.value(0)])[1];
-    console.log(api.value(1), 'api.value(1)');
-    console.log(api.value(2), 'api.value(2)');
-    //console.log(y, 'yyyyyyyyyyyyyyy-yyyyyyyy');
     if (y < params.coordSys.y + 5) {
       return;
     }
@@ -3702,20 +3667,6 @@ const Home = function (props) {
       position: [2150, y],
       children: [
         {
-          type: 'path',
-          shape: {
-            d: 'M0,0 L0,-20 L30,-20 C42,-20 38,-1 50,-1 L70,-1 L70,0 Z',
-            x: 0,
-            y: -20,
-            width: 90,
-            height: 20,
-            layout: 'cover'
-          },
-          style: {
-            fill: '#368c6c'
-          }
-        },
-        {
           type: 'text',
           style: {
             x: 24,
@@ -3723,20 +3674,9 @@ const Home = function (props) {
             text: api.value(1),
             textVerticalAlign: 'bottom',
             textAlign: 'center',
-            textFill: '#fff'
+            textFill: '#FFFFFF'
           }
         },
-        {
-          type: 'text',
-          style: {
-            x: 75,
-            y: -2,
-            textVerticalAlign: 'bottom',
-            textAlign: 'center',
-            text: api.value(2),
-            textFill: '#fff'
-          }
-        }
       ]
     };
   }
