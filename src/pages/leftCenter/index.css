@@ -164,6 +164,13 @@
   left: 88.7%;
   top: 87%;
 }
+.left-center > .ant-row .plan-mark-total #main-plan {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: -2%;
+  top: -4%;
+}
 .left-center > .ant-row .table-material {
   width: 100%;
   height: 77.5%;

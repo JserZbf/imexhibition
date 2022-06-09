@@ -257,14 +257,14 @@ const Home = function (props) {
       tranOrderCardDetail(res.orderCardDetail);//计划状态卡片四个饼图option
       tranDeviceCardDetail(res.deviceCardDetail)//每台设备卡片十个折线图option、
       setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime);//机床可用时间
-      // var chartDom = document.getElementById('main');
-      // myChart = echarts.init(chartDom);
-      // axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
-      //   console.log(rawData, 'rawData______________', ROOT_PATH);
-      //   _rawData = rawData.data;
-      //   myChart.setOption((option = makeOption(res.orderScheduleDetail)));
-      //   initDrag();
-      // });
+      var chartDom = document.getElementById('main');
+      myChart = echarts.init(chartDom);
+      axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
+        console.log(rawData, 'rawData______________', ROOT_PATH);
+        _rawData = rawData.data;
+        myChart.setOption((option = makeOption(res.orderScheduleDetail)));
+        initDrag();
+      });
     })
 
   }, [])
