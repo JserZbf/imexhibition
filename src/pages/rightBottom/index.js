@@ -13,7 +13,7 @@ const RightBottom = function (props) {
       value: rightBottomInfor.ActualUsedNum
     }, {
       title: '排产机床使用率',
-      value: rightBottomInfor.useRate+'%'
+      value: rightBottomInfor.useRate*100+'%'
     }
 
   ];

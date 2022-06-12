@@ -9,8 +9,8 @@ const RightTop = function (props) {
       value: allData.orderNO
     },
     {
-      title: '排产日期',
-      value: allData.scheduleCycle
+      title: '排产周期',
+      value: '7日'
     }, {
       title: '机床可用时间',
       value: deviceUseTime

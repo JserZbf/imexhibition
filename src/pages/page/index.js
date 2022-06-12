@@ -61,6 +61,7 @@ const Home = function (props) {
   const [infoFour, setInfoFour] = useState({});
   const [infoFive, setInfoFive] = useState({});
   const [deviceUseTime, setDeviceUseTime] = useState();
+  const [ganTeData, setGanTeData] = useState([]);
   ///甘特图变量
   var ROOT_PATH =
     'https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
@@ -262,12 +263,28 @@ const Home = function (props) {
       axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
         console.log(rawData, 'rawData______________', ROOT_PATH);
         _rawData = rawData.data;
-        myChart.setOption((option = makeOption(res.orderScheduleDetail)));
+        setGanTeData(res.orderScheduleDetail);
+        const cen = res.orderScheduleDetail.map((item, index) => {
+          return {
+            ...item,
+            currentColor: color16()
+          }
+        })
+        //.slice(0, 6)
+        myChart.setOption((option = makeOption(cen)));
         initDrag();
       });
     })
 
   }, [])
+  const color16 = () => {
+    let r = Math.floor(Math.random() * 256);
+    let g = Math.floor(Math.random() * 256);
+    let b = Math.floor(Math.random() * 256);
+    let color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+    return color;
+  }
+
   const tranOrderCardDetail = (data) => {
     setLeftEchartsPieInfoOne(data[0]);
     setLeftEchartsPieInfoTwo(data[1]);
@@ -3290,10 +3307,10 @@ const Home = function (props) {
 
         },
         data: [{
-          value: data[i].value,
+          value: data[i].value * 100,
           name: data[i].name
         }, {
-          value: 400 / 3 - data[i].value,
+          value: 400 / 3 - data[i].value * 100,
           name: '',
           itemStyle: {
             color: "rgba(0,0,0,0)",
@@ -3387,7 +3404,7 @@ const Home = function (props) {
       trigger: "item",
       confine: true,
       formatter: function (param) {
-        return param.name + ' : ' + param.value + ' ( ' + (objData[param.name].value / sumValue * 100).toFixed(2) + "% ）"
+        return param.name + ' : ' + param.value + '%';
       },
       textStyle: {
         rich: {
@@ -3406,6 +3423,36 @@ const Home = function (props) {
     },
     series: optionData.series
   };
+  function removeDuplicateY1(arr) {
+    const newArr = [];
+    arr.forEach(item => {
+      if (newArr.indexOf(item.machineName) === -1) {
+        newArr.push(item.machineName)
+      }
+    })
+    // console.log(newArr, 'newArr————————');
+    return newArr // 返回一个新数组
+  }
+  function removeDuplicateY2(arr) {
+    const newArr = [];
+    arr.forEach(item => {
+      if (newArr.indexOf(item.productName) === -1) {
+        newArr.push(item.productName)
+      }
+    })
+    // console.log(newArr, 'newArr————————');
+    return newArr // 返回一个新数组
+  }
+  function removeDuplicateY3(arr) {
+    const newArr = [];
+    arr.forEach(item => {
+      if (newArr.indexOf(item.productName) === -1) {
+        newArr.push({productName:item.productName,currentColor:item.currentColor})
+      }
+    })
+    // console.log(newArr, 'newArr————————');
+    return newArr // 返回一个新数组
+  }
   function makeOption(data1) {
     console.log(data1, 'data1');
     return {
@@ -3519,26 +3566,26 @@ const Home = function (props) {
         max: _rawData.parkingApron.data.length
       },
       series: [
-        {//内容值
-          id: 'flightData',
-          type: 'custom',
-          renderItem: renderGanttItem,
-          dimensions: _rawData.flight.dimensions,
-          encode: {
-            x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
-            y: DIM_CATEGORY_INDEX,
-            tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE]
-          },
-          // var data3 = [[311, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'YS121'],
-          // [317, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'Y3683'],
-          // ]
-          data: data1.map((item, index) => {
-            return [index + 150].concat(item.startTime, item.endTime, item.machineName);
-          })
-        },
+        // {//内容值
+        //   id: 'flightDataCenter',
+        //   type: 'custom',
+        //   renderItem: renderGanttItem,
+        //   dimensions: _rawData.flight.dimensions,
+        //   encode: {
+        //     x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
+        //     y: DIM_CATEGORY_INDEX,
+        //     tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE]
+        //   },
+        //   // var data3 = [[311, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'YS121'],
+        //   // [317, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'Y3683'],
+        //   // ]
+        //   data: data1.map((item, index) => {
+        //     return [index + 150].concat(item.startTime, item.endTime, item.machineName, item.currentColor);//左右颜色
+        //   })
+        // },
         {//y1轴值
           type: 'custom',
-          renderItem: renderAxisLabelItem,
+          renderItem: renderAxisLabelItemY1,
           dimensions: _rawData.parkingApron.dimensions,
           encode: {
             x: -1,
@@ -3547,20 +3594,32 @@ const Home = function (props) {
           // data: _rawData.parkingApron.data.map(function (item, index) {
           //   return [index].concat(item);
           // }),
-          data: data1.map((item, index) => {
-            return [index + 150].concat(item.machineName);
+          data: removeDuplicateY1(data1).map((item, index) => {
+            return [index + 315].concat(item);
           })
         },
         {//y2轴值
           type: 'custom',
-          renderItem: renderAxisLabelItems,
+          renderItem: renderAxisLabelItemY2,
           dimensions: _rawData.parkingApron.dimensions,
           encode: {
             x: -1,
             y: 0
           },
-          data: data1.map(function (item, index) {
-            return [index + 150].concat(item.productName);
+          data: removeDuplicateY2(data1).map((item, index) => {
+            return [index + 315].concat(item);
+          })
+        },
+        {//y3轴值
+          type: 'custom',
+          renderItem: renderAxisLabelItemY3,
+          dimensions: _rawData.parkingApron.dimensions,
+          encode: {
+            x: -1,
+            y: 0
+          },
+          data: removeDuplicateY3(data1).map(function (item, index) {
+            return [index + 315].concat(item.productName, item.currentColor);
           })
         }
       ]
@@ -3587,6 +3646,7 @@ const Home = function (props) {
       barLength > flightNumberWidth + 40 && x + barLength >= 180
         ? flightNumber
         : '';
+    // data1.map((item, index) => {
     var rectNormal = clipRectByRect(params, {
       x: x,
       y: y,
@@ -3612,13 +3672,19 @@ const Home = function (props) {
           type: 'rect',
           ignore: !rectNormal,
           shape: rectNormal,
-          style: api.style()
+          style: api.style({
+            //右边颜色
+            fill: api.value(4),
+          })
         },
         {
           type: 'rect',
           ignore: !rectVIP && !api.value(4),
           shape: rectVIP,
-          style: api.style()
+          style: api.style({
+            //左边颜色
+            fill: api.value(4),
+          })
         },
         {
           type: 'rect',
@@ -3628,13 +3694,15 @@ const Home = function (props) {
             fill: 'transparent',
             stroke: 'transparent',
             text: text,
-            textFill: '#fff'
+            textFill: 'white'
           })
         }
       ]
     };
+    // })
+
   }
-  function renderAxisLabelItem(params, api) {
+  function renderAxisLabelItemY1(params, api) {
     var y = api.coord([0, api.value(0)])[1];
     if (y < params.coordSys.y + 5) {
       return;
@@ -3657,7 +3725,7 @@ const Home = function (props) {
       ]
     };
   }
-  function renderAxisLabelItems(params, api) {
+  function renderAxisLabelItemY2(params, api) {
     var y = api.coord([0, api.value(0)])[1];
     if (y < params.coordSys.y + 5) {
       return;
@@ -3677,6 +3745,32 @@ const Home = function (props) {
             textFill: '#FFFFFF'
           }
         },
+      ]
+    };
+  }
+  function renderAxisLabelItemY3(params, api) {
+    var y = api.coord([0, api.value(0)])[1];
+    if (y < params.coordSys.y + 5) {
+      return;
+    }
+    return {
+      type: 'group',
+      position: [2120, y],
+      children: [
+        {
+          type: 'rect',
+          shape: {
+            d: 'M0,0 L0,-20 L30,-20 C42,-20 38,-1 50,-1 L70,-1 L70,0 Z',
+            x: 0,
+            y: -20,
+            width: 20,
+            height: 20,
+            layout: 'cover'
+          },
+          style: {
+            fill: api.value(2)
+          }
+        }
       ]
     };
   }
@@ -3755,7 +3849,7 @@ const Home = function (props) {
         updateRawData() &&
           myChart.setOption({
             series: {
-              id: 'flightData',
+              id: 'flightDataCenter',
               data: _rawData.flight.data
             }
           });
@@ -3766,11 +3860,11 @@ const Home = function (props) {
     function dragRelease() {
       _autoDataZoomAnimator.stop();
       if (_draggingEl) {
-        //myChart.getZr().remove(_draggingEl);
+        myChart.getZr().remove(_draggingEl);
         _draggingEl = null;
       }
       if (_dropShadow) {
-        //myChart.getZr().remove(_dropShadow);
+        myChart.getZr().remove(_dropShadow);
         _dropShadow = null;
       }
       _dropRecord = _draggingRecord = null;
@@ -3822,11 +3916,11 @@ const Home = function (props) {
     }
     // This is some business logic, don't care about it.
     function updateRawData() {
-      var flightData = _rawData.flight.data;
-      var movingItem = flightData[_draggingRecord.dataIndex];
+      var flightDataCenter = _rawData.flight.data;
+      var movingItem = flightDataCenter[_draggingRecord.dataIndex];
       // Check conflict
-      for (var i = 0; i < flightData.length; i++) {
-        var dataItem = flightData[i];
+      for (var i = 0; i < flightDataCenter.length; i++) {
+        var dataItem = flightDataCenter[i];
         if (
           dataItem !== movingItem &&
           _dropRecord.categoryIndex === dataItem[DIM_CATEGORY_INDEX] &&

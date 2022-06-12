@@ -56,7 +56,7 @@ const leftCenter = function (props) {
       "planType": "产品加工",
       "planLevel": 0,
       "planStart": "2022-05-10",
-      "planEnd": "2022-06-10"
+      "planEnd": "2022-06-11"
     },
     {
       "planNO": "2022051021330742024300002",
@@ -182,7 +182,7 @@ const leftCenter = function (props) {
       "planType": "产品加工",
       "planLevel": 1,
       "planStart": "2022-05-10",
-      "planEnd": "2022-05-13"
+      "planEnd": "2022-06-12"
     }
   ]
   var dimensionsList = [
@@ -212,7 +212,7 @@ const leftCenter = function (props) {
       _rawData = rawData.data;
       const allTime = orderDetail.filter(item => (!compareTime(item.planStart, item.planEnd, new Date())))
       const currentTime = orderDetail.filter(item => (compareTime(item.planStart, item.planEnd, new Date())))
-      console.log(allTime,currentTime,'allTime-currentTime');
+    //  console.log(allTime,currentTime,'allTime-currentTime');
       myChartPlan.setOption((option = makeOption(allTime, currentTime)));
       initDrag();
     });
@@ -430,7 +430,7 @@ const leftCenter = function (props) {
       },
       series: [
         {//内容值
-          id: 'flightData',
+          id: 'flightDataLeft1',
           type: 'custom',
           renderItem: renderGanttItem,
           // dimensions: _rawData.flight.dimensions,
@@ -453,11 +453,11 @@ const leftCenter = function (props) {
             ], false), // 线条颜色
           },
           data: allTime.map((item, index) => {
-            return [index + 310].concat(item.planStart, item.planEnd, '产品名称:' + item.productName + '/需求数量:' + item.productNum + '/计划等级:' + item.planLevel);
+            return [index +310 ].concat(item.planStart, item.planEnd, '产品名称:' + item.productName + '/需求数量:' + item.productNum + '/计划等级:' + item.planLevel);
           }),
         },
         {//内容值
-          id: 'flightData2',
+          id: 'flightDataLeft2',
           type: 'custom',
           renderItem: renderGanttItem,
           // dimensions: _rawData.flight.dimensions,
@@ -480,7 +480,7 @@ const leftCenter = function (props) {
             ], false), // 线条颜色
           },
           data: currentTime.map((item, index) => {
-            return [index + 309].concat(item.planStart, item.planEnd, '产品名称:' + item.productName + '/需求数量:' + item.productNum + '/计划等级:' + item.planLevel);
+            return [index + 305].concat(item.planStart, item.planEnd, '产品名称:' + item.productName + '/需求数量:' + item.productNum + '/计划等级:' + item.planLevel);
           }),
         },
       ]
@@ -629,10 +629,10 @@ const leftCenter = function (props) {
         updateRawData() &&
           myChartPlan.setOption({
             series: [{
-              id: 'flightData',
+              id: 'flightDataLeft1',
               data: _rawData.flight.data
             }, {
-              id: 'flightData2',
+              id: 'flightDataLeft2',
               data: _rawData.flight.data
             }]
           });
@@ -643,11 +643,11 @@ const leftCenter = function (props) {
     function dragRelease() {
       _autoDataZoomAnimator.stop();
       if (_draggingEl) {
-        //myChartPlan.getZr().remove(_draggingEl);
+        myChartPlan.getZr().remove(_draggingEl);
         _draggingEl = null;
       }
       if (_dropShadow) {
-        //myChartPlan.getZr().remove(_dropShadow);
+        myChartPlan.getZr().remove(_dropShadow);
         _dropShadow = null;
       }
       _dropRecord = _draggingRecord = null;
@@ -699,11 +699,11 @@ const leftCenter = function (props) {
     }
     // This is some business logic, don't care about it.
     function updateRawData() {
-      var flightData = _rawData.flight.data;
-      var movingItem = flightData[_draggingRecord.dataIndex];
+      var flightDataLeft1 = _rawData.flight.data;
+      var movingItem = flightDataLeft1[_draggingRecord.dataIndex];
       // Check conflict
-      for (var i = 0; i < flightData.length; i++) {
-        var dataItem = flightData[i];
+      for (var i = 0; i < flightDataLeft1.length; i++) {
+        var dataItem = flightDataLeft1[i];
         if (
           dataItem !== movingItem &&
           _dropRecord.categoryIndex === dataItem[DIM_CATEGORY_INDEX] &&
