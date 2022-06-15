@@ -269,6 +269,9 @@
   background: #4D4D4B;
   border-radius: 10px;
 }
+.left-center > .ant-row .rowClass {
+  background-color: red;
+}
 .left-center > .ant-row .ehcarts-yield-one,
 .left-center > .ant-row .ehcarts-yield-two,
 .left-center > .ant-row .ehcarts-yield-three,
@@ -391,16 +394,45 @@
 .left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
 .left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
 .left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
   width: 30px;
   height: 30px;
+}
+.left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
   background: #7CA9FF;
+}
+.left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+  background: #f0f0f0;
 }
 .left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
 .left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
 .left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
 .left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
   background: #8AB2FF;
+  height: 14px;
+}
+.left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-two > div > .steps .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-three > div > .steps .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after,
+.left-center > .ant-row .ehcarts-yield-four > div > .steps .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after {
   height: 14px;
 }
 .left-center > .ant-row .ehcarts-yield-one > div > .steps .ant-steps-dot .ant-steps-item-icon,

@@ -755,7 +755,7 @@ const rightCenter = function (props) {
     series: [
       {
         name: '机床使用率',
-        type: 'bar',
+        type: 'line',
         barGap: 0,
         //label: labelOption,
         emphasis: {

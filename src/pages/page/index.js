@@ -261,16 +261,16 @@ const Home = function (props) {
       var chartDom = document.getElementById('main');
       myChart = echarts.init(chartDom);
       axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then(rawData => {
-        console.log(rawData, 'rawData______________', ROOT_PATH);
+        //console.log(rawData, 'rawData______________', ROOT_PATH);
         _rawData = rawData.data;
         setGanTeData(res.orderScheduleDetail);
         const cen = res.orderScheduleDetail.map((item, index) => {
           return {
             ...item,
-            currentColor: color16()
+            currentColor: color16(),
+            yValue: index
           }
         })
-        //.slice(0, 6)
         myChart.setOption((option = makeOption(cen)));
         initDrag();
       });
@@ -3423,38 +3423,53 @@ const Home = function (props) {
     },
     series: optionData.series
   };
-  function removeDuplicateY1(arr) {
-    const newArr = [];
-    arr.forEach(item => {
-      if (newArr.indexOf(item.machineName) === -1) {
-        newArr.push(item.machineName)
+  var removeDuplicateDataDimensions = ['Index', '开始时间', '结束时间', '机床名称']
+  function removeDuplicateData(arr) {
+    for (var i = 0; i < arr.length; i++) {    // 首次遍历数组
+      for (var j = i + 1; j < arr.length; j++) {   // 再次遍历数组
+        if (arr[i].machineName == arr[j].machineName) {          // 判断连个值是否相等
+          arr[j].yValue = arr[i].yValue;
+        }
       }
-    })
-    // console.log(newArr, 'newArr————————');
-    return newArr // 返回一个新数组
+    }
+    return arr
+  }
+  function removeDuplicateY1(arr) {
+    for (var i = 0; i < arr.length; i++) {    // 首次遍历数组
+      for (var j = i + 1; j < arr.length; j++) {   // 再次遍历数组
+        if (arr[i].machineName == arr[j].machineName) {          // 判断连个值是否相等
+          arr.splice(j, 1);           // 相等删除后者
+          j--;
+        }
+      }
+    }
+    return arr
   }
   function removeDuplicateY2(arr) {
-    const newArr = [];
-    arr.forEach(item => {
-      if (newArr.indexOf(item.productName) === -1) {
-        newArr.push(item.productName)
+    for (var i = 0; i < arr.length; i++) {    // 首次遍历数组
+      for (var j = i + 1; j < arr.length; j++) {   // 再次遍历数组
+        if (arr[i].productName == arr[j].productName) {          // 判断连个值是否相等
+          arr.splice(j, 1);           // 相等删除后者
+          j--;
+        }
       }
-    })
-    // console.log(newArr, 'newArr————————');
-    return newArr // 返回一个新数组
+    }
+    return arr
   }
   function removeDuplicateY3(arr) {
-    const newArr = [];
-    arr.forEach(item => {
-      if (newArr.indexOf(item.productName) === -1) {
-        newArr.push({productName:item.productName,currentColor:item.currentColor})
+    for (var i = 0; i < arr.length; i++) {    // 首次遍历数组
+      for (var j = i + 1; j < arr.length; j++) {   // 再次遍历数组
+        if (arr[i].productName == arr[j].productName) {          // 判断连个值是否相等
+          arr.splice(j, 1);           // 相等删除后者
+          j--;
+        }
       }
-    })
-    // console.log(newArr, 'newArr————————');
-    return newArr // 返回一个新数组
+    }
+    return arr
   }
   function makeOption(data1) {
-    console.log(data1, 'data1');
+    // const aaa=data1.find(item=>item.machineName=='清洗机');
+ //   console.log(data1, 'aa清洗');
     return {
       tooltip: {},
       animation: false,
@@ -3566,23 +3581,23 @@ const Home = function (props) {
         max: _rawData.parkingApron.data.length
       },
       series: [
-        // {//内容值
-        //   id: 'flightDataCenter',
-        //   type: 'custom',
-        //   renderItem: renderGanttItem,
-        //   dimensions: _rawData.flight.dimensions,
-        //   encode: {
-        //     x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
-        //     y: DIM_CATEGORY_INDEX,
-        //     tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE]
-        //   },
-        //   // var data3 = [[311, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'YS121'],
-        //   // [317, "2022-06-08T08:00:00", "2022-06-08T10:53:00", 'Y3683'],
-        //   // ]
-        //   data: data1.map((item, index) => {
-        //     return [index + 150].concat(item.startTime, item.endTime, item.machineName, item.currentColor);//左右颜色
-        //   })
-        // },
+        {//内容值
+          id: 'flightDataCenter',
+          type: 'custom',
+          renderItem: renderGanttItem,
+          dimensions: removeDuplicateDataDimensions,
+          encode: {
+            x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
+            y: DIM_CATEGORY_INDEX,
+            tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE]
+          },
+          // data: data1.map((item, index) => {
+          //   return [index + 150].concat(item.startTime, item.endTime, item.machineName, item.currentColor);//左右颜色
+          // })
+          data: removeDuplicateData(data1).map((item, index) => {
+            return [item.yValue + 315].concat(item.startTime, item.endTime, item.productName, item.machineName, item.currentColor);//左右颜色
+          })
+        },
         {//y1轴值
           type: 'custom',
           renderItem: renderAxisLabelItemY1,
@@ -3595,7 +3610,7 @@ const Home = function (props) {
           //   return [index].concat(item);
           // }),
           data: removeDuplicateY1(data1).map((item, index) => {
-            return [index + 315].concat(item);
+            return [index + 315].concat(item.machineName);
           })
         },
         {//y2轴值
@@ -3607,7 +3622,7 @@ const Home = function (props) {
             y: 0
           },
           data: removeDuplicateY2(data1).map((item, index) => {
-            return [index + 315].concat(item);
+            return [index + 318].concat(item.productName);
           })
         },
         {//y3轴值
@@ -3618,8 +3633,8 @@ const Home = function (props) {
             x: -1,
             y: 0
           },
-          data: removeDuplicateY3(data1).map(function (item, index) {
-            return [index + 315].concat(item.productName, item.currentColor);
+          data: removeDuplicateY3(data1).map((item, index) => {
+            return [index + 318].concat(item.currentColor);
           })
         }
       ]
@@ -3640,7 +3655,7 @@ const Home = function (props) {
     var barHeight = api.size([0, 1])[1] * HEIGHT_RATIO;
     var x = timeArrival[0];
     var y = timeArrival[1] - barHeight;
-    var flightNumber = api.value(3) + '';
+    var flightNumber = api.value(4) + '';
     var flightNumberWidth = echarts.format.getTextRect(flightNumber).width;
     var text =
       barLength > flightNumberWidth + 40 && x + barLength >= 180
@@ -3674,16 +3689,16 @@ const Home = function (props) {
           shape: rectNormal,
           style: api.style({
             //右边颜色
-            fill: api.value(4),
+            fill: api.value(5),
           })
         },
         {
           type: 'rect',
-          ignore: !rectVIP && !api.value(4),
+          ignore: !rectVIP && !api.value(5),
           shape: rectVIP,
           style: api.style({
             //左边颜色
-            fill: api.value(4),
+            fill: api.value(5),
           })
         },
         {
@@ -3768,7 +3783,7 @@ const Home = function (props) {
             layout: 'cover'
           },
           style: {
-            fill: api.value(2)
+            fill: api.value(1)
           }
         }
       ]

@@ -343,6 +343,10 @@
 
     }
 
+    .rowClass {
+      background-color: red;
+    }
+
     .ehcarts-yield-one,
     .ehcarts-yield-two,
     .ehcarts-yield-three,
@@ -434,14 +438,28 @@
         }
 
         .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
-        .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+        .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
+        .ant-steps-item-wait .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
           width: 30px;
           height: 30px;
+        }
+
+        .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
+        .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
           background: #7CA9FF;
+        }
+
+        .ant-steps-item-wait .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+          background: #f0f0f0;
         }
 
         .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
           background: #8AB2FF;
+          height: 14px;
+        }
+
+        .ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-tail::after,
+        .ant-steps-item-wait>.ant-steps-item-container>.ant-steps-item-tail::after {
           height: 14px;
         }
 

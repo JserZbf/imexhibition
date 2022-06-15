@@ -8,6 +8,7 @@ import ReactEchartsCom from '../../components/ReactEcharts/index'
 // 添加请求拦截器
 import axios from 'axios'
 import * as echarts from 'echarts'
+import { autoToolTip } from "../../services/echarts_auto_tooltop";
 axios.interceptors.request.use((config) => {
   config.url = config.url;
   let headers = {};
@@ -193,18 +194,30 @@ const leftCenter = function (props) {
   const { materialDemandList, leftEchartsPieOne, leftEchartsPieTwo, leftEchartsPieThree,
     leftEchartsPieFour, leftEchartsPieInfoOne, leftEchartsPieInfoTwo, leftEchartsPieInfoThree,
     leftEchartsPieInfoFour } = props;
-  // useEffect(() => {
-  //   setAllTime(orderDetail.map((item, index) => {
-  //     if (!compareTime(item.planStart, item.planEnd, new Date())) {
-  //       return item;
-  //     }
-  //   }));
-  //   setCurrentTime(orderDetail.map((item, index) => {
-  //     if (compareTime(item.planStart, item.planEnd, new Date())) {
-  //       return item;
-  //     }
-  //   }));
-  // })
+  const [timer, setTimer] = useState(null);
+  const [leftEchartsPieInfoOneStepsmer, setLeftEchartsPieInfoOneSteps] = useState(null);
+
+  useEffect(() => {
+    if (leftEchartsPieInfoOne) {
+     // console.log(compareTime(leftEchartsPieInfoOne.planStart, leftEchartsPieInfoOne.planEnd, new Date(),'compareTime(leftEchartsPieInfoOne.planStart, leftEchartsPieInfoOne.planEnd, new Date()');
+     /*  if (compareTime(leftEchartsPieInfoOne.planStart, leftEchartsPieInfoOne.planEnd, new Date())) {
+        setLeftEchartsPieInfoOneSteps(1)
+      } */ /* else if (compareTime(leftEchartsPieInfoOne.planEnd, leftEchartsPieInfoOne.schedualStart, new Date())) {
+        setLeftEchartsPieInfoOneSteps(2)
+      } else if (compareTime(leftEchartsPieInfoOne.schedualStart, leftEchartsPieInfoOne.schedualEnd, new Date())) {
+        setLeftEchartsPieInfoOneSteps(3)
+      }  else {
+        setLeftEchartsPieInfoOneSteps(0)
+      }*/
+      /* else if (compareTime(leftEchartsPieInfoOne.schedualStart, leftEchartsPieInfoOne.schedualEnd, new Date())) {
+        setLeftEchartsPieInfoOneSteps(2)
+      } */
+    }
+  }, [leftEchartsPieInfoOne])
+  useEffect(() => {
+    InitialScroll(materialDemandList);
+    //console.log(materialDemandList,'materialDemandList');
+  }, [materialDemandList])
   useEffect(() => {
     var chartDom = document.getElementById('main-plan');
     myChartPlan = echarts.init(chartDom);
@@ -212,10 +225,24 @@ const leftCenter = function (props) {
       _rawData = rawData.data;
       const allTime = orderDetail.filter(item => (!compareTime(item.planStart, item.planEnd, new Date())))
       const currentTime = orderDetail.filter(item => (compareTime(item.planStart, item.planEnd, new Date())))
-    //  console.log(allTime,currentTime,'allTime-currentTime');
+      //  console.log(allTime,currentTime,'allTime-currentTime');
       myChartPlan.setOption((option = makeOption(allTime, currentTime)));
+      autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
+        // 轮播间隔时间 默认2s
+        interval: 2000,
+        // 是否循环轮播所有序列
+        loopSeries: false,
+        // 第1个被轮播的序列下标
+        seriesIndex: 0,
+      });
+      window.addEventListener("resize", function () {
+        myChartPlan.resize();
+      });
       initDrag();
     });
+    return () => {
+      clearInterval(timer)
+    }
   }, [])
   const columns = [
     {
@@ -453,7 +480,7 @@ const leftCenter = function (props) {
             ], false), // 线条颜色
           },
           data: allTime.map((item, index) => {
-            return [index +310 ].concat(item.planStart, item.planEnd, '产品名称:' + item.productName + '/需求数量:' + item.productNum + '/计划等级:' + item.planLevel);
+            return [index + 310].concat(item.planStart, item.planEnd, '产品名称:' + item.productName + '/需求数量:' + item.productNum + '/计划等级:' + item.planLevel);
           }),
         },
         {//内容值
@@ -835,8 +862,32 @@ const leftCenter = function (props) {
     }
     return true;
   }
+  const setRowClass = (record) => {
+    if (record.isAdequate == '否') {
+      return 'rowClass';
+    } else {
+      return "";
+    }
+  }
+  const InitialScroll = (data) => {
+    let v = document.getElementsByClassName("ant-table-body")[0];
+    // if (data && data.length > 3)  // 只有当大于三条数据的时候 才会看起滚动 
+    // {
+    let time = setInterval(() => {
+      v.scrollTop += 3.5;
+      if (Math.ceil(v.scrollTop) >= parseFloat(v.scrollHeight - v.clientHeight)) {
+        v.scrollTop = 0
+        // setTimeout(() => { v.scrollTop = 0 }, 1000)
+      }
+    }, 100)
+    setTimer(time)  // 定时器保存变量 利于停止
+    // }
+  }
+  // const leftEchartsPieInfoOneFun=()=>{
+  //   console.log(leftEchartsPieInfoOne,'leftEchartsPieInfoOne');
+  // }
   return <div className='left-center'>
-    <Row>
+    <Row>//
       <Col span={9}>
         <div className='plan-mark-total'>
           <ul className='back-line-list'>
@@ -907,7 +958,17 @@ const leftCenter = function (props) {
         </div>
       </Col>
       <Col span={7}>
-        <Table className='table-material' columns={columns} scroll={{ x: 'max-content', y: 680 }} rowKey={'Specs'} dataSource={materialDemandList} pagination={false} />
+        <div
+          onMouseEnter={() => {
+            if (timer) clearTimeout(timer);  // 如果之前有定时器 先把之前的定时器取消
+            clearInterval(timer)
+          }} onMouseLeave={() => {
+            if (timer) clearTimeout(timer);  // 如果之前有定时器 先把之前的定时器取消
+            InitialScroll(materialDemandList)
+          }}
+        >
+          <Table id="cyclicScroll" scroll={{ y: 110 }} className='table-material' columns={columns} rowClassName={setRowClass} scroll={{ x: 'max-content', y: 680 }} rowKey={'Specs'} dataSource={materialDemandList} pagination={false} />
+        </div>
       </Col>
       <Col span={5} push={2}>
         <div className='ehcarts-yield-one'>
@@ -929,7 +990,7 @@ const leftCenter = function (props) {
                 <span>计划等级</span>
                 <span>{leftEchartsPieInfoOne.planLevel}</span>
               </li>
-              <li className='title'>状态</li>
+              <li className='title'></li>
               <li className='title-button'>
                 <span className={leftEchartsPieInfoOne.state == '加工中' ? 'active' : ''}>加工中</span>
                 <span className={leftEchartsPieInfoOne.state == '未加工' ? 'active' : ''}>未加工</span>
@@ -939,8 +1000,8 @@ const leftCenter = function (props) {
             <Steps className='steps' current={3} progressDot={customDotOne}>
               <Step title="计划开始时间" description={leftEchartsPieInfoOne.planStart} />
               <Step title="最晚结束时间" description={leftEchartsPieInfoOne.planEnd} />
-              <Step title="最晚结束时间" description={leftEchartsPieInfoOne.planEnd} />
-              <Step title="超期完成时间" description={leftEchartsPieInfoOne.delayMinutes} />
+              <Step title="排产起始时间" description={leftEchartsPieInfoOne.schedualStart} />
+              <Step title="排产结束时间" description={leftEchartsPieInfoOne.schedualEnd} />
             </Steps>
           </div>
         </div>
@@ -962,7 +1023,7 @@ const leftCenter = function (props) {
                 <span>计划等级</span>
                 <span>{leftEchartsPieInfoTwo.planLevel}</span>
               </li>
-              <li className='title'>状态</li>
+              <li className='title'></li>
               <li className='title-button'>
                 <span className={leftEchartsPieInfoTwo.state == '加工中' ? 'active' : ''}>加工中</span>
                 <span className={leftEchartsPieInfoTwo.state == '未加工' ? 'active' : ''}>未加工</span>
@@ -995,7 +1056,7 @@ const leftCenter = function (props) {
                 <span>计划等级</span>
                 <span>{leftEchartsPieInfoThree.planLevel}</span>
               </li>
-              <li className='title'>状态</li>
+              <li className='title'></li>
               <li className='title-button'>
                 <span className={leftEchartsPieInfoThree.state == '加工中' ? 'active' : ''}>加工中</span>
                 <span className={leftEchartsPieInfoThree.state == '未加工' ? 'active' : ''}>未加工</span>
@@ -1028,7 +1089,7 @@ const leftCenter = function (props) {
                 <span>计划等级</span>
                 <p>{leftEchartsPieInfoFour.planLevel}</p>
               </li>
-              <li className='title'>状态</li>
+              <li className='title'></li>
               <li className='title-button'>
                 <span className={leftEchartsPieInfoFour.state == '加工中' ? 'active' : ''}>加工中</span>
                 <span className={leftEchartsPieInfoFour.state == '未加工' ? 'active' : ''}>未加工</span>
@@ -1045,7 +1106,7 @@ const leftCenter = function (props) {
         </div>
       </Col>
     </Row>
-  </div>
+  </div >
 
 };
 

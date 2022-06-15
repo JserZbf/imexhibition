@@ -288,7 +288,7 @@ const leftBottom = function (props) {
       <Col span={5}>
         <div className='diff-infor-title'>
           <p>不同算法对比信息</p>
-          <p>增加5种分派规则设备利用率生成对比</p>
+          <p></p>
         </div>
         <div className='diff-infor-mess'>
           六类算法同步测算比较,EDD算法得出方案机床使用更均衡

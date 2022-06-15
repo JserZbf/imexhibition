@@ -7,7 +7,7 @@ const LeftTop = function (props) {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1)
+    }, 100)
     return () => {
       clearInterval(timer)
     }
