@@ -308,7 +308,7 @@
   font-weight: normal;
   color: #A5CFE7;
   line-height: 15px;
-  margin: 0% 3.5%;
+  margin: 0% 6%;
   width: 14%;
 }
 .left-center > .ant-row .ehcarts-yield-one > div > ul > .title > span,
@@ -332,6 +332,7 @@
 .left-center > .ant-row .ehcarts-yield-three > div > ul .title-button,
 .left-center > .ant-row .ehcarts-yield-four > div > ul .title-button {
   display: flex;
+  margin-left: -10%;
 }
 .left-center > .ant-row .ehcarts-yield-one > div > ul .title-button .active,
 .left-center > .ant-row .ehcarts-yield-two > div > ul .title-button .active,

@@ -298,6 +298,9 @@ const rightCenter = function (props) {
         itemStyle: {
           color: 'transparent'
         },
+        tooltip:{
+          show:false,
+        },
         data: fourWeekEnergyConsumption.Y1
       },
       {
@@ -409,7 +412,10 @@ const rightCenter = function (props) {
         itemStyle: {
           color: 'transparent'
         },
-        data: fourWeekOutputStatistics.Y1
+        data: fourWeekOutputStatistics.Y1,
+        tooltip: {
+          show: false,
+        }
       },
       {
         name: '加工数',
@@ -555,9 +561,6 @@ const rightCenter = function (props) {
         shadowOffsetY: 0,
         shadowOffsetX: 0,
       },
-      tooltip: {
-        show: false
-      },
       areaStyle: {
         normal: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -608,9 +611,6 @@ const rightCenter = function (props) {
         shadowOffsetY: 0,
         shadowOffsetX: 0,
       },
-      tooltip: {
-        show: false
-      },
       areaStyle: {
         normal: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -660,9 +660,6 @@ const rightCenter = function (props) {
         shadowBlur: 0,
         shadowOffsetY: 0,
         shadowOffsetX: 0,
-      },
-      tooltip: {
-        show: false
       },
       areaStyle: {
         normal: {
@@ -852,11 +849,10 @@ const rightCenter = function (props) {
         {
           maintainList.map((item, index) => {
             return <div key={index} className='maintain-list'>
-              <div className='finish-bao-yang'></div>
+              <div className={item.info.isFinishMaintain=='是'?'finish-bao-yang':'unfinish-bao-yang'}></div>
               <div className='maintain-back-list'>
                 <p><span>设备名称:</span><span>{item.info.deviceName}</span></p>
                 <p><span>排产周期内机床开动率：</span><span>{item.info.runTimeRate}</span></p>
-                <p><span>是否完成保养计划:</span><span>{item.info.isFinishMaintain}</span></p>
               </div>
               <div>
                 <ReactEchartsCom option={item.production} width={'340px'} height={'250px'} left={'290px'} top={'7px'} />

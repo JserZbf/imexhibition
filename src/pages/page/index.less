@@ -90,6 +90,65 @@
         }
       }
 
+      @-webkit-keyframes rotate {
+        from {
+          -webkit-transform: rotateY(0deg)
+        }
+
+        to {
+          -webkit-transform: rotateY(360deg)
+        }
+      }
+
+      @-moz-keyframes rotate {
+        from {
+          -moz-transform: rotateY(0deg)
+        }
+
+        to {
+          -moz-transform: rotateY(359deg)
+        }
+      }
+
+      @-o-keyframes rotate {
+        from {
+          -o-transform: rotateY(0deg)
+        }
+
+        to {
+          -o-transform: rotateY(359deg)
+        }
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotateY(0deg)
+        }
+
+        to {
+          transform: rotateY(359deg)
+        }
+      }
+
+      #xuanzhun {
+        width: 1000px;
+        height: 500px;
+        background: url("./img/background/machine-logo.png") no-repeat;
+        background-size: contain;
+        position: absolute;
+        left: 37%;
+        top: 70%;
+        -webkit-transition-property: -webkit-transform;
+        -webkit-transition-duration: 1s;
+        -moz-transition-property: -moz-transform;
+        -moz-transition-duration: 1s;
+        -webkit-animation: rotate 3s linear infinite;
+        -moz-animation: rotate 3s linear infinite;
+        -o-animation: rotate 3s linear infinite;
+        animation: rotate 3s linear infinite;
+
+      }
+
       .left-mess {
         width: 464px;
         height: 1135px;

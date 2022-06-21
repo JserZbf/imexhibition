@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less'
 import * as echarts from 'echarts'
+import moment from 'moment';
 import LeftTop from '../leftTop/index'
 import LeftCenter from '../leftCenter/index'
 import LeftBottom from '../leftBottom/index'
@@ -237,7 +238,22 @@ const Home = function (props) {
     }
     props.getAllData(obj).then(res => {
       setAllData(res);
-      setMaterialTypeSixList(res.materialDemandList.slice(0, 6));//物料类型六个卡片
+      // const oneCen = res.materialDemandList.slice(0, 6).concat({ shortNum: 666, supplyTime: '2022/6/19' })
+      const oneCen = res.materialDemandList.slice(0, 6);
+      const arrCen = oneCen.map((item, index) => {
+        if (item.supplyTime == moment(new Date()).format('YYYY/M/DD')) {
+          return {
+            ...item,
+            flagBool: true
+          }
+        } else {
+          return {
+            ...item,
+            flagBool: false
+          }
+        }
+      })
+      setMaterialTypeSixList(arrCen);//物料类型六个卡片
       setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics);//右下角信息
       setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics);//计划完成率相关信息
       setDiffAlgorithm(res.orderStatisticsInfo.algorithmComparisonData)//不同算法对比信息图
@@ -277,6 +293,29 @@ const Home = function (props) {
     })
 
   }, [])
+  const compareTime = (stime, etime, nowTime1) => {
+    // 转换时间格式，并转换为时间戳
+    function tranDate(time) {
+      return new Date(time.replace(/-/g, '/')).getTime();
+    }
+    // 开始时间
+    let startTime = tranDate(stime);
+    // 结束时间
+    let endTime = tranDate(etime);
+    let thisDate = nowTime1;
+    // 根据选中日期传值，格式为 2018-9-10 20:08
+    let currentTime = thisDate.getFullYear() + '-' + (thisDate.getMonth() + 1) + '-' + thisDate.getDate() + ' ' + thisDate.getHours() + ':' + thisDate.getMinutes();
+    let nowTime = tranDate(currentTime);
+    // 如果当前时间处于时间段内，返回true，否则返回false
+    if (nowTime > startTime && nowTime < endTime) {
+      return 'center';
+    } else if (nowTime < startTime) {
+      return 'left';
+    } else if (nowTime > endTime) {
+      return 'right';
+    }
+    return true;
+  }
   const color16 = () => {
     let r = Math.floor(Math.random() * 256);
     let g = Math.floor(Math.random() * 256);
@@ -284,13 +323,54 @@ const Home = function (props) {
     let color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
     return color;
   }
+  const GetNumberOfDays = (date1, date2) => {//获得天数
+    //date1：开始日期，date2结束日期
+    var a1 = Date.parse(new Date(date1));
+    var a2 = Date.parse(new Date(date2));
+    var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24));//核心：时间戳相减，然后除以天数
+    //  console.log(day, 'day-day-1111111111111111');
+    return day
+  };
 
+  const addDate = (dateStr, diffDay) => {
+    var dateTime = (new Date(dateStr)).getTime();
+    var diffTimeLong = dateTime + (diffDay) * 24 * 3600 * 1000;
+    var diffTime = new Date(diffTimeLong);
+    var m = (diffTime.getMonth() + 1) < 10 ? "0" + (diffTime.getMonth() + 1) : (diffTime.getMonth() + 1);
+    var d = diffTime.getDate() < 10 ? "0" + diffTime.getDate() : diffTime.getDate();
+    return diffTime.getFullYear() + "-" + m + "-" + d;
+  }
+  const tranData = (obj) => {
+    const cen = compareTime(obj.planStart, obj.planEnd, new Date());
+    var value = null;
+    var percent = null;
+    var processedValue = null;
+    var cenValue = obj.productNum / GetNumberOfDays(obj.planStart, obj.planEnd);
+    if (cen == 'left') {
+      value = 0;
+      percent = 0 + '%';
+      processedValue = 0;
+    } else if (cen == 'center') {
+      var tranDatas = GetNumberOfDays(obj.planStart, obj.planEnd);
+      for (var index = 1; index <= tranDatas; index++) {
+        if (moment(new Date()).format('YYYY-MM-DD') == addDate(obj.planStart, index)) {
+          value = (obj.productNum / GetNumberOfDays(obj.planStart, obj.planEnd)) * index;
+          processedValue = (obj.productNum / GetNumberOfDays(obj.planStart, obj.planEnd)) * index;
+          percent = (cenValue / obj.productNum * 100) * index + '%';
+        }
+      }
+    } else if (cen == 'right') {
+      value = 100;
+      processedValue = obj.productNum;
+      percent = 100 + '%';
+    }
+    return [value, percent, processedValue]
+  }
   const tranOrderCardDetail = (data) => {
     setLeftEchartsPieInfoOne(data[0]);
     setLeftEchartsPieInfoTwo(data[1]);
     setLeftEchartsPieInfoThree(data[2]);
     setLeftEchartsPieInfoFour(data[3]);
-
     const echartsList1 = {
       title: {
         text: '',
@@ -351,7 +431,7 @@ const Home = function (props) {
         },
         hoverAnimation: false,
         data: [{
-          value: data[0].finishNum,
+          value: tranData(data[0])[0],
           name: '01',
           itemStyle: {
             normal: {
@@ -383,12 +463,8 @@ const Home = function (props) {
                 }
               },
               formatter: function (params) {
-                if (data[0].finishNum <= 0) {
-                  return "{b|100%}\n\n" + "{b|计划产量" + data[0].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[0].finishNum + "件}";
-                } else {
-                  return "{b|100%}\n\n" + "{b|计划产量" + data[0].productNum + "件}" + "\n\n{b|" + (data[0].finishNum / data[0].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[0].finishNum + "件}";
-                }
-
+                const [value, percent, processedValue] = tranData(data[0]);
+                return "{b|100%}\n\n" + "{b|计划产量" + data[0].productNum + "件}" + "\n\n{b|" + percent + "}" + "\n\n{b|已加工" + processedValue + "件}";
               },
               position: 'center',
               show: true,
@@ -400,7 +476,7 @@ const Home = function (props) {
             }
           },
         }, {
-          value: data[0].productNum,
+          value: 100 - tranData(data[0])[0],
           name: '',
           itemStyle: {
             normal: {
@@ -511,7 +587,7 @@ const Home = function (props) {
         },
         hoverAnimation: false,
         data: [{
-          value: data[1].finishNum,
+          value: tranData(data[1])[0],
           name: '01',
           itemStyle: {
             normal: {
@@ -543,12 +619,8 @@ const Home = function (props) {
                 }
               },
               formatter: function (params) {
-                if (data[1].finishNum <= 0) {
-                  return "{b|100%}\n\n" + "{b|计划产量" + data[1].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[1].finishNum + "件}";
-                } else {
-                  return "{b|100%}\n\n" + "{b|计划产量" + data[1].productNum + "件}" + "\n\n{b|" + (data[1].finishNum / data[1].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[1].finishNum + "件}";
-                }
-
+                const [value, percent, processedValue] = tranData(data[1]);
+                return "{b|100%}\n\n" + "{b|计划产量" + data[1].productNum + "件}" + "\n\n{b|" + percent + "}" + "\n\n{b|已加工" + processedValue + "件}";
               },
               position: 'center',
               show: true,
@@ -560,7 +632,7 @@ const Home = function (props) {
             }
           },
         }, {
-          value: data[1].productNum,
+          value: 100 - tranData(data[1])[0],
           name: '',
           itemStyle: {
             normal: {
@@ -671,7 +743,7 @@ const Home = function (props) {
         },
         hoverAnimation: false,
         data: [{
-          value: data[2].finishNum,
+          value: tranData(data[2])[0],
           name: '01',
           itemStyle: {
             normal: {
@@ -703,12 +775,8 @@ const Home = function (props) {
                 }
               },
               formatter: function (params) {
-                if (data[2].finishNum <= 0) {
-                  return "{b|100%}\n\n" + "{b|计划产量" + data[2].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[2].finishNum + "件}";
-                } else {
-                  return "{b|100%}\n\n" + "{b|计划产量" + data[2].productNum + "件}" + "\n\n{b|" + (data[2].finishNum / data[2].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[2].finishNum + "件}";
-                }
-
+                const [value, percent, processedValue] = tranData(data[2]);
+                return "{b|100%}\n\n" + "{b|计划产量" + data[2].productNum + "件}" + "\n\n{b|" + percent + "}" + "\n\n{b|已加工" + processedValue + "件}";
               },
               position: 'center',
               show: true,
@@ -720,7 +788,7 @@ const Home = function (props) {
             }
           },
         }, {
-          value: data[2].productNum,
+          value: 100 - tranData(data[2])[0],
           name: '',
           itemStyle: {
             normal: {
@@ -845,12 +913,8 @@ const Home = function (props) {
               }
             },
             formatter: function (params) {
-              if (data[3].finishNum <= 0) {
-                return "{b|100%}\n\n" + "{b|计划产量" + data[3].productNum + "件}" + "\n\n{b|0%}" + "\n\n{b|已加工" + data[3].finishNum + "件}";
-              } else {
-                return "{b|100%}\n\n" + "{b|计划产量" + data[3].productNum + "件}" + "\n\n{b|" + (data[3].finishNum / data[3].productNum) * 100 + "%}" + "\n\n{b|已加工" + data[3].finishNum + "件}";
-              }
-
+              const [value, percent, processedValue] = tranData(data[3]);
+              return "{b|100%}\n\n" + "{b|计划产量" + data[3].productNum + "件}" + "\n\n{b|" + percent + "}" + "\n\n{b|已加工" + processedValue + "件}";
             },
             position: 'center',
             show: true,
@@ -863,7 +927,7 @@ const Home = function (props) {
         },
         hoverAnimation: false,
         data: [{
-          value: data[3].finishNum,
+          value: tranData(data[3])[0],
           name: '01',
           itemStyle: {
             normal: {
@@ -880,7 +944,7 @@ const Home = function (props) {
             }
           },
         }, {
-          value: data[3].productNum,
+          value: 100 - tranData(data[3])[0],
           name: '',
           itemStyle: {
             normal: {
@@ -933,33 +997,34 @@ const Home = function (props) {
     setLeftEchartsPieFour(echartsList4);
   }
   const tranDeviceCardDetail = (data) => {
+    console.log(data, 'data-data-data');
     const info1 = {
       deviceName: data[0].deviceName,
-      runTimeRate: data[0].runTimeRate,
+      runTimeRate: ((data[0].runTimeRate) * 100).toFixed(2) + '%',
       isFinishMaintain: data[0].isFinishMaintain
     }
     setInfoOne(info1);
     const info2 = {
       deviceName: data[1].deviceName,
-      runTimeRate: data[1].runTimeRate,
+      runTimeRate: ((data[1].runTimeRate) * 100).toFixed(2) + '%',
       isFinishMaintain: data[1].isFinishMaintain
     }
     setInfoTwo(info2);
     const info3 = {
       deviceName: data[2].deviceName,
-      runTimeRate: data[2].runTimeRate,
+      runTimeRate: ((data[2].runTimeRate) * 100).toFixed(2) + '%',
       isFinishMaintain: data[2].isFinishMaintain
     }
     setInfoThree(info3);
     const info4 = {
       deviceName: data[3].deviceName,
-      runTimeRate: data[3].runTimeRate,
+      runTimeRate: ((data[3].runTimeRate) * 100).toFixed(2) + '%',
       isFinishMaintain: data[3].isFinishMaintain
     }
     setInfoFour(info4);
     const info5 = {
       deviceName: data[4].deviceName,
-      runTimeRate: data[4].runTimeRate,
+      runTimeRate: ((data[4].runTimeRate) * 100).toFixed(2) + '%',
       isFinishMaintain: data[4].isFinishMaintain
     }
     setInfoFive(info5);
@@ -1059,6 +1124,7 @@ const Home = function (props) {
         name: '2020',
         type: 'bar',
         barWidth: 15,
+        barMinHeight: 5,
         barGap: '-100%',
         itemStyle: { //lenged文本
           opacity: .7,
@@ -3457,6 +3523,7 @@ const Home = function (props) {
     return arr
   }
   function removeDuplicateY3(arr) {
+    //  console.log(arr,'arr-00000000000000000');
     for (var i = 0; i < arr.length; i++) {    // 首次遍历数组
       for (var j = i + 1; j < arr.length; j++) {   // 再次遍历数组
         if (arr[i].productName == arr[j].productName) {          // 判断连个值是否相等
@@ -3469,7 +3536,7 @@ const Home = function (props) {
   }
   function makeOption(data1) {
     // const aaa=data1.find(item=>item.machineName=='清洗机');
- //   console.log(data1, 'aa清洗');
+    //   console.log(data1, 'aa清洗');
     return {
       tooltip: {},
       animation: false,
@@ -4079,6 +4146,8 @@ const Home = function (props) {
             <p>现代化</p>
             <p>MODERNIZATION</p>
           </div>
+        </div>
+        <div id='xuanzhun'>
         </div>
         <div className='left-mess'>
           <div>•APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。</div>

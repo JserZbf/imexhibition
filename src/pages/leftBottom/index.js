@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less'
 import ReactEchartsCom from '../../components/ReactEcharts/index'
 import * as echarts from 'echarts'
 const leftBottom = function (props) {
-  const { materialTypeSixList, allData, finishPlanObj,diffAlgorithm} = props;
-  //console.log(diffAlgorithm,'diffAlgorithm');
+  const { materialTypeSixList, allData, finishPlanObj, diffAlgorithm } = props;
   const finishPlanList = [{
     title: "预计交付计划数",
     value: finishPlanObj.deliveryNum,
@@ -27,7 +26,7 @@ const leftBottom = function (props) {
       value: allData.selectAlgorithm
     }, {
       title: '是否有保养任务',
-      value: allData.isHasMaintenance?'是':'否'
+      value: allData.isHasMaintenance ? '是' : '否'
     },
     {
       title: '排产目标',
@@ -159,9 +158,9 @@ const leftBottom = function (props) {
           shadowOffsetY: 0,
           shadowOffsetX: 0,
         },
-        tooltip: {
-          show: false
-        },
+        // tooltip: {
+        //   show: false
+        // },
         areaStyle: {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -228,16 +227,16 @@ const leftBottom = function (props) {
           {
             materialTypeSixList.map((item, index) => {
               return <li key={index}>
-                <p className='title'>物料类型</p>
-                <p className='number'>
+                <p className={item.flagBool ? 'title-active' : 'title'}>物料类型</p>
+                <p className={item.flagBool ? 'number-active' : 'number'}>
                   <span>缺口数量:</span>
                   <span>{item.shortNum}</span>
                 </p>
-                <p className='start-time'>
+                <p className={item.flagBool ? 'start-time-active' : 'start-time'}>
                   <span>最晚到达时间:</span>
                   <span>{item.supplyTime}</span>
                 </p>
-                <p className='time'>{item.supplyTime}</p>
+                <p className={item.flagBool ? 'time-active' : 'time'}>{item.supplyTime}</p>
               </li>
             })
           }

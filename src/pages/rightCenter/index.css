@@ -25,7 +25,7 @@
   left: 8.5%;
   top: 53%;
   color: #FFFFFF;
-  font-size: 8px;
+  font-size: 16px;
 }
 .right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p {
   transform: rotate(-4deg);
@@ -35,11 +35,11 @@
 }
 .right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p:nth-child(1) {
   left: 0%;
-  top: 0%;
+  top: 21%;
 }
 .right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p:nth-child(2) {
   left: 0%;
-  top: 25%;
+  top: 45%;
 }
 .right-center > .ant-row .right-center-part1 .maintain-list .maintain-back-list > p:nth-child(3) {
   left: 0%;
@@ -54,15 +54,24 @@
   left: 3%;
   top: 8.3%;
 }
+.right-center > .ant-row .right-center-part1 .maintain-list .unfinish-bao-yang {
+  width: 130px;
+  height: 80px;
+  background: url('img/background/un-baoyang-title.png') no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  left: 3%;
+  top: 8.3%;
+}
 .right-center > .ant-row .right-center-part1 .maintain-list > div:nth-child(3) {
   position: absolute;
   right: 50%;
-  top: 0%;
+  top: 8%;
 }
 .right-center > .ant-row .right-center-part1 .maintain-list > div:nth-child(4) {
   position: absolute;
   right: 0%;
-  top: 0%;
+  top: 8%;
 }
 .right-center > .ant-row .right-center-part1 .maintain-list:nth-child(1) {
   margin-left: -7%;
