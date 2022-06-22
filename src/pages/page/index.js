@@ -3239,14 +3239,12 @@ const Home = function (props) {
         endAngle: 450,
         min: 0,
         max: 100,
-        radius: '90%',
+        radius: '95%',
         center: ["50%", "50%"],
         title: { show: false },
         detail: { show: false },
         axisLine: {
-          //length: '100%',
           show: true,
-
         },
         axisTick: { length: 0, },
         splitLine: {
@@ -3352,6 +3350,8 @@ const Home = function (props) {
       } */
       res.series.push({
         name: '',
+        startAngle: 180,
+        endAngle: 450,
         type: 'pie',
         clockWise: false, //顺时加载
         hoverAnimation: false, //鼠标移入变大
@@ -3390,6 +3390,8 @@ const Home = function (props) {
       });
       res.series.push({
         name: '',
+        startAngle: 180,
+        endAngle: 450,
         type: 'pie',
         silent: true,
         z: 1,
@@ -3438,15 +3440,15 @@ const Home = function (props) {
   const nan1 = {
     legend: [{
       show: true,
-      top: '15%',
-      left: "50%",
+      top: '12%',
+      left: "30%",
       data: arrName,
       width: 100,
       itemGap: 28,
       itemWidth: 0,
       icon: 'none',
       formatter: function (name) {
-        return "{title|" + name + "}{value| " + "%} "
+        return "{title|" + name + "}"
       },
       textStyle: {
         rich: {
