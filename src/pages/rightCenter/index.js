@@ -221,6 +221,18 @@ const rightCenter = function (props) {
         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
       },
     },
+    legend: {
+      show: true,
+      x: '180',
+      y: '5%',
+      icon: 'rect',
+      itemWidth: 25,
+      itemHeight: 10,
+      textStyle: {
+        color: '#1bb4f6'
+      },
+      data: [{ name: '加工能耗' }, { name: '待机能耗' }]
+    },
     grid: {
       left: '3%',
       right: '4%',
@@ -330,12 +342,24 @@ const rightCenter = function (props) {
     ]
   }
   const aps = {
-    backgroundColor: '#001120',
+  //  backgroundColor: '#001120',
     tooltip: {
       trigger: 'axis',
       axisPointer: {            // 坐标轴指示器，坐标轴触发有效
         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
       },
+    },
+    legend: {
+      show: true,
+      x: '180',
+      y: '5%',
+      icon: 'rect',
+      itemWidth: 25,
+      itemHeight: 10,
+      textStyle: {
+        color: '#1bb4f6'
+      },
+      data: [{ name: '故障维修数' }, { name: '加工数' }]
     },
     grid: {
       left: '3%',

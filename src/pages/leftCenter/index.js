@@ -57,7 +57,7 @@ const leftCenter = function (props) {
       "planType": "产品加工",
       "planLevel": 0,
       "planStart": "2022-05-10",
-      "planEnd": "2022-06-11"
+      "planEnd": "2022-05-16"
     },
     {
       "planNO": "2022051021330742024300002",
@@ -183,7 +183,7 @@ const leftCenter = function (props) {
       "planType": "产品加工",
       "planLevel": 1,
       "planStart": "2022-05-10",
-      "planEnd": "2022-06-12"
+      "planEnd": "2022-05-13"
     }
   ]
   var dimensionsList = [
@@ -217,15 +217,15 @@ const leftCenter = function (props) {
   const tick = (number) => {
     setNum(number)
   }
-  useEffect(() => {
-    if (num % 2 == 0) {
-      //偶数
-      initPlanEchartsData(0, 8)
-    } else {
-      //奇数
-      initPlanEchartsData(8, 16)
-    }
-  }, [num])
+  // useEffect(() => {
+  //   if (num % 2 == 0) {
+  //     //偶数
+  //     initPlanEchartsData(0, 8)
+  //   } else {
+  //     //奇数
+  //     initPlanEchartsData(8, 16)
+  //   }
+  // }, [num])
   useEffect(() => {
     InitialScroll(materialDemandList);
     //console.log(materialDemandList,'materialDemandList');
@@ -462,6 +462,7 @@ const leftCenter = function (props) {
     </Popover>
   );
   function makeOption(allTime, currentTime) {
+    console.log(allTime, currentTime,'allTime, currentTime');
     return {
       tooltip: {},
       animation: false,
@@ -492,11 +493,12 @@ const leftCenter = function (props) {
           height: 20,
           bottom: 0,
           start: 0,
-          end: 26,
+          end: 100,
           handleIcon:
             'path://M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
           handleSize: '80%',
-          showDetail: false
+          showDetail: false,
+          show:false
         },
         {
           type: 'inside',
@@ -508,19 +510,19 @@ const leftCenter = function (props) {
           zoomOnMouseWheel: false,
           moveOnMouseMove: true
         },
-        {
-          type: 'slider',
-          yAxisIndex: 0,
-          zoomLock: true,
-          width: 10,
-          right: 10,
-          top: 70,
-          bottom: 20,
-          start: 95,
-          end: 100,
-          handleSize: 0,
-          showDetail: false
-        },
+        // {//y轴
+        //   type: 'slider',
+        //   yAxisIndex: 0,
+        //   zoomLock: true,
+        //   width: 10,
+        //   right: 10,
+        //   top: 70,
+        //   bottom: 20,
+        //   start: 95,
+        //   end: 100,
+        //   handleSize: 0,
+        //   showDetail: false
+        // },
         {
           type: 'inside',
           id: 'insideY',
@@ -561,7 +563,8 @@ const leftCenter = function (props) {
           color: '#929ABA',
           inside: false,
           align: 'center',
-        }
+        },
+        data:['2022-05-10','2022-05-11','2022-05-12','2022-05-13','2022-05-14','2022-05-15','2022-05-16']
       }],
       yAxis: {
         axisTick: { show: false },
@@ -1014,7 +1017,7 @@ const leftCenter = function (props) {
     return true;
   }
   const setRowClass = (record) => {
-    if (record.isAdequate == '否') {
+    if (record.isAdequate == '是') {
       return 'rowClass';
     } else {
       return "";

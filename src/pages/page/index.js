@@ -29,7 +29,8 @@ const Home = function (props) {
   const [materialTypeSixList, setMaterialTypeSixList] = useState([]);
   const [rightBottomInfor, setRightBottomInfor] = useState({});
   const [finishPlanObj, setFinishPlanObj] = useState({});
-  const [diffAlgorithm, setDiffAlgorithm] = useState({});
+  const [diffAlgorithmX, setDiffAlgorithmX] = useState([]);
+  const [diffAlgorithmY, setDiffAlgorithmY] = useState([]);
   const [arrName, setArrName] = useState();
   const [sumValue, setSumValue] = useState();
   const [objData, setObjData] = useState();
@@ -238,10 +239,10 @@ const Home = function (props) {
     }
     props.getAllData(obj).then(res => {
       setAllData(res);
-      // const oneCen = res.materialDemandList.slice(0, 6).concat({ shortNum: 666, supplyTime: '2022/6/19' })
+      // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
       const oneCen = res.materialDemandList.slice(0, 6);
       const arrCen = oneCen.map((item, index) => {
-        if (item.supplyTime == moment(new Date()).format('YYYY/M/DD')) {
+        if (item.supplyTime == moment(new Date()).format('YYYY/M/DD')||item.supplyTime == moment(new Date()).format('YYYY/M/D')) {
           return {
             ...item,
             flagBool: true
@@ -256,7 +257,11 @@ const Home = function (props) {
       setMaterialTypeSixList(arrCen);//物料类型六个卡片
       setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics);//右下角信息
       setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics);//计划完成率相关信息
-      setDiffAlgorithm(res.orderStatisticsInfo.algorithmComparisonData)//不同算法对比信息图
+      const cenY=res.orderStatisticsInfo.algorithmComparisonData.Y.map(item=>{
+       return Number((-10000*item))
+      })
+      setDiffAlgorithmY(cenY)//不同算法对比信息图
+      setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
       const fourWeekFinishRateTran = res.orderStatisticsInfo.fourWeekFinishRate.X.map((item, index) => {
         return {
           name: item,
@@ -341,21 +346,28 @@ const Home = function (props) {
     return diffTime.getFullYear() + "-" + m + "-" + d;
   }
   const tranData = (obj) => {
-    const cen = compareTime(obj.planStart, obj.planEnd, new Date());
+    var startTime = moment(obj.schedualStart).format('YYYY-MM-DD');
+    var endTime = moment(obj.schedualEnd).format('YYYY-MM-DD');
+    const cen = compareTime(startTime, endTime, new Date());
     var value = null;
     var percent = null;
     var processedValue = null;
-    var cenValue = obj.productNum / GetNumberOfDays(obj.planStart, obj.planEnd);
+    var cenValue = obj.productNum / GetNumberOfDays(startTime, endTime);
     if (cen == 'left') {
       value = 0;
       percent = 0 + '%';
       processedValue = 0;
     } else if (cen == 'center') {
-      var tranDatas = GetNumberOfDays(obj.planStart, obj.planEnd);
-      for (var index = 1; index <= tranDatas; index++) {
-        if (moment(new Date()).format('YYYY-MM-DD') == addDate(obj.planStart, index)) {
-          value = (obj.productNum / GetNumberOfDays(obj.planStart, obj.planEnd)) * index;
-          processedValue = (obj.productNum / GetNumberOfDays(obj.planStart, obj.planEnd)) * index;
+      // console.log(startTime, endTime, 'start-endTime');
+      // console.log(moment(new Date()).format('YYYY-MM-DD'), 'moment(new Date())');
+      // console.log(addDate('2022-07-01', 1),'addDate(startTime, index)-123');
+      var tranDatas = GetNumberOfDays(startTime, endTime);
+      for (var index = 0; index <= tranDatas; index++) {
+        if (moment(new Date()).format('YYYY-MM-DD') == addDate(startTime, index)) {
+          //  console.log(moment(new Date()).format('YYYY-MM-DD'),'moment(new Date())');
+          //  console.log(addDate(startTime, index),'addDate(startTime, index)');
+          value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
+          processedValue = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
           percent = (cenValue / obj.productNum * 100) * index + '%';
         }
       }
@@ -463,6 +475,7 @@ const Home = function (props) {
                 }
               },
               formatter: function (params) {
+                console.log(tranData(data[0]), 'tranData(data[0])');
                 const [value, percent, processedValue] = tranData(data[0]);
                 return "{b|100%}\n\n" + "{b|计划产量" + data[0].productNum + "件}" + "\n\n{b|" + percent + "}" + "\n\n{b|已加工" + processedValue + "件}";
               },
@@ -997,7 +1010,7 @@ const Home = function (props) {
     setLeftEchartsPieFour(echartsList4);
   }
   const tranDeviceCardDetail = (data) => {
-    console.log(data, 'data-data-data');
+    // console.log(data, 'data-data-data');
     const info1 = {
       deviceName: data[0].deviceName,
       runTimeRate: ((data[0].runTimeRate) * 100).toFixed(2) + '%',
@@ -3664,7 +3677,7 @@ const Home = function (props) {
           //   return [index + 150].concat(item.startTime, item.endTime, item.machineName, item.currentColor);//左右颜色
           // })
           data: removeDuplicateData(data1).map((item, index) => {
-            return [item.yValue + 315].concat(item.startTime, item.endTime, item.productName, item.machineName, item.currentColor);//左右颜色
+            return [item.yValue + 315].concat(item.startTime, item.endTime, item.opName, item.opName, item.currentColor);//左右颜色
           })
         },
         {//y1轴值
@@ -4131,7 +4144,7 @@ const Home = function (props) {
           leftEchartsPieTwo={leftEchartsPieTwo}
           leftEchartsPieThree={leftEchartsPieThree}
           leftEchartsPieFour={leftEchartsPieFour} />
-        <LeftBottom allData={allData} finishPlanObj={finishPlanObj} diffAlgorithm={diffAlgorithm} materialTypeSixList={materialTypeSixList} />
+        <LeftBottom allData={allData} finishPlanObj={finishPlanObj} diffAlgorithmX={diffAlgorithmX} diffAlgorithmY={diffAlgorithmY} materialTypeSixList={materialTypeSixList} />
       </Col>
       <Col span={8} className='center-middle'>
         <div className='main-title'></div>

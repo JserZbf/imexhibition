@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less'
 import ReactEchartsCom from '../../components/ReactEcharts/index'
 import * as echarts from 'echarts'
 const leftBottom = function (props) {
-  const { materialTypeSixList, allData, finishPlanObj, diffAlgorithm } = props;
+  const { materialTypeSixList, allData, finishPlanObj, diffAlgorithmX, diffAlgorithmY } = props;
   const finishPlanList = [{
     title: "预计交付计划数",
     value: finishPlanObj.deliveryNum,
@@ -16,23 +16,43 @@ const leftBottom = function (props) {
     title: "预计提前计划数",
     value: finishPlanObj.aheadNum,
   },]
-  const order = [
-    {
-      title: '排产订单号',
-      value: allData.orderNO,
-    },
-    {
-      title: '选用排产算法',
-      value: allData.selectAlgorithm
-    }, {
-      title: '是否有保养任务',
-      value: allData.isHasMaintenance ? '是' : '否'
-    },
-    {
-      title: '排产目标',
-      value: allData.scheduleTarget
+  const [order, setOrder] = useState([])
+  useEffect(() => {
+    //console.log(allData.selectAlgorithm,'allData.selectAlgorithm');
+    var selectAlgorithmCen = ''
+    if (allData.selectAlgorithm == 1) {
+      selectAlgorithmCen = 'SPT'
+    } else if (allData.selectAlgorithm == 2) {
+      selectAlgorithmCen = 'LPT'
+    } else if (allData.selectAlgorithm == 3) {
+      selectAlgorithmCen = 'CR'
+    } else if (allData.selectAlgorithm == 4) {
+      selectAlgorithmCen = 'EDD'
+    } else if (allData.selectAlgorithm == 5) {
+      selectAlgorithmCen = 'ESD'
+    } else if (allData.selectAlgorithm == 6) {
+      selectAlgorithmCen = 'PL'
+    } else if (allData.selectAlgorithm == 7) {
+      selectAlgorithmCen = 'GA'
     }
-  ];
+    setOrder([
+      {
+        title: '排产订单号',
+        value: allData.orderNO,
+      },
+      {
+        title: '选用排产算法',
+        value: selectAlgorithmCen
+      }, {
+        title: '是否有保养任务',
+        value: allData.isHasMaintenance ? '是' : '否'
+      },
+      {
+        title: '排产目标',
+        value: allData.scheduleTarget
+      }
+    ]);
+  }, [allData])
   const diffOption = {
     title: {
       text: '',
@@ -95,7 +115,7 @@ const leftBottom = function (props) {
         show: false
       },
       boundaryGap: false,
-      data: diffAlgorithm.X,
+      data: diffAlgorithmX,
     }],
     yAxis: [{
       type: 'value',
@@ -175,7 +195,7 @@ const leftBottom = function (props) {
             shadowBlur: 100
           }
         },
-        data: diffAlgorithm.Y,
+        data: diffAlgorithmY,
       },
       {
         name: '',
@@ -226,17 +246,18 @@ const leftBottom = function (props) {
         <ul className='material-type-list'>
           {
             materialTypeSixList.map((item, index) => {
-              return <li key={index}>
-                <p className={item.flagBool ? 'title-active' : 'title'}>物料类型</p>
-                <p className={item.flagBool ? 'number-active' : 'number'}>
+              return <li key={index} className={item.flagBool ? 'active-li' : 'li'}>
+                <p className='title'>物料类型</p>
+                <p className='number'>
                   <span>缺口数量:</span>
                   <span>{item.shortNum}</span>
                 </p>
-                <p className={item.flagBool ? 'start-time-active' : 'start-time'}>
+                <p className='start-time'>
                   <span>最晚到达时间:</span>
                   <span>{item.supplyTime}</span>
                 </p>
-                <p className={item.flagBool ? 'time-active' : 'time'}>{item.supplyTime}</p>
+                <p className='time'>{item.supplyTime}</p>
+                <div></div>
               </li>
             })
           }
