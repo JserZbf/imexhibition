@@ -3363,10 +3363,10 @@ const Home = function (props) {
       } */
       res.series.push({
         name: '',
-        startAngle: 180,
+        startAngle: 0,
         endAngle: 450,
         type: 'pie',
-        clockWise: false, //顺时加载
+        clockWise: true, //顺时加载
         hoverAnimation: false, //鼠标移入变大
         radius: [radius[i].value1, radius[i].value2],
         center: ["50%", "50%"],
@@ -3403,12 +3403,12 @@ const Home = function (props) {
       });
       res.series.push({
         name: '',
-        startAngle: 180,
+        startAngle: 0,
         endAngle: 450,
         type: 'pie',
         silent: true,
         z: 1,
-        clockWise: false, //顺时加载
+        clockWise: true, //顺时加载
         hoverAnimation: false, //鼠标移入变大
         radius: [radius[i].value1, radius[i].value2],
         center: ["50%", "50%"],
