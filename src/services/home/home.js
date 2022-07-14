@@ -1,5 +1,8 @@
 import http from '../http';
 
-export const getVirtualmeterList = (params) => {
-  return http.get('/api/main/virtualmeter/list', params);
+export const getOrderData = (params) => {
+    return http.post('/sss-imexhibition-aps/getOrderData', params);
+};
+export const getEditStart = (params) => {
+    return http.post('/sss-imexhibition-aps/start', params);
 };
