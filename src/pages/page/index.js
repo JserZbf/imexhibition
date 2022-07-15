@@ -328,7 +328,7 @@ const Home = function (props) {
       "orderDetail": dataSource
     }
     const cenObjStart = JSON.stringify(objStart);
-    const url = encodeURI(encodeURI(`http://192.168.0.103:8001/page?obj=${cenObjStart}`));
+    const url = encodeURI(encodeURI(`http://172.17.40.62:98/page?obj=${cenObjStart}`));
     window.open(url, '_self')
     // getEditStart(objStart).then(res => {
     //   if (res.code == 200) {
