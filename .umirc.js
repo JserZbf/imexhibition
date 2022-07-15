@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 export const TARGETS = {
     dev: {
-        ems: 'http://ime.sh-smartstate.com.cn',
+        ems: 'http://172.17.40.64:5300',
     },
 };
 const TARGET = TARGETS[process.env.PROXY_TARGET] || {};
