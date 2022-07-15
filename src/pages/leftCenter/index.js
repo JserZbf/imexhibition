@@ -196,6 +196,10 @@ const leftCenter = function (props) {
     leftEchartsPieInfoTwo,
     leftEchartsPieInfoThree,
     leftEchartsPieInfoFour,
+    outSideOrderDetail,
+    outSideScheduleCycle,
+    outSideSchedulePattern,
+    scheduleTarget,
   } = props;
   const [timer, setTimer] = useState(null);
   const [leftEchartsPieInfoOneCurrent, setLeftEchartsPieInfoOneCurrent] = useState(null);
@@ -223,10 +227,10 @@ const leftCenter = function (props) {
   useEffect(() => {
     if (num % 2 == 0) {
       //偶数
-      initPlanEchartsData(0, 8);
+      initPlanEchartsData(0, outSideOrderDetail.length / 2);
     } else {
       //奇数
-      initPlanEchartsData(8, 16);
+      initPlanEchartsData(outSideOrderDetail.length / 2 + 1, outSideOrderDetail.length);
     }
   }, [num]);
   useEffect(() => {
@@ -238,7 +242,7 @@ const leftCenter = function (props) {
     myChartPlan = echarts.init(chartDom);
     axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
       _rawData = rawData.data;
-      initPlanEchartsData(0, 8);
+      initPlanEchartsData(0, outSideOrderDetail.length / 2);
       // myChartPlan.setOption((option = makeOption(allTime, currentTime)));
       // autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
       //   // 轮播间隔时间 默认2s
@@ -262,10 +266,10 @@ const leftCenter = function (props) {
     myChartPlan = echarts.init(chartDom);
     axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
       _rawData = rawData.data;
-      const allTime = orderDetail
+      const allTime = outSideOrderDetail
         .slice(start, end)
         .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
-      const currentTime = orderDetail
+      const currentTime = outSideOrderDetail
         .slice(start, end)
         .filter((item) => compareTime(item.planStart, item.planEnd, new Date()));
       myChartPlan.setOption((option = makeOption(allTime, currentTime)));

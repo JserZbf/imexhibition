@@ -65,6 +65,11 @@ const Home = function (props) {
   const [infoFive, setInfoFive] = useState({});
   const [deviceUseTime, setDeviceUseTime] = useState();
   const [ganTeData, setGanTeData] = useState([]);
+  const [outSideOrderDetail, setOutSideOrderDetail] = useState([]);
+  const [outSideScheduleCycle, setOutSideScheduleCycle] = useState(null);
+  const [outSideSchedulePattern, setOutSideSchedulePattern] = useState(null);
+  const [scheduleTarget, setOutSideScheduleTarget] = useState(null);
+
   ///甘特图变量
   var ROOT_PATH = 'https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
   // var chartDom = document.getElementById('main');
@@ -95,152 +100,160 @@ const Home = function (props) {
   var ganTey;
   useEffect(() => {
     // console.log(window.location,'window.location')
-    // var index = window.location.href.lastIndexOf("\=");
-    // var num = window.location.href.substring(index + 1, window.location.href.length);
-    //  console.log(JSON.parse(decodeURI(decodeURI(num))),'decodeURI(decodeURI(num))')
-    const obj = {
-      taskId: '93578990',
-      scheduleTarget: 1,
-      schedulePattern: 2,
-      scheduleCycle: 7,
-      orderDetail: [
-        {
-          planNO: '2022051021330739627200001',
-          productName: '12M33机体',
-          productNum: 2,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-16',
-        },
-        {
-          planNO: '2022051021330742024300002',
-          productName: '8M33机体',
-          productNum: 8,
-          planType: '产品加工',
-          planLevel: 2,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742123900003',
-          productName: 'WP3H机体',
-          productNum: 1,
-          planType: '产品加工',
-          planLevel: 2,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742223800004',
-          productName: 'P15NG机体',
-          productNum: 2,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742323800005',
-          productName: 'P8H国六缸盖',
-          productNum: 2,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742423300006',
-          productName: '16M33总成',
-          productNum: 4,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742523100007',
-          productName: 'WP8机体',
-          productNum: 2,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742718700008',
-          productName: 'P11机体',
-          productNum: 6,
-          planType: '产品加工',
-          planLevel: 2,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742822500009',
-          productName: 'WP13H缸盖',
-          productNum: 1,
-          planType: '产品加工',
-          planLevel: 2,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330742922000010',
-          productName: '46吨阀体',
-          productNum: 2,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330743021600011',
-          productName: 'P8GH机体',
-          productNum: 1,
-          planType: '产品加工',
-          planLevel: 2,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330743121700012',
-          productName: 'H2缸盖吕框架',
-          productNum: 1,
-          planType: '产品加工',
-          planLevel: 2,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330743221200013',
-          productName: 'H2缸盖',
-          productNum: 1,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330743320800014',
-          productName: 'P11H机体',
-          productNum: 6,
-          planType: '产品加工',
-          planLevel: 0,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-12',
-        },
-        {
-          planNO: '2022051021330743420600015',
-          productName: 'P8H机体',
-          productNum: 7,
-          planType: '产品加工',
-          planLevel: 1,
-          planStart: '2022-05-10',
-          planEnd: '2022-05-13',
-        },
-      ],
-    };
+    var index = window.location.href.lastIndexOf('=');
+    var num = window.location.href.substring(index + 1, window.location.href.length);
+    var obj = null;
+    if (num.length < 50) {
+      obj = {
+        taskId: '93578990',
+        scheduleTarget: 1,
+        schedulePattern: 2,
+        scheduleCycle: 7,
+        orderDetail: [
+          {
+            planNO: '2022051021330739627200001',
+            productName: '12M33机体',
+            productNum: 2,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-16',
+          },
+          {
+            planNO: '2022051021330742024300002',
+            productName: '8M33机体',
+            productNum: 8,
+            planType: '产品加工',
+            planLevel: 2,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742123900003',
+            productName: 'WP3H机体',
+            productNum: 1,
+            planType: '产品加工',
+            planLevel: 2,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742223800004',
+            productName: 'P15NG机体',
+            productNum: 2,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742323800005',
+            productName: 'P8H国六缸盖',
+            productNum: 2,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742423300006',
+            productName: '16M33总成',
+            productNum: 4,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742523100007',
+            productName: 'WP8机体',
+            productNum: 2,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742718700008',
+            productName: 'P11机体',
+            productNum: 6,
+            planType: '产品加工',
+            planLevel: 2,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742822500009',
+            productName: 'WP13H缸盖',
+            productNum: 1,
+            planType: '产品加工',
+            planLevel: 2,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330742922000010',
+            productName: '46吨阀体',
+            productNum: 2,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330743021600011',
+            productName: 'P8GH机体',
+            productNum: 1,
+            planType: '产品加工',
+            planLevel: 2,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330743121700012',
+            productName: 'H2缸盖吕框架',
+            productNum: 1,
+            planType: '产品加工',
+            planLevel: 2,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330743221200013',
+            productName: 'H2缸盖',
+            productNum: 1,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330743320800014',
+            productName: 'P11H机体',
+            productNum: 6,
+            planType: '产品加工',
+            planLevel: 0,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-12',
+          },
+          {
+            planNO: '2022051021330743420600015',
+            productName: 'P8H机体',
+            productNum: 7,
+            planType: '产品加工',
+            planLevel: 1,
+            planStart: '2022-05-10',
+            planEnd: '2022-05-13',
+          },
+        ],
+      };
+    } else {
+      obj = JSON.parse(decodeURI(decodeURI(num)));
+    }
+    setOutSideOrderDetail(obj.orderDetail ? obj.orderDetail : []);
+    setOutSideScheduleCycle(obj.scheduleCycle);
+    setOutSideSchedulePattern(obj.schedulePattern);
+    setOutSideScheduleTarget(obj.scheduleTarget);
     getAllData(obj).then((res) => {
       console.log(res, 'res-last-dead');
       setAllData(res);
@@ -4528,6 +4541,10 @@ const Home = function (props) {
             leftEchartsPieTwo={leftEchartsPieTwo}
             leftEchartsPieThree={leftEchartsPieThree}
             leftEchartsPieFour={leftEchartsPieFour}
+            outSideOrderDetail={outSideOrderDetail}
+            outSideScheduleCycle={outSideScheduleCycle}
+            outSideSchedulePattern={outSideSchedulePattern}
+            scheduleTarget={scheduleTarget}
           />
           <LeftBottom
             allData={allData}
