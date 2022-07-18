@@ -10,7 +10,7 @@ import LeftBottom from '../leftBottom/index';
 import RightTop from '../rightTop/index';
 import RightCenter from '../rightCenter/index';
 import RightBottom from '../rightBottom/index';
-import { getAllData } from 'services/home/home';
+import { getAllData, getQuery } from 'services/home/home';
 // 添加请求拦截器
 import axios from 'axios';
 axios.interceptors.request.use((config) => {
@@ -69,7 +69,7 @@ const Home = function (props) {
   const [outSideScheduleCycle, setOutSideScheduleCycle] = useState(null);
   const [outSideSchedulePattern, setOutSideSchedulePattern] = useState(null);
   const [scheduleTarget, setOutSideScheduleTarget] = useState(null);
-
+  const [count, setCount] = useState(0);
   ///甘特图变量
   var ROOT_PATH = 'https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
   // var chartDom = document.getElementById('main');
@@ -98,8 +98,98 @@ const Home = function (props) {
   var _autoDataZoomAnimator;
   var myChart;
   var ganTey;
+  // var websock;
+  let number = 0;
   useEffect(() => {
-    // console.log(window.location,'window.location')
+    const timerIDs = setInterval(() => {
+      number = number + 0.1;
+      tick(number);
+    }, 10000);
+    return () => {
+      clearInterval(timerIDs);
+    };
+  }, []);
+  const tick = (number) => {
+    setCount(number);
+  };
+  useEffect(() => {
+    const obj = {
+      source_code: 'SSS',
+    };
+    getQuery(obj).then((res) => {
+      console.log(res.code, 'res.coderes.code');
+      if (res.code == 200) {
+        setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+        setOutSideScheduleCycle(res.scheduleCycle);
+        setOutSideSchedulePattern(res.schedulePattern);
+        setOutSideScheduleTarget(res.scheduleTarget);
+        setAllData(res);
+        // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
+        const oneCen = res.materialDemandList.slice(0, 6);
+        const arrCen = oneCen.map((item, index) => {
+          if (
+            item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
+            item.supplyTime == moment(new Date()).format('YYYY/M/D')
+          ) {
+            return {
+              ...item,
+              flagBool: true,
+            };
+          } else {
+            return {
+              ...item,
+              flagBool: false,
+            };
+          }
+        });
+        setMaterialTypeSixList(arrCen); //物料类型六个卡片
+        setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+        setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+        const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+          return Number(-10000 * item);
+        });
+        setDiffAlgorithmY(cenY); //不同算法对比信息图
+        setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+        const fourWeekFinishRateTran = res.orderStatisticsInfo.fourWeekFinishRate.X.map(
+          (item, index) => {
+            return {
+              name: item,
+              value: res.orderStatisticsInfo.fourWeekFinishRate.Y[index],
+            };
+          },
+        );
+        setArrName(getArrayValue(fourWeekFinishRateTran, 'name'));
+        setSumValue(eval(getArrayValue(fourWeekFinishRateTran, 'value').join('+')));
+        setObjData(array2obj(fourWeekFinishRateTran, 'name'));
+        setOptionData(getData(fourWeekFinishRateTran)); //最近四周趋势对比图
+        setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+        setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+        setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+        setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+        tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+        tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+        setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+        var chartDom = document.getElementById('main');
+        myChart = echarts.init(chartDom);
+        axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
+          //console.log(rawData, 'rawData______________', ROOT_PATH);
+          _rawData = rawData.data;
+          setGanTeData(res.orderScheduleDetail);
+          const cen = res.orderScheduleDetail.map((item, index) => {
+            return {
+              ...item,
+              currentColor: color16(),
+              yValue: index,
+            };
+          });
+          myChart.setOption((option = makeOption(cen)));
+          initDrag();
+        });
+      }
+    });
+  }, [count]);
+  /*  useEffect(() => {
+    //initWebSocket();
     var index = window.location.href.lastIndexOf('=');
     var num = window.location.href.substring(index + 1, window.location.href.length);
     var obj = null;
@@ -319,7 +409,39 @@ const Home = function (props) {
         initDrag();
       });
     });
-  }, []);
+     return () => {
+       websocketclose();
+     }
+  }, []); */
+  /*   const initWebSocket = () => {
+      console.log(document.domain, location.port, 'websocket连接了');
+      //初始化weosocket
+      let Ip = window.location.host
+      //这里的wsuri是根据服务端的ip进行配置（开发环境），生产环境的话可以使用上面的Ip或者是nginx做代理
+      //  const wsuri = `ws://192.168.20.28:10068/websocket/power`;      //协议标识符是ws（如果加密，则为wss），服务器网址就是 URL。 
+      // const wsuri = `ws://${Ip}/ws/${localStorage.getItem('name')}`;  
+      const wsuri = "ws:" + '//' + document.domain + ':' + location.port+'/dcenter';
+      websock = new WebSocket(wsuri);
+      websock.onmessage = websocketonmessage;
+      websock.onopen = websocketonopen;
+      websock.onerror = websocketonerror;
+      websock.onclose = websocketclose;
+    };
+    const websocketsend = () => {//数据发送
+      // let msg=JSON.stringify(111111);
+      // this.websock.send(msg);
+    };
+    const websocketonopen = () => { //连接建立之后执行send方法发送数据
+    };
+    const websocketonerror = (error) => {//连接建立失败重连
+      initWebSocket();
+    };
+    const websocketonmessage = (e) => { //数据接收
+      console.log(e, '接受了');
+    };
+    const websocketclose = (e) => {  //关闭
+      websock.close();
+    } */
   const compareTime = (stime, etime, nowTime1) => {
     // 转换时间格式，并转换为时间戳
     function tranDate(time) {

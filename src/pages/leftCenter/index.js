@@ -227,7 +227,7 @@ const leftCenter = function (props) {
   useEffect(() => {
     if (num % 2 == 0) {
       //偶数
-      initPlanEchartsData(0, outSideOrderDetail.length / 2);
+      initPlanEchartsData(0, outSideOrderDetail.length / 2 + 1);
     } else {
       //奇数
       initPlanEchartsData(outSideOrderDetail.length / 2 + 1, outSideOrderDetail.length);
@@ -242,7 +242,7 @@ const leftCenter = function (props) {
     myChartPlan = echarts.init(chartDom);
     axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
       _rawData = rawData.data;
-      initPlanEchartsData(0, outSideOrderDetail.length / 2);
+      initPlanEchartsData(0, outSideOrderDetail.length / 2 + 1);
       // myChartPlan.setOption((option = makeOption(allTime, currentTime)));
       // autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
       //   // 轮播间隔时间 默认2s
@@ -639,15 +639,15 @@ const leftCenter = function (props) {
             inside: false,
             align: 'center',
           },
-          data: [
-            '2022-05-10',
-            '2022-05-11',
-            '2022-05-12',
-            '2022-05-13',
-            '2022-05-14',
-            '2022-05-15',
-            '2022-05-16',
-          ],
+          // data: [
+          //   '2022-05-10',
+          //   '2022-05-11',
+          //   '2022-05-12',
+          //   '2022-05-13',
+          //   '2022-05-14',
+          //   '2022-05-15',
+          //   '2022-05-16',
+          // ],
         },
       ],
       yAxis: {
