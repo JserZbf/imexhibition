@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
-import { Table, DatePicker, InputNumber } from 'antd';
+import { Table, DatePicker, InputNumber,message} from 'antd';
 import moment from 'moment';
 import './index.less'
 import { getOrderData, getEditStart } from 'services/home/home';
@@ -44,12 +44,14 @@ const Home = function (props) {
       key: 'index',
       render: (text, record, index) => {
         return index + 1;
-      }
+      },
+      width:20
     },
     {
       title: '计划编号',
       dataIndex: 'planNO',
       key: 'planNO',
+      width:20
     },
     {
       title: '计划等级（可选1,2,3）',
@@ -64,17 +66,20 @@ const Home = function (props) {
             setDataSource(newData);
           }}
         />
-      }
+      },
+      width:100
     },
     {
       title: '产品名称',
       dataIndex: 'productName',
       key: 'productName',
+      width:100
     },
     {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
+      width:100
     },
     {
       title: '计划开始时间（可选）',
@@ -88,7 +93,8 @@ const Home = function (props) {
             newData[index] = record;
             setDataSource(newData);
           }} />
-      }
+      },
+      width:100
     },
     {
       title: '计划结束时间（可选）',
@@ -103,7 +109,8 @@ const Home = function (props) {
             setDataSource(newData);
           }}
         />
-      }
+      },
+      width:100
     }
   ];
   const talbeData = [
@@ -315,11 +322,9 @@ const Home = function (props) {
   }
 
   const clickMoal = () => {
-    setModalFlag(true);
+    setModalFlag(false);
   }
   const productionStart = () => {
-    //console.log(schedulePattern, scheduleCycle, scheduleTarget, 'cen-cen-cen');
-    // console.log(dataSource, 'dataSource');Y
     var objStart = {
       "taskId": taskId + '',
       "scheduleTarget": scheduleTarget,
@@ -327,14 +332,16 @@ const Home = function (props) {
       "scheduleCycle": scheduleCycle,
       "orderDetail": dataSource
     }
-    const cenObjStart = JSON.stringify(objStart);
-    const url = encodeURI(encodeURI(`http://172.17.40.62:98/page?obj=${cenObjStart}`));
-    window.open(url, '_self')
-    // getEditStart(objStart).then(res => {
-    //   if (res.code == 200) {
-    //     console.log(res,'res-last-data')
-    //   }
-    // })
+    // const cenObjStart = JSON.stringify(objStart);
+    // const url = encodeURI(encodeURI(`http://192.168.0.103:8001/page?obj=${cenObjStart}`));
+    // window.open(url, '_self')
+    getEditStart(objStart).then(res => {
+      if (res.code == 200) {
+        message.success('排产开始成功')
+      }else{
+        message.warn('排产开始失败')
+      }
+    })
   }
   // useMemo(() => {
   //   const cen = talbeData.filter(item => value === item.flag);
