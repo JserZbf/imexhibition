@@ -5,7 +5,7 @@ import moment from 'moment';
 import './index.less'
 import { getOrderData, getEditStart } from 'services/home/home';
 const Home = function (props) {
-  const dateFormat = 'YYYY/MM/DD';
+  const dateFormat = 'YYYY-MM-DD';
   // const [value, setValue] = useState(1);
   const [modalFlag, setModalFlag] = useState(false);
   const [moniList, setMoniList] = useState([{
