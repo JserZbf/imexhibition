@@ -6,3 +6,6 @@ export const getOrderData = (params) => {
 export const getEditStart = (params) => {
     return http.post('/sss-imexhibition-aps/start', params);
 };
+export const getRescheduling = (params) => {
+    return http.post('/sss-imexhibition-aps/rescheduling', params);
+};
