@@ -596,7 +596,7 @@ const rightCenter = function (props) {
         },
 
         itemStyle: {
-          color: '#fff',
+          color: 'rgba(65, 155, 251, 1)',
           borderColor: 'rgba(65, 155, 251, 1)',
           borderWidth: 2,
           shadowColor: 'rgba(0, 0, 0, .3)',
@@ -655,7 +655,7 @@ const rightCenter = function (props) {
         },
 
         itemStyle: {
-          color: '#fff',
+          color: 'rgba(30, 218, 247, 1)',
           borderColor: 'rgba(2, 191, 248, 1)',
           borderWidth: 2,
           shadowColor: 'rgba(0, 0, 0, .3)',
@@ -714,7 +714,7 @@ const rightCenter = function (props) {
         },
 
         itemStyle: {
-          color: '#fff',
+          color: '#FE8B24',
           borderColor: '#FE8B24',
           borderWidth: 2,
           shadowColor: 'rgba(0, 0, 0, .3)',
@@ -832,6 +832,11 @@ const rightCenter = function (props) {
         data: fourWeekUseTrend.Y1,
         itemStyle: {
           borderRadius: [30, 30, 0, 0],
+          normal: {
+            lineStyle: {
+              width: 10,
+            },
+          },
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             {
               offset: 0,
@@ -972,14 +977,15 @@ const rightCenter = function (props) {
             left={'13px'}
             top={'68px'}
           />
-          <div className="right-center-mess diff-kind">APS系统可适应不同加工类型</div>
+          <div className="right-center-title diff-cond-product">不同产品类型的产量变化对比</div>
+          <div className="right-center-mess">APS系统可适应不同加工类型</div>
           <div className="right-center-mess-line"></div>
           <ReactEchartsCom option={aps} width={'650px'} height={'400px'} left={'0px'} top={'0px'} />
         </Col>
         <Col span={5} className="right-center-part3">
           <div className="right-center-title">近四周总设备利用率变化趋势图</div>
           <div className="right-center-mess">
-            APS系统增高机床开动率,降低机床待机率, 可通过监控机床维修率安排机床保养
+            APS系统提高机床开动率，降低机床待机率，故障较高的设备可优先保养
           </div>
           <div className="right-center-mess-line"></div>
           <ReactEchartsCom
@@ -989,7 +995,7 @@ const rightCenter = function (props) {
             left={'0px'}
             top={'66px'}
           />
-          <div className="right-center-title diff-cond">预计设备不同状态</div>
+          <div className="right-center-title diff-cond">近四周设备能耗监控</div>
           <div className="right-center-mess">可有效观察能耗分布,协助降低能耗大户</div>
           <div className="right-center-mess-line"></div>
           <ReactEchartsCom

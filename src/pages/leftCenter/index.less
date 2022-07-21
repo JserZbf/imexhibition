@@ -4,23 +4,23 @@
   margin: 2.5% 0 0 262px;
 
   // background: orange;
-  >.ant-row {
+  > .ant-row {
     width: 100%;
     height: 100%;
 
     .plan-mark-total {
       width: 98%;
       height: 77.5%;
-      border: 1px solid #09306D;
+      border: 1px solid #09306d;
       position: relative;
       padding: 72px 0px 57.5px 0px;
 
-      >.back-line-list {
+      > .back-line-list {
         width: 100%;
         height: 100%;
         display: flex;
 
-        >li {
+        > li {
           width: 1px;
           height: 100%;
           border: 1px solid rgba(14, 101, 240, 0.4);
@@ -41,17 +41,17 @@
         .jian-tou {
           width: 40px;
           height: 25px;
-          background: url("./img/background/two-triangle.png") no-repeat;
+          background: url('./img/background/two-triangle.png') no-repeat;
           background-size: 100% 100%;
-          margin-top: 20px
+          margin-top: 20px;
         }
 
-        >span {
+        > span {
           margin-left: 18px;
           font-size: 40px;
           font-family: PingFang SC-Regular, PingFang SC;
           font-weight: 400;
-          color: #0E65F0;
+          color: #0e65f0;
         }
       }
 
@@ -62,7 +62,7 @@
         left: 0%;
         top: 0%;
 
-        >li {
+        > li {
           width: 344px;
           height: 58px;
           background: url('./img/background/plan-blue-background.png') no-repeat;
@@ -79,32 +79,32 @@
           .line {
             width: 1px;
             height: 28px;
-            border: 1px solid #FFFFFF;
+            border: 1px solid #ffffff;
             margin: 0% 3%;
           }
         }
 
-        >li:nth-child(1) {
+        > li:nth-child(1) {
           left: 86px;
           top: 107px;
         }
 
-        >li:nth-child(2) {
+        > li:nth-child(2) {
           left: 40px;
           top: 187px;
         }
 
-        >li:nth-child(3) {
+        > li:nth-child(3) {
           left: 364px;
           top: 268px;
         }
 
-        >li:nth-child(4) {
+        > li:nth-child(4) {
           left: 651px;
           top: 355px;
         }
 
-        >li:nth-child(5) {
+        > li:nth-child(5) {
           background: url('./img/background/plan-orange-background.png') no-repeat;
           background-size: 100% 100%;
           width: 365px;
@@ -120,11 +120,11 @@
         left: 0;
         top: 0;
 
-        >li {
+        > li {
           position: absolute;
         }
 
-        >li:nth-child(1) {
+        > li:nth-child(1) {
           width: 897px;
           height: 5px;
           background: rgba(23, 146, 255, 1);
@@ -133,7 +133,7 @@
           top: 66%;
         }
 
-        >li:nth-child(2) {
+        > li:nth-child(2) {
           width: 2px;
           height: 114px;
           background: rgba(23, 146, 255, 1);
@@ -142,7 +142,7 @@
           top: 69.7%;
         }
 
-        >li:nth-child(3) {
+        > li:nth-child(3) {
           width: 13px;
           height: 13px;
           background: rgba(23, 146, 255, 1);
@@ -151,7 +151,7 @@
           top: 85%;
         }
 
-        >li:nth-child(4) {
+        > li:nth-child(4) {
           width: 2px;
           height: 114px;
           background: rgba(23, 146, 255, 1);
@@ -160,7 +160,7 @@
           top: 69.7%;
         }
 
-        >li:nth-child(5) {
+        > li:nth-child(5) {
           width: 13px;
           height: 13px;
           background: rgba(23, 146, 255, 1);
@@ -169,20 +169,20 @@
           top: 85%;
         }
 
-        >li:nth-child(6) {
+        > li:nth-child(6) {
           font-size: 24px;
           font-family: PingFang SC-Regular, PingFang SC;
           font-weight: 400;
-          color: #FFFFFF;
+          color: #ffffff;
           left: 64.7%;
           top: 87%;
         }
 
-        >li:nth-child(7) {
+        > li:nth-child(7) {
           font-size: 24px;
           font-family: PingFang SC-Regular, PingFang SC;
           font-weight: 400;
-          color: #FFFFFF;
+          color: #ffffff;
           left: 88.7%;
           top: 87%;
         }
@@ -209,14 +209,14 @@
       }
 
       .ant-table {
-        background-color: #02060B;
+        background-color: #02060b;
         color: white;
-        border: 1px solid #09306D;
+        border: 1px solid #09306d;
       }
 
       // 表头样式
-      .ant-table-thead>tr>th {
-        background-color: #02060B;
+      .ant-table-thead > tr > th {
+        background-color: #02060b;
         color: white;
         font-size: 22px;
         font-family: Segoe UI-Regular, Segoe UI;
@@ -229,39 +229,38 @@
 
       // 修改选中行样式
       .ant-table-tbody {
-
-        >tr:hover:not(.ant-table-expanded-row)>td,
+        > tr:hover:not(.ant-table-expanded-row) > td,
         .ant-table-row-hover,
-        .ant-table-row-hover>td {
-          background-color: #132A56 !important;
-          color: #15E0FF !important;
+        .ant-table-row-hover > td {
+          background-color: #132a56 !important;
+          color: #15e0ff !important;
         }
       }
 
       // 去除边框，留右边框 && 表格内容居中 && 行高
-      .ant-table-tbody>tr>td,
-      .ant-table-thead>tr>th {
+      .ant-table-tbody > tr > td,
+      .ant-table-thead > tr > th {
         border-bottom: none;
         text-align: center !important;
         padding: 10px 10px !important;
       }
 
-      .ant-table-tbody>tr {
-        >td {
+      .ant-table-tbody > tr {
+        > td {
           font-size: 22px;
           font-family: Segoe UI-Regular, Segoe UI;
           font-weight: 400;
-          color: #FFFFFF;
+          color: #ffffff;
         }
       }
 
       // 去除表头最右边边框
-      .ant-table-container table>thead>tr:first-child th:last-child {
+      .ant-table-container table > thead > tr:first-child th:last-child {
         border-right: none;
       }
 
       // 去除tbody最右边边框
-      .ant-table-container table>tbody>tr td:last-child {
+      .ant-table-container table > tbody > tr td:last-child {
         border-right: none;
       }
 
@@ -287,13 +286,13 @@
       // 我看了生成后的表格元素，发现它是表头其实也是个表格，然后取表格的thead部分设置，
       // 表体又是一个表格，然后取tbody设置
       .ant-table-header {
-        border-right: #2F2F2F;
+        border-right: #2f2f2f;
 
         //滚动条整体部分
         &::-webkit-scrollbar {
           width: 6px; //y轴滚动条粗细
           height: 6px; //x轴滚动条粗细
-          border-bottom: 1px solid #7B7B7B;
+          border-bottom: 1px solid #7b7b7b;
         }
 
         //滚动条里面的小方块，能上下左右移动（取决于是垂直滚动条还是水平滚动条）
@@ -308,20 +307,20 @@
         &::-webkit-scrollbar-track {
           -webkit-box-shadow: 0;
           border-radius: 0;
-          background: #4D4D4B; //滚动槽背景色
+          background: #4d4d4b; //滚动槽背景色
           border-radius: 10px; //滚动条边框半径设置
         }
       }
 
       //表格体的滚动条设置
       .ant-table-body {
-        border-right: #2F2F2F;
+        border-right: #2f2f2f;
 
         //滚动条整体部分
         &::-webkit-scrollbar {
           width: 6px; //y轴滚动条粗细
           height: 6px; //x轴滚动条粗细
-          border-bottom: 1px solid #7B7B7B;
+          border-bottom: 1px solid #7b7b7b;
         }
 
         //滚动条里面的小方块，能上下左右移动（取决于是垂直滚动条还是水平滚动条）
@@ -336,15 +335,17 @@
         &::-webkit-scrollbar-track {
           -webkit-box-shadow: 0;
           border-radius: 0;
-          background: #4D4D4B; //滚动槽背景色
+          background: #4d4d4b; //滚动槽背景色
           border-radius: 10px; //滚动条边框半径设置
         }
       }
-
     }
 
     .rowClass {
-      background-color: red;
+      color: red;
+      > td {
+        color: red !important;
+      }
     }
 
     .ehcarts-yield-one,
@@ -353,32 +354,32 @@
     .ehcarts-yield-four {
       width: 123%;
       height: 250px;
-      background: url("./img/background/plan-yeild.png") no-repeat;
+      background: url('./img/background/plan-yeild.png') no-repeat;
       background-size: 100% 100%;
       display: flex;
       margin-top: 1.7%;
 
       .ant-steps-item-description {
-        color: #A5CFE7;
+        color: #a5cfe7;
         margin-left: 20%;
       }
 
-      >div>ul {
+      > div > ul {
         display: flex;
         width: 100%;
         margin-top: 5%;
         margin-left: 3%;
 
-        >.title {
+        > .title {
           font-size: 13px;
           font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
           font-weight: normal;
-          color: #A5CFE7;
+          color: #a5cfe7;
           line-height: 15px;
           margin: 0% 6%;
           width: 14%;
 
-          >span {
+          > span {
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -386,7 +387,7 @@
             text-align: center;
           }
 
-          >span:nth-child(2) {
+          > span:nth-child(2) {
             margin: 10% 0%;
           }
         }
@@ -395,33 +396,33 @@
           display: flex;
           margin-left: -10%;
           .active {
-            background-color: #E53737;
+            background-color: #e53737;
           }
 
-          >span {
+          > span {
             width: 55px;
             height: 17px;
             font-size: 8px;
             text-align: center;
             font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
             font-weight: normal;
-            color: #FFFFFF;
-            background: #597BF3;
+            color: #ffffff;
+            background: #597bf3;
             border-radius: 10px 10px 10px 10px;
             margin: 0% 0% 0% 4%;
           }
 
-          >span:nth-child(2) {
+          > span:nth-child(2) {
             margin-top: 2.5%;
           }
 
-          >span:nth-child(3) {
+          > span:nth-child(3) {
             margin-top: 5%;
           }
         }
       }
 
-      >div>.steps {
+      > div > .steps {
         width: 70%;
         height: auto;
         margin-left: -2%;
@@ -431,35 +432,35 @@
           font-size: 12px;
           font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
           font-weight: normal;
-          color: #A5CFE7;
+          color: #a5cfe7;
           line-height: 14px;
           margin-top: 11%;
           margin-left: 22%;
         }
 
-        .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
-        .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
-        .ant-steps-item-wait .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+        .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+        .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+        .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
           width: 30px;
           height: 30px;
         }
 
-        .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot,
-        .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
-          background: #7CA9FF;
+        .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+        .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+          background: #7ca9ff;
         }
 
-        .ant-steps-item-wait .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+        .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
           background: #f0f0f0;
         }
 
-        .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
-          background: #8AB2FF;
+        .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+          background: #8ab2ff;
           height: 14px;
         }
 
-        .ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-tail::after,
-        .ant-steps-item-wait>.ant-steps-item-container>.ant-steps-item-tail::after {
+        .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+        .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after {
           height: 14px;
         }
 
@@ -496,5 +497,4 @@
       margin-top: -3%;
     }
   }
-
 }

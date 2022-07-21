@@ -32,10 +32,9 @@ const Home = function (props) {
   const [finishPlanObj, setFinishPlanObj] = useState({});
   const [diffAlgorithmX, setDiffAlgorithmX] = useState([]);
   const [diffAlgorithmY, setDiffAlgorithmY] = useState([]);
-  const [arrName, setArrName] = useState();
-  const [sumValue, setSumValue] = useState();
-  const [objData, setObjData] = useState();
-  const [optionData, setOptionData] = useState({});
+  const [fourWeekFinishRateX, setFourWeekFinishRateX] = useState([]);
+  const [fourWeekFinishRateY, setFourWeekFinishRateY] = useState([]);
+  const [bigValueLine, setBigValueLine] = useState([]);
   const [fourWeekOutputStatistics, setFourWeekOutputStatistics] = useState({});
   const [fourWeekEnergyConsumption, setFourWeekEnergyConsumption] = useState({});
   const [fourWeekUseTrend, setFourWeekUseTrend] = useState({});
@@ -70,6 +69,11 @@ const Home = function (props) {
   const [outSideSchedulePattern, setOutSideSchedulePattern] = useState(null);
   const [scheduleTarget, setOutSideScheduleTarget] = useState(null);
   const [count, setCount] = useState(0);
+  const [num, setNum] = useState(0);
+  const [orderCardCount, setOrderCardCount] = useState(4);
+  const [deviceCardCount, setDeviceCardCount] = useState(5);
+  const [orderCardDetail, setOrderCardDetail] = useState([]);
+  const [deviceCardDetail, setDeviceCardDetail] = useState([]);
   ///甘特图变量
   var ROOT_PATH = 'https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples';
   // var chartDom = document.getElementById('main');
@@ -104,7 +108,7 @@ const Home = function (props) {
     const timerIDs = setInterval(() => {
       number = number + 0.1;
       tick(number);
-    }, 10000);
+    }, 3000);
     return () => {
       clearInterval(timerIDs);
     };
@@ -112,83 +116,120 @@ const Home = function (props) {
   const tick = (number) => {
     setCount(number);
   };
+  let numbers = 0;
   useEffect(() => {
-    const obj = {
-      source_code: 'SSS',
+    const timerIDS = setInterval(() => {
+      numbers = numbers + 1;
+      ticks(numbers);
+    }, 10000);
+    return () => {
+      clearInterval(timerIDS);
     };
-    getQuery(obj).then((res) => {
-      console.log(res.code, 'res.coderes.code');
-      if (res.code == 200) {
-        setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
-        setOutSideScheduleCycle(res.scheduleCycle);
-        setOutSideSchedulePattern(res.schedulePattern);
-        setOutSideScheduleTarget(res.scheduleTarget);
-        setAllData(res);
-        // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-        const oneCen = res.materialDemandList.slice(0, 6);
-        const arrCen = oneCen.map((item, index) => {
-          if (
-            item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
-            item.supplyTime == moment(new Date()).format('YYYY/M/D')
-          ) {
-            return {
-              ...item,
-              flagBool: true,
-            };
-          } else {
-            return {
-              ...item,
-              flagBool: false,
-            };
-          }
-        });
-        setMaterialTypeSixList(arrCen); //物料类型六个卡片
-        setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
-        setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-        const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-          return Number(-10000 * item);
-        });
-        setDiffAlgorithmY(cenY); //不同算法对比信息图
-        setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
-        const fourWeekFinishRateTran = res.orderStatisticsInfo.fourWeekFinishRate.X.map(
-          (item, index) => {
-            return {
-              name: item,
-              value: res.orderStatisticsInfo.fourWeekFinishRate.Y[index],
-            };
-          },
-        );
-        setArrName(getArrayValue(fourWeekFinishRateTran, 'name'));
-        setSumValue(eval(getArrayValue(fourWeekFinishRateTran, 'value').join('+')));
-        setObjData(array2obj(fourWeekFinishRateTran, 'name'));
-        setOptionData(getData(fourWeekFinishRateTran)); //最近四周趋势对比图
-        setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
-        setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
-        setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
-        setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
-        tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
-        tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
-        setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
-        var chartDom = document.getElementById('main');
-        myChart = echarts.init(chartDom);
-        axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-          //console.log(rawData, 'rawData______________', ROOT_PATH);
-          _rawData = rawData.data;
-          setGanTeData(res.orderScheduleDetail);
-          const cen = res.orderScheduleDetail.map((item, index) => {
-            return {
-              ...item,
-              currentColor: color16(),
-              yValue: index,
-            };
-          });
-          myChart.setOption((option = makeOption(cen)));
-          initDrag();
-        });
-      }
-    });
-  }, [count]);
-  /*  useEffect(() => {
+  }, []);
+  const ticks = (number) => {
+    setNum(number);
+    const cen = deviceCardCount;
+    setDeviceCardCount(cen + 5);
+  };
+  //  useEffect(() => {
+  //    const obj = {
+  //      source_code: 'SSS',
+  //    };
+  //    getQuery(obj).then((res) => {
+  //      console.log(res.code, 'res.coderes.code');
+  //      if (res.code == 200) {
+  //        setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+  //        setOutSideScheduleCycle(res.scheduleCycle);
+  //        setOutSideSchedulePattern(res.schedulePattern);
+  //        setOutSideScheduleTarget(res.scheduleTarget);
+  //        setAllData(res);
+  //        const oneCen = res.materialDemandList.filter(item => item.shortNum).slice(0, 6);
+  //        const arrCen = oneCen.map((item, index) => {
+  //          if (
+  //            item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
+  //            item.supplyTime == moment(new Date()).format('YYYY/M/D')
+  //          ) {
+  //            return {
+  //              ...item,
+  //              flagBool: true,
+  //            };
+  //          } else {
+  //            return {
+  //              ...item,
+  //              flagBool: false,
+  //            };
+  //          }
+  //        });
+  //        setMaterialTypeSixList(arrCen); //物料类型六个卡片
+  //        setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+  //        setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+  //        const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+  //          return Number(-10000 * item);
+  //        });
+  //        var bigValueLineCen = [];
+  //        for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
+  //          bigValueLineCen.push(Number(-10000 * res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
+  //            return a - b;
+  //          })[0]))
+  //        }
+  //        //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
+  //        setBigValueLine(bigValueLineCen);
+  //        setDiffAlgorithmY(cenY); //不同算法对比信息图
+  //        setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+  //        setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
+  //        setFourWeekFinishRateY(res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
+  //          return Number(100 * item);
+  //        }));
+  //        setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+  //        setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+  //        setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+  //        setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+  //        setOrderCardDetail(res.orderCardDetail);
+  //        setDeviceCardDetail(res.deviceCardDetail);
+  //        tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+  //        tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+  //        setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+  //        var chartDom = document.getElementById('main');
+  //        myChart = echarts.init(chartDom);
+  //        axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
+  //          //console.log(rawData, 'rawData______________', ROOT_PATH);
+  //          _rawData = rawData.data;
+  //          setGanTeData(res.orderScheduleDetail);
+  //          var cen1T = res.orderScheduleDetail.map((item, index) => {
+  //            return {
+  //              ...item,
+  //              currentColor: color16(),
+  //              yValue: index,
+  //            };
+  //          });
+  //          const cen2 = res.orderScheduleDetail.map((item, index) => {
+  //            return {
+  //              ...item,
+  //              currentColor: cen1T[index].currentColor,
+  //              yValue: index,
+  //            };
+  //          });
+  //          const cen3 = res.orderScheduleDetail.map((item, index) => {
+  //            return {
+  //              ...item,
+  //              currentColor: cen1T[index].currentColor,
+  //              yValue: index,
+  //            };
+  //          });
+  //          const cen4 = res.orderScheduleDetail.map((item, index) => {
+  //            return {
+  //              ...item,
+  //              currentColor: cen1T[index].currentColor,
+  //              yValue: index,
+  //            };
+  //          });
+  //          myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
+  //          initDrag();
+  //        });
+  //      }
+  //    });
+  //  }, [count]);
+  useEffect(() => {
     //initWebSocket();
     var index = window.location.href.lastIndexOf('=');
     var num = window.location.href.substring(index + 1, window.location.href.length);
@@ -207,7 +248,7 @@ const Home = function (props) {
             planType: '产品加工',
             planLevel: 0,
             planStart: '2022-05-10',
-            planEnd: '2022-05-16',
+            planEnd: '2022-05-11',
           },
           {
             planNO: '2022051021330742024300002',
@@ -216,7 +257,7 @@ const Home = function (props) {
             planType: '产品加工',
             planLevel: 2,
             planStart: '2022-05-10',
-            planEnd: '2022-05-12',
+            planEnd: '2022-05-30',
           },
           {
             planNO: '2022051021330742123900003',
@@ -344,75 +385,3613 @@ const Home = function (props) {
     setOutSideScheduleCycle(obj.scheduleCycle);
     setOutSideSchedulePattern(obj.schedulePattern);
     setOutSideScheduleTarget(obj.scheduleTarget);
-    getAllData(obj).then((res) => {
-      console.log(res, 'res-last-dead');
-      setAllData(res);
-      // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-      const oneCen = res.materialDemandList.slice(0, 6);
-      const arrCen = oneCen.map((item, index) => {
-        if (
-          item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
-          item.supplyTime == moment(new Date()).format('YYYY/M/D')
-        ) {
-          return {
-            ...item,
-            flagBool: true,
-          };
-        } else {
-          return {
-            ...item,
-            flagBool: false,
-          };
-        }
-      });
-      setMaterialTypeSixList(arrCen); //物料类型六个卡片
-      setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
-      setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-      const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-        return Number(-10000 * item);
-      });
-      setDiffAlgorithmY(cenY); //不同算法对比信息图
-      setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
-      const fourWeekFinishRateTran = res.orderStatisticsInfo.fourWeekFinishRate.X.map(
-        (item, index) => {
-          return {
-            name: item,
-            value: res.orderStatisticsInfo.fourWeekFinishRate.Y[index],
-          };
+    //  getAllData(obj).then((res) => {
+    // console.log(res, 'res-last-dead');
+    const res = {
+      code: 200,
+      deviceCardDetail: [
+        {
+          dayOutput: {
+            X: ['20220723', '20220717'],
+            Y: [14, 4],
+          },
+          deviceImg: '1.png',
+          deviceName: '350-2',
+          isFinishMaintain: '否',
+          runTimeRate: 0.16742424242424242,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [901, 743, 1772, 92, 7693],
+            Y2: [3057, 1524, 3583, 952, 0],
+            Y3: [5282, 6973, 3885, 8196, 1547],
+          },
         },
-      );
-      setArrName(getArrayValue(fourWeekFinishRateTran, 'name'));
-      setSumValue(eval(getArrayValue(fourWeekFinishRateTran, 'value').join('+')));
-      setObjData(array2obj(fourWeekFinishRateTran, 'name'));
-      setOptionData(getData(fourWeekFinishRateTran)); //最近四周趋势对比图
-      setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
-      setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
-      setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
-      setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
-      tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
-      tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
-      setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
-      var chartDom = document.getElementById('main');
-      myChart = echarts.init(chartDom);
-      axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-        //console.log(rawData, 'rawData______________', ROOT_PATH);
-        _rawData = rawData.data;
-        setGanTeData(res.orderScheduleDetail);
-        const cen = res.orderScheduleDetail.map((item, index) => {
-          return {
-            ...item,
-            currentColor: color16(),
-            yValue: index,
-          };
-        });
-        myChart.setOption((option = makeOption(cen)));
-        initDrag();
-      });
+        {
+          dayOutput: {
+            X: ['20220722', '20220724', '20220723', '20220717', '20220718'],
+            Y: [7, 5, 2, 1, 1],
+          },
+          deviceImg: '1.png',
+          deviceName: '350-3',
+          isFinishMaintain: '否',
+          runTimeRate: 0.2093073593073593,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [398, 133, 663, 134, 7306],
+            Y2: [2040, 929, 1126, 761, 0],
+            Y3: [6802, 8178, 7451, 8345, 1934],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220717', '20220718'],
+            Y: [6, 2],
+          },
+          deviceImg: '1.png',
+          deviceName: '海科特-1',
+          isFinishMaintain: '否',
+          runTimeRate: 0.08073593073593073,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [148, 383, 1984, 2253, 8494],
+            Y2: [2748, 2913, 3181, 3459, 0],
+            Y3: [6344, 5944, 4075, 3528, 746],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220717'],
+            Y: [2],
+          },
+          deviceImg: '1.png',
+          deviceName: '6000-2',
+          isFinishMaintain: '否',
+          runTimeRate: 0.030303030303030304,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [1043, 1266, 354, 2450, 8960],
+            Y2: [2411, 2939, 1238, 3028, 0],
+            Y3: [5786, 5035, 7648, 3762, 280],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220718'],
+            Y: [2],
+          },
+          deviceImg: '1.png',
+          deviceName: '锡根',
+          isFinishMaintain: '否',
+          runTimeRate: 0.025974025974025976,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [526, 1561, 735, 279, 9000],
+            Y2: [1787, 3725, 1143, 2183, 0],
+            Y3: [6927, 3954, 7362, 6778, 240],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220722', '20220717', '20220718'],
+            Y: [8, 2, 2],
+          },
+          deviceImg: '1.png',
+          deviceName: '海科特-2',
+          isFinishMaintain: '否',
+          runTimeRate: 0.09253246753246754,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [163, 6, 59, 80, 8385],
+            Y2: [3869, 776, 1409, 1823, 0],
+            Y3: [5208, 8458, 7772, 7337, 855],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220719', '20220720', '20220717', '20220718'],
+            Y: [11, 11, 7, 3],
+          },
+          deviceImg: '1.png',
+          deviceName: '英赛',
+          isFinishMaintain: '否',
+          runTimeRate: 0.29805194805194807,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [781, 504, 322, 1883, 6486],
+            Y2: [2095, 612, 1890, 2127, 0],
+            Y3: [6364, 8124, 7028, 5230, 2754],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220721', '20220719', '20220718'],
+            Y: [11, 5, 1],
+          },
+          deviceImg: '1.png',
+          deviceName: '清洗机',
+          isFinishMaintain: '否',
+          runTimeRate: 0.15627705627705626,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [382, 224, 1689, 2204, 7796],
+            Y2: [1185, 723, 3292, 2430, 0],
+            Y3: [7673, 8293, 4259, 4606, 1444],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220717'],
+            Y: [4],
+          },
+          deviceImg: '1.png',
+          deviceName: '10000-1',
+          isFinishMaintain: '否',
+          runTimeRate: 0.06774891774891775,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [80, 988, 176, 351, 8614],
+            Y2: [969, 1462, 4395, 2746, 0],
+            Y3: [8191, 6790, 4669, 6143, 626],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220718', '20220717'],
+            Y: [7, 6],
+          },
+          deviceImg: '1.png',
+          deviceName: '依巴米亚',
+          isFinishMaintain: '否',
+          runTimeRate: 0.10844155844155844,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [522, 1040, 1401, 2849, 8238],
+            Y2: [3862, 2956, 1518, 3105, 0],
+            Y3: [4856, 5244, 6321, 3286, 1002],
+          },
+        },
+        {
+          dayOutput: {
+            X: ['20220720', '20220718', '20220721', '20220717', '20220722'],
+            Y: [5, 5, 3, 3, 1],
+          },
+          deviceImg: '1.png',
+          deviceName: '试漏设备',
+          isFinishMaintain: '否',
+          runTimeRate: 0.18322510822510824,
+          stateRatio: {
+            X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+            Y1: [726, 706, 796, 1913, 7547],
+            Y2: [1821, 1127, 3645, 2525, 0],
+            Y3: [6693, 7407, 4799, 4802, 1693],
+          },
+        },
+      ],
+      deviceStatisticsInfo: {
+        deviceUseStatistics: {
+          ActualUsedNum: 11,
+          availableNum: 22,
+          useRate: 0.5,
+        },
+        deviceUseTime: '8:00-17:00,19:00-次日8:00',
+        fourWeekEnergyConsumption: {
+          X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+          Y1: [
+            2340.9, 1643.8999999999999, 1439.05, 1314.95, 1227.3999999999999, 851.6999999999999,
+            726.75, 634.1, 532.1, 238.0, 204.0,
+          ],
+          Y2: [
+            1500.099999999999, 6210.099999999999, 6414.95, 6539.05, 6626.599999999999, 7002.3,
+            7127.25, 7219.9, 7321.9, 7616.0, 3650.0,
+          ],
+        },
+        fourWeekUseTrend: {
+          X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+          Y1: [0.4, 0.6, 0.71, 0.68, 0.5],
+          Y2: [0.8, 0.78, 0.85, 0.73, 0.29805194805194807],
+          Y3: [0.4, 0.2, 0.13, 0.18, 0.025974025974025976],
+        },
+        fourWeekUtilizationRate: {
+          X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+          Y1: [0.77, 0.85, 0.88, 0.79, 0.06454643841007478],
+          Y2: [0.23, 0.15, 0.12, 0.21, 0.9354535615899252],
+          Y3: [0.22, 0.2, 0.15, 0.16, 0.0],
+        },
+      },
+      isHasMaintenance: false,
+      materialDemandList: [
+        {
+          Specs: 'p1514',
+          demandNum: 22,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 9,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'p3455',
+          demandNum: 16,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 21,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'p2517',
+          demandNum: 15,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'p1277',
+          demandNum: 11,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tray',
+          shortNum: 12,
+          stockQuantity: 6,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'p3280',
+          demandNum: 10,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'p1636',
+          demandNum: 8,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tray',
+          shortNum: 6,
+          stockQuantity: 10,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'p3512',
+          demandNum: 8,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'p1561',
+          demandNum: 8,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 25,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'p3473',
+          demandNum: 7,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 3,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'p2042',
+          demandNum: 7,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tray',
+          shortNum: 5,
+          stockQuantity: 27,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'p1415',
+          demandNum: 6,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'p1389',
+          demandNum: 6,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tray',
+          shortNum: 1,
+          stockQuantity: 1,
+          supplyTime: '2022-07-19',
+        },
+        {
+          Specs: 'p3180',
+          demandNum: 4,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tray',
+          shortNum: 19,
+          stockQuantity: 16,
+          supplyTime: '2022-07-19',
+        },
+        {
+          Specs: 'p2660',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 30,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'p1925',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 20,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'p1477',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 23,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'p1814',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'p1832',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 24,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'p3200',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 27,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'p1660',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tray',
+          shortNum: 0,
+          stockQuantity: 4,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'F1626',
+          demandNum: 35,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 9,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'F1850',
+          demandNum: 32,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 21,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'F1767',
+          demandNum: 18,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'F3721',
+          demandNum: 12,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'fixture',
+          shortNum: 12,
+          stockQuantity: 6,
+          supplyTime: '2022-07-18',
+        },
+        {
+          Specs: 'F3725',
+          demandNum: 10,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'F1439',
+          demandNum: 8,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'fixture',
+          shortNum: 6,
+          stockQuantity: 10,
+          supplyTime: '2022-07-18',
+        },
+        {
+          Specs: 'F2519',
+          demandNum: 6,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'F1855',
+          demandNum: 5,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 25,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'F1051',
+          demandNum: 4,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 3,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'F3671',
+          demandNum: 2,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'fixture',
+          shortNum: 5,
+          stockQuantity: 27,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'F1939',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'F2211',
+          demandNum: 2,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'fixture',
+          shortNum: 1,
+          stockQuantity: 1,
+          supplyTime: '2022-07-18',
+        },
+        {
+          Specs: 'F3498',
+          demandNum: 2,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'fixture',
+          shortNum: 19,
+          stockQuantity: 16,
+          supplyTime: '2022-07-18',
+        },
+        {
+          Specs: 'F2731',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 30,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'F3784',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 20,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'F2549',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'fixture',
+          shortNum: 0,
+          stockQuantity: 23,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D215铣刀45420',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 9,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'D160粗铣SNGX1205ANN',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 21,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D32立铣302175706',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'D6.8/10钻头302650516',
+          demandNum: 1,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tool',
+          shortNum: 12,
+          stockQuantity: 6,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'D63铣刀LNGX130708',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D35精铰303161159',
+          demandNum: 1,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tool',
+          shortNum: 6,
+          stockQuantity: 10,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'D100铣刀LNGX130708R',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'D15枪钻15.00*560',
+          demandNum: 6,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 25,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'D63方肩铣LNGX130708',
+          demandNum: 6,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 3,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'D92扩刀   ',
+          demandNum: 6,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tool',
+          shortNum: 5,
+          stockQuantity: 27,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: 'D30铰刀302824237',
+          demandNum: 6,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'D10立铣刀D10-180',
+          demandNum: 6,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tool',
+          shortNum: 1,
+          stockQuantity: 1,
+          supplyTime: '2022-07-18',
+        },
+        {
+          Specs: 'D13钻头WP5H-D13.5-35-D16',
+          demandNum: 6,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'tool',
+          shortNum: 19,
+          stockQuantity: 16,
+          supplyTime: '2022-07-19',
+        },
+        {
+          Specs: 'D30立铣刀D30-120-165',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 30,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: '45度倒角刀D30-50-120',
+          demandNum: 7,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 23,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'D20枪钻D20.02*805',
+          demandNum: 7,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'D171粗镗ccMt120408',
+          demandNum: 7,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 24,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'D183粗镗ccMt120408',
+          demandNum: 7,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 27,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D40.6镗刀+0.13',
+          demandNum: 3,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 12,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'D152.7扩刀CNMG120408',
+          demandNum: 3,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 28,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'D37铰刀303161160',
+          demandNum: 3,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 12,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'D250精铣P45420',
+          demandNum: 3,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 18,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'D63立铣LNGX130708R',
+          demandNum: 3,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 23,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: '导管精刀0.006',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 18,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: '角度头EDCT10T308PDERLD',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 24,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'd14钻头',
+          demandNum: 5,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 8,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'M14*2丝锥M14*2-D11*L140',
+          demandNum: 5,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 18,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'd14.5扩刀',
+          demandNum: 5,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 28,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'D60铰刀MPHX090304',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 30,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D10.5枪钻10.5*580',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 24,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'D17.5铰刀1274689',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 23,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: '密封环槽刀P45420',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 4,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: 'D40精镗+0.01',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 10,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: '103精镗刀0.015',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 9,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: '缸孔精镗刀',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 28,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'D16/17.5/钻头3y1071',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 22,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D12深孔钻6512-12',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'D12钻头302713010',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: 'D40精镗刀+0.115',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 26,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'D40方肩铣LNGX130708',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 19,
+          supplyTime: '2022-07-14',
+        },
+        {
+          Specs: 'D6.8/D9钻头26006429-3-3-MCD068',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 26,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'D100方肩铣LGX130708R',
+          demandNum: 0,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'tool',
+          shortNum: 0,
+          stockQuantity: 19,
+          supplyTime: '2022-07-16',
+        },
+        {
+          Specs: 'P8H国六缸盖',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 9,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'WP3H机体',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 21,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'H2缸盖',
+          demandNum: 5,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'P11H机体',
+          demandNum: 18,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'blank',
+          shortNum: 12,
+          stockQuantity: 6,
+          supplyTime: '2022-07-17',
+        },
+        {
+          Specs: '12M33机体',
+          demandNum: 10,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 16,
+          supplyTime: '2022-07-15',
+        },
+        {
+          Specs: '16M33总成',
+          demandNum: 16,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'blank',
+          shortNum: 6,
+          stockQuantity: 10,
+          supplyTime: '2022-07-19',
+        },
+        {
+          Specs: 'H2缸盖吕框架',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-11',
+        },
+        {
+          Specs: 'WP8机体',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 25,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'WP13H缸盖',
+          demandNum: 1,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 3,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: '8M33机体',
+          demandNum: 32,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'blank',
+          shortNum: 5,
+          stockQuantity: 27,
+          supplyTime: '2022-07-19',
+        },
+        {
+          Specs: 'P11机体',
+          demandNum: 6,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 29,
+          supplyTime: '2022-07-13',
+        },
+        {
+          Specs: '46吨阀体',
+          demandNum: 2,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'blank',
+          shortNum: 1,
+          stockQuantity: 1,
+          supplyTime: '2022-07-19',
+        },
+        {
+          Specs: 'P8H机体',
+          demandNum: 35,
+          isAdequate: '否',
+          materialStatus: '待补充',
+          materialType: 'blank',
+          shortNum: 19,
+          stockQuantity: 16,
+          supplyTime: '2022-07-18',
+        },
+        {
+          Specs: 'P8GH机体',
+          demandNum: 2,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 30,
+          supplyTime: '2022-07-12',
+        },
+        {
+          Specs: 'P15NG机体',
+          demandNum: 8,
+          isAdequate: '是',
+          materialStatus: '已到',
+          materialType: 'blank',
+          shortNum: 0,
+          stockQuantity: 20,
+          supplyTime: '2022-07-13',
+        },
+      ],
+      message: 'scheduling success!',
+      orderCardDetail: [
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5551200.0,
+          finishNum: 0,
+          planEnd: '2022-05-16',
+          planLevel: 0,
+          planNO: '2022051021330739627200001',
+          planStart: '2022-05-10',
+          productName: '12M33机体',
+          productNum: 2,
+          schedualEnd: '2022-07-19 06:00:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 6107700.0,
+          finishNum: 2,
+          planEnd: '2022-05-12',
+          planLevel: 2,
+          planNO: '2022051021330742024300002',
+          planStart: '2022-05-10',
+          productName: '8M33机体',
+          productNum: 8,
+          schedualEnd: '2022-07-21 16:35:00',
+          schedualStart: '2022-07-19 06:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5778480.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 2,
+          planNO: '2022051021330742123900003',
+          planStart: '2022-05-10',
+          productName: 'WP3H机体',
+          productNum: 1,
+          schedualEnd: '2022-07-17 21:08:00',
+          schedualStart: '2022-07-17 19:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 6123720.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330742223800004',
+          planStart: '2022-05-10',
+          productName: 'P15NG机体',
+          productNum: 2,
+          schedualEnd: '2022-07-21 21:02:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5758680.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330742323800005',
+          planStart: '2022-05-10',
+          productName: 'P8H国六缸盖',
+          productNum: 2,
+          schedualEnd: '2022-07-17 15:38:00',
+          schedualStart: '2022-07-17 12:10:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5971080.0,
+          finishNum: 1,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330742423300006',
+          planStart: '2022-05-10',
+          productName: '16M33总成',
+          productNum: 4,
+          schedualEnd: '2022-07-20 02:38:00',
+          schedualStart: '2022-07-17 11:52:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5746200.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330742523100007',
+          planStart: '2022-05-10',
+          productName: 'WP8机体',
+          productNum: 2,
+          schedualEnd: '2022-07-17 12:10:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5815560.0,
+          finishNum: 1,
+          planEnd: '2022-05-12',
+          planLevel: 2,
+          planNO: '2022051021330742718700008',
+          planStart: '2022-05-10',
+          productName: 'P11机体',
+          productNum: 6,
+          schedualEnd: '2022-07-18 07:26:00',
+          schedualStart: '2022-07-18 00:20:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5751420.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 2,
+          planNO: '2022051021330742822500009',
+          planStart: '2022-05-10',
+          productName: 'WP13H缸盖',
+          productNum: 1,
+          schedualEnd: '2022-07-17 13:37:00',
+          schedualStart: '2022-07-17 10:53:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5748000.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330742922000010',
+          planStart: '2022-05-10',
+          productName: '46吨阀体',
+          productNum: 2,
+          schedualEnd: '2022-07-17 12:40:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5821920.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 2,
+          planNO: '2022051021330743021600011',
+          planStart: '2022-05-10',
+          productName: 'P8GH机体',
+          productNum: 1,
+          schedualEnd: '2022-07-18 09:12:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5761080.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 2,
+          planNO: '2022051021330743121700012',
+          planStart: '2022-05-10',
+          productName: 'H2缸盖吕框架',
+          productNum: 1,
+          schedualEnd: '2022-07-17 16:18:00',
+          schedualStart: '2022-07-17 13:37:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 6138480.0,
+          finishNum: 0,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330743221200013',
+          planStart: '2022-05-10',
+          productName: 'H2缸盖',
+          productNum: 1,
+          schedualEnd: '2022-07-22 01:08:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 5797440.0,
+          finishNum: 1,
+          planEnd: '2022-05-12',
+          planLevel: 0,
+          planNO: '2022051021330743320800014',
+          planStart: '2022-05-10',
+          productName: 'P11H机体',
+          productNum: 6,
+          schedualEnd: '2022-07-18 02:24:00',
+          schedualStart: '2022-07-17 08:00:00',
+          state: '加工中',
+        },
+        {
+          aheadMinutes: 0.0,
+          delayMinutes: 6249600.0,
+          finishNum: 1,
+          planEnd: '2022-05-13',
+          planLevel: 1,
+          planNO: '2022051021330743420600015',
+          planStart: '2022-05-10',
+          productName: 'P8H机体',
+          productNum: 7,
+          schedualEnd: '2022-07-24 08:00:00',
+          schedualStart: '2022-07-22 00:03:00',
+          state: '加工中',
+        },
+      ],
+      orderNO: '564687',
+      orderScheduleDetail: [
+        {
+          endTime: '2022-07-17 10:53:00',
+          fixture: 'F3228',
+          machineName: '10000-1',
+          opName: 'H2缸盖OP010',
+          orderNO: '2022051021330743221200013',
+          planNO: '2022051021330743221200013',
+          productName: 'H2缸盖',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'T20133#H200920',
+          toolType: 'D60铰刀MPHX090304#D10.5枪钻10.5*580',
+          tray: 'p1832',
+          useTime: 173.0,
+        },
+        {
+          endTime: '2022-07-17 10:50:00',
+          fixture: 'F2211',
+          machineName: '6000-2',
+          opName: '46吨阀体OP020',
+          orderNO: '2022051021330742922000010',
+          planNO: '2022051021330742922000010',
+          productName: '46吨阀体',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'BF1056#AF4546',
+          toolType: 'D40方肩铣LNGX130708#D6.8/D9钻头26006429-3-3-MCD068',
+          tray: 'p1925',
+          useTime: 170.0,
+        },
+        {
+          endTime: '2022-07-17 09:52:00',
+          fixture: 'F3097',
+          machineName: '海科特-2',
+          opName: 'P15NG机体OP020',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'H2203',
+          toolType: '106.9扩刀CCMT120408',
+          tray: 'p3180',
+          useTime: 112.0,
+        },
+        {
+          endTime: '2022-07-17 10:42:00',
+          fixture: 'F3671',
+          machineName: '350-3',
+          opName: 'P8GH机体OP015',
+          orderNO: '2022051021330743021600011',
+          planNO: '2022051021330743021600011',
+          productName: 'P8GH机体',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'P8G61501',
+          toolType: '103精镗刀0.015',
+          tray: 'p1561',
+          useTime: 162.0,
+        },
+        {
+          endTime: '2022-07-17 10:35:00',
+          fixture: 'F3498',
+          machineName: '350-2',
+          opName: 'WP8机体OP030',
+          orderNO: '2022051021330742523100007',
+          planNO: '2022051021330742523100007',
+          productName: 'WP8机体',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: '角度头',
+          toolType: '角度头EDCT10T308PDERLD',
+          tray: 'p1277',
+          useTime: 155.0,
+        },
+        {
+          endTime: '2022-07-17 10:07:00',
+          fixture: 'F1767',
+          machineName: '海科特-1',
+          opName: 'P11H机体OP020',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'H39039#H39043',
+          toolType: 'D134.5镗刀CCMT120408#D163.5镗刀CCMT120408',
+          tray: 'p1389',
+          useTime: 127.0,
+        },
+        {
+          endTime: '2022-07-17 10:26:00',
+          fixture: 'F3725',
+          machineName: '英赛',
+          opName: '12M33机体OP020',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-17 08:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'T151#T01006',
+          toolType: 'D160粗铣SNGX1205ANN#D215铣刀45420',
+          tray: 'p3280',
+          useTime: 146.0,
+        },
+        {
+          endTime: '2022-07-17 11:44:00',
+          fixture: 'F3097',
+          machineName: '海科特-2',
+          opName: 'P15NG机体OP020',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-17 09:52:00',
+          staticTime: '20220717',
+          toolMachineName: 'H2203',
+          toolType: '106.9扩刀CCMT120408',
+          tray: 'p3180',
+          useTime: 112.0,
+        },
+        {
+          endTime: '2022-07-17 11:14:00',
+          fixture: 'F1767',
+          machineName: '海科特-1',
+          opName: 'P11H机体OP020',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 10:07:00',
+          staticTime: '20220717',
+          toolMachineName: 'H39039#H39043',
+          toolType: 'D134.5镗刀CCMT120408#D163.5镗刀CCMT120408',
+          tray: 'p1389',
+          useTime: 67.0,
+        },
+        {
+          endTime: '2022-07-17 11:52:00',
+          fixture: 'F3725',
+          machineName: '英赛',
+          opName: '12M33机���OP020',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-17 10:26:00',
+          staticTime: '20220717',
+          toolMachineName: 'T151#T01006',
+          toolType: 'D160粗铣SNGX1205ANN#D215铣刀45420',
+          tray: 'p3280',
+          useTime: 86.0,
+        },
+        {
+          endTime: '2022-07-17 12:10:00',
+          fixture: 'F3498',
+          machineName: '350-2',
+          opName: 'WP8机体OP030',
+          orderNO: '2022051021330742523100007',
+          planNO: '2022051021330742523100007',
+          productName: 'WP8机体',
+          startTime: '2022-07-17 10:35:00',
+          staticTime: '20220717',
+          toolMachineName: '角度头',
+          toolType: '角度头EDCT10T308PDERLD',
+          tray: 'p1277',
+          useTime: 95.0,
+        },
+        {
+          endTime: '2022-07-17 12:40:00',
+          fixture: 'F2211',
+          machineName: '6000-2',
+          opName: '46吨阀体OP020',
+          orderNO: '2022051021330742922000010',
+          planNO: '2022051021330742922000010',
+          productName: '46吨阀体',
+          startTime: '2022-07-17 10:50:00',
+          staticTime: '20220717',
+          toolMachineName: 'BF1056#AF4546',
+          toolType: 'D40方肩铣LNGX130708#D6.8/D9钻头26006429-3-3-MCD068',
+          tray: 'p1925',
+          useTime: 110.0,
+        },
+        {
+          endTime: '2022-07-17 13:37:00',
+          fixture: 'F3784',
+          machineName: '10000-1',
+          opName: 'WP13H缸盖OP040',
+          orderNO: '2022051021330742822500009',
+          planNO: '2022051021330742822500009',
+          productName: 'WP13H缸盖',
+          startTime: '2022-07-17 10:53:00',
+          staticTime: '20220717',
+          toolMachineName: 'T3403',
+          toolType: 'D100方肩铣LGX130708R',
+          tray: 'p1832',
+          useTime: 164.0,
+        },
+        {
+          endTime: '2022-07-17 12:21:00',
+          fixture: 'F1767',
+          machineName: '海科特-1',
+          opName: 'P11H机体OP020',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 11:14:00',
+          staticTime: '20220717',
+          toolMachineName: 'H39039#H39043',
+          toolType: 'D134.5镗刀CCMT120408#D163.5镗刀CCMT120408',
+          tray: 'p1389',
+          useTime: 67.0,
+        },
+        {
+          endTime: '2022-07-17 14:16:00',
+          fixture: 'F3228',
+          machineName: '依巴米亚',
+          opName: 'H2缸盖OP030',
+          orderNO: '2022051021330743221200013',
+          planNO: '2022051021330743221200013',
+          productName: 'H2缸盖',
+          startTime: '2022-07-17 11:52:00',
+          staticTime: '20220717',
+          toolMachineName: 'P12005',
+          toolType: 'D17.5铰刀1274689',
+          tray: 'p2042',
+          useTime: 144.0,
+        },
+        {
+          endTime: '2022-07-17 13:55:00',
+          fixture: 'F1051',
+          machineName: '英赛',
+          opName: '16M33总成OP010',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-17 11:52:00',
+          staticTime: '20220717',
+          toolMachineName: 'T163328',
+          toolType: 'D40.6镗刀+0.13',
+          tray: 'p3280',
+          useTime: 123.0,
+        },
+        {
+          endTime: '2022-07-17 14:09:00',
+          fixture: 'F1939',
+          machineName: '350-2',
+          opName: 'P8H国六缸盖OP030',
+          orderNO: '2022051021330742323800005',
+          planNO: '2022051021330742323800005',
+          productName: 'P8H国六缸盖',
+          startTime: '2022-07-17 12:10:00',
+          staticTime: '20220717',
+          toolMachineName: 'H6总成3003',
+          toolType: '导管精刀0.006',
+          tray: 'p1277',
+          useTime: 119.0,
+        },
+        {
+          endTime: '2022-07-17 13:28:00',
+          fixture: 'F1767',
+          machineName: '海科特-1',
+          opName: 'P11H机体OP020',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 12:21:00',
+          staticTime: '20220717',
+          toolMachineName: 'H39039#H39043',
+          toolType: 'D134.5镗刀CCMT120408#D163.5镗刀CCMT120408',
+          tray: 'p1389',
+          useTime: 67.0,
+        },
+        {
+          endTime: '2022-07-17 14:35:00',
+          fixture: 'F1767',
+          machineName: '海科特-1',
+          opName: 'P11H机体OP020',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 13:28:00',
+          staticTime: '20220717',
+          toolMachineName: 'H39039#H39043',
+          toolType: 'D134.5镗刀CCMT120408#D163.5镗刀CCMT120408',
+          tray: 'p1389',
+          useTime: 67.0,
+        },
+        {
+          endTime: '2022-07-17 16:18:00',
+          fixture: 'F2549',
+          machineName: '10000-1',
+          opName: 'H2缸盖吕框架OP030',
+          orderNO: '2022051021330743121700012',
+          planNO: '2022051021330743121700012',
+          productName: 'H2缸盖吕框架',
+          startTime: '2022-07-17 13:37:00',
+          staticTime: '20220717',
+          toolMachineName: 'H11004',
+          toolType: 'D40精镗+0.01',
+          tray: 'p3200',
+          useTime: 161.0,
+        },
+        {
+          endTime: '2022-07-17 14:58:00',
+          fixture: 'F1051',
+          machineName: '英赛',
+          opName: '16M33总成OP010',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-17 13:55:00',
+          staticTime: '20220717',
+          toolMachineName: 'T163328',
+          toolType: 'D40.6镗刀+0.13',
+          tray: 'p3280',
+          useTime: 63.0,
+        },
+        {
+          endTime: '2022-07-17 15:38:00',
+          fixture: 'F1939',
+          machineName: '350-2',
+          opName: 'P8H国六缸盖OP030',
+          orderNO: '2022051021330742323800005',
+          planNO: '2022051021330742323800005',
+          productName: 'P8H国六缸盖',
+          startTime: '2022-07-17 14:09:00',
+          staticTime: '20220717',
+          toolMachineName: 'H6总成3003',
+          toolType: '导管精刀0.006',
+          tray: 'p1277',
+          useTime: 89.0,
+        },
+        {
+          endTime: '2022-07-17 16:08:00',
+          fixture: 'F1767',
+          machineName: '依巴米亚',
+          opName: 'P11H机体OP040',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 14:16:00',
+          staticTime: '20220717',
+          toolMachineName: 'H34001#H34002#H39020',
+          toolType: 'd14.5扩刀#d14钻头#M14*2丝锥M14*2-D11*L140',
+          tray: 'p1415',
+          useTime: 112.0,
+        },
+        {
+          endTime: '2022-07-17 15:42:00',
+          fixture: 'F1767',
+          machineName: '海科特-1',
+          opName: 'P11H机体OP020',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 14:35:00',
+          staticTime: '20220717',
+          toolMachineName: 'H39039#H39043',
+          toolType: 'D134.5镗刀CCMT120408#D163.5镗刀CCMT120408',
+          tray: 'p1389',
+          useTime: 67.0,
+        },
+        {
+          endTime: '2022-07-17 16:01:00',
+          fixture: 'F1051',
+          machineName: '英赛',
+          opName: '16M33总成OP010',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-17 14:58:00',
+          staticTime: '20220717',
+          toolMachineName: 'T163328',
+          toolType: 'D40.6镗刀+0.13',
+          tray: 'p3280',
+          useTime: 63.0,
+        },
+        {
+          endTime: '2022-07-17 20:03:00',
+          fixture: 'F1051',
+          machineName: '英赛',
+          opName: '16M33总成OP010',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-17 19:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'T163328',
+          toolType: 'D40.6镗刀+0.13',
+          tray: 'p3280',
+          useTime: 63.0,
+        },
+        {
+          endTime: '2022-07-17 20:52:00',
+          fixture: 'F1767',
+          machineName: '依巴米亚',
+          opName: 'P11H机体OP040',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 19:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'H34001#H34002#H39020',
+          toolType: 'd14.5扩刀#d14钻头#M14*2丝锥M14*2-D11*L140',
+          tray: 'p1415',
+          useTime: 112.0,
+        },
+        {
+          endTime: '2022-07-17 20:39:00',
+          fixture: 'F1767',
+          machineName: '试漏设备',
+          opName: 'P11H机体OP025',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 19:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 99.0,
+        },
+        {
+          endTime: '2022-07-17 21:08:00',
+          fixture: 'F2731',
+          machineName: '10000-1',
+          opName: 'WP3H机体OP010',
+          orderNO: '2022051021330742123900003',
+          planNO: '2022051021330742123900003',
+          productName: 'WP3H机体',
+          startTime: '2022-07-17 19:00:00',
+          staticTime: '20220717',
+          toolMachineName: 'T31003',
+          toolType: 'D30立铣刀D30-120-165',
+          tray: 'p3200',
+          useTime: 128.0,
+        },
+        {
+          endTime: '2022-07-17 22:42:00',
+          fixture: 'F3721',
+          machineName: '英赛',
+          opName: '16M33总成OP020',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-17 20:03:00',
+          staticTime: '20220717',
+          toolMachineName: 'T061006#T081102',
+          toolType: 'D152.7扩刀CNMG120408#D37铰刀303161160',
+          tray: 'p3280',
+          useTime: 159.0,
+        },
+        {
+          endTime: '2022-07-17 21:48:00',
+          fixture: 'F1767',
+          machineName: '试漏设备',
+          opName: 'P11H机体OP025',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 20:39:00',
+          staticTime: '20220717',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 69.0,
+        },
+        {
+          endTime: '2022-07-17 21:44:00',
+          fixture: 'F1767',
+          machineName: '依巴米亚',
+          opName: 'P11H机体OP040',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 20:52:00',
+          staticTime: '20220717',
+          toolMachineName: 'H34001#H34002#H39020',
+          toolType: 'd14.5扩刀#d14钻头#M14*2丝锥M14*2-D11*L140',
+          tray: 'p1415',
+          useTime: 52.0,
+        },
+        {
+          endTime: '2022-07-17 22:36:00',
+          fixture: 'F1767',
+          machineName: '依巴米亚',
+          opName: 'P11H机体OP040',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 21:44:00',
+          staticTime: '20220717',
+          toolMachineName: 'H34001#H34002#H39020',
+          toolType: 'd14.5扩刀#d14钻头#M14*2丝锥M14*2-D11*L140',
+          tray: 'p1415',
+          useTime: 52.0,
+        },
+        {
+          endTime: '2022-07-17 22:57:00',
+          fixture: 'F1767',
+          machineName: '试漏设备',
+          opName: 'P11H机体OP025',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 21:48:00',
+          staticTime: '20220717',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 69.0,
+        },
+        {
+          endTime: '2022-07-17 23:28:00',
+          fixture: 'F1767',
+          machineName: '依巴米亚',
+          opName: 'P11H机体OP040',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 22:36:00',
+          staticTime: '20220717',
+          toolMachineName: 'H34001#H34002#H39020',
+          toolType: 'd14.5扩刀#d14钻头#M14*2丝锥M14*2-D11*L140',
+          tray: 'p1415',
+          useTime: 52.0,
+        },
+        {
+          endTime: '2022-07-18 01:51:00',
+          fixture: 'F1051',
+          machineName: '英赛',
+          opName: '16M33总成OP020',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-17 22:42:00',
+          staticTime: '20220718',
+          toolMachineName: 'T061006#T081102',
+          toolType: 'D152.7扩刀CNMG120408#D37铰刀303161160',
+          tray: 'p1514',
+          useTime: 189.0,
+        },
+        {
+          endTime: '2022-07-18 00:06:00',
+          fixture: 'F1767',
+          machineName: '试漏设备',
+          opName: 'P11H机体OP025',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 22:57:00',
+          staticTime: '20220718',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 69.0,
+        },
+        {
+          endTime: '2022-07-18 00:20:00',
+          fixture: 'F1767',
+          machineName: '依巴米亚',
+          opName: 'P11H机体OP040',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-17 23:28:00',
+          staticTime: '20220718',
+          toolMachineName: 'H34001#H34002#H39020',
+          toolType: 'd14.5扩刀#d14钻头#M14*2丝锥M14*2-D11*L140',
+          tray: 'p1415',
+          useTime: 52.0,
+        },
+        {
+          endTime: '2022-07-18 01:15:00',
+          fixture: 'F1767',
+          machineName: '试漏设备',
+          opName: 'P11H机体OP025',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-18 00:06:00',
+          staticTime: '20220718',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 69.0,
+        },
+        {
+          endTime: '2022-07-18 02:11:00',
+          fixture: 'F1318',
+          machineName: '依巴米亚',
+          opName: 'P11机体OP040',
+          orderNO: '2022051021330742718700008',
+          planNO: '2022051021330742718700008',
+          productName: 'P11机体',
+          startTime: '2022-07-18 00:20:00',
+          staticTime: '20220718',
+          toolMachineName: 'H554009',
+          toolType: 'D120玉米铣LNMT1306PNTR',
+          tray: 'p2042',
+          useTime: 111.0,
+        },
+        {
+          endTime: '2022-07-18 02:11:00',
+          fixture: 'F3097',
+          machineName: '海科特-2',
+          opName: 'P15NG机体OP030',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-18 00:20:00',
+          staticTime: '20220718',
+          toolMachineName: 'H2404',
+          toolType: 'D16/17.5/钻头3y1071',
+          tray: 'p3180',
+          useTime: 111.0,
+        },
+        {
+          endTime: '2022-07-18 02:24:00',
+          fixture: 'F1767',
+          machineName: '试漏设备',
+          opName: 'P11H机体OP025',
+          orderNO: '2022051021330743320800014',
+          planNO: '2022051021330743320800014',
+          productName: 'P11H机体',
+          startTime: '2022-07-18 01:15:00',
+          staticTime: '20220718',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 69.0,
+        },
+        {
+          endTime: '2022-07-18 04:00:00',
+          fixture: 'F1051',
+          machineName: '英赛',
+          opName: '16M33总成OP020',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-18 01:51:00',
+          staticTime: '20220718',
+          toolMachineName: 'T061006#T081102',
+          toolType: 'D152.7扩刀CNMG120408#D37铰刀303161160',
+          tray: 'p1514',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-18 04:02:00',
+          fixture: 'F3097',
+          machineName: '海科特-2',
+          opName: 'P15NG机体OP030',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-18 02:11:00',
+          staticTime: '20220718',
+          toolMachineName: 'H2404',
+          toolType: 'D16/17.5/钻头3y1071',
+          tray: 'p3180',
+          useTime: 111.0,
+        },
+        {
+          endTime: '2022-07-18 04:02:00',
+          fixture: 'F1318',
+          machineName: '依巴米亚',
+          opName: 'P11机体OP040',
+          orderNO: '2022051021330742718700008',
+          planNO: '2022051021330742718700008',
+          productName: 'P11机体',
+          startTime: '2022-07-18 02:11:00',
+          staticTime: '20220718',
+          toolMachineName: 'H554009',
+          toolType: 'D120玉米铣LNMT1306PNTR',
+          tray: 'p2042',
+          useTime: 111.0,
+        },
+        {
+          endTime: '2022-07-18 07:09:00',
+          fixture: 'F3721',
+          machineName: '英赛',
+          opName: '16M33总成OP020',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-18 04:00:00',
+          staticTime: '20220718',
+          toolMachineName: 'T061006#T081102',
+          toolType: 'D152.7扩刀CNMG120408#D37铰刀303161160',
+          tray: 'p3280',
+          useTime: 189.0,
+        },
+        {
+          endTime: '2022-07-18 04:53:00',
+          fixture: 'F1318',
+          machineName: '依巴米亚',
+          opName: 'P11机体OP040',
+          orderNO: '2022051021330742718700008',
+          planNO: '2022051021330742718700008',
+          productName: 'P11机体',
+          startTime: '2022-07-18 04:02:00',
+          staticTime: '20220718',
+          toolMachineName: 'H554009',
+          toolType: 'D120玉米铣LNMT1306PNTR',
+          tray: 'p2042',
+          useTime: 51.0,
+        },
+        {
+          endTime: '2022-07-18 06:39:00',
+          fixture: 'F3097',
+          machineName: '海科特-1',
+          opName: 'P15NG机体OP050',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-18 04:02:00',
+          staticTime: '20220718',
+          toolMachineName: 'H51011#H51012#P171001',
+          toolType: 'D40精镗刀+0.115#D12深孔钻6512-12#D12钻头302713010',
+          tray: 'p2660',
+          useTime: 157.0,
+        },
+        {
+          endTime: '2022-07-18 05:44:00',
+          fixture: 'F1318',
+          machineName: '依巴米亚',
+          opName: 'P11机体OP040',
+          orderNO: '2022051021330742718700008',
+          planNO: '2022051021330742718700008',
+          productName: 'P11机体',
+          startTime: '2022-07-18 04:53:00',
+          staticTime: '20220718',
+          toolMachineName: 'H554009',
+          toolType: 'D120玉米铣LNMT1306PNTR',
+          tray: 'p2042',
+          useTime: 51.0,
+        },
+        {
+          endTime: '2022-07-18 06:35:00',
+          fixture: 'F1318',
+          machineName: '依巴米亚',
+          opName: 'P11机体OP040',
+          orderNO: '2022051021330742718700008',
+          planNO: '2022051021330742718700008',
+          productName: 'P11机体',
+          startTime: '2022-07-18 05:44:00',
+          staticTime: '20220718',
+          toolMachineName: 'H554009',
+          toolType: 'D120玉米铣LNMT1306PNTR',
+          tray: 'p2042',
+          useTime: 51.0,
+        },
+        {
+          endTime: '2022-07-18 07:26:00',
+          fixture: 'F1318',
+          machineName: '依巴米亚',
+          opName: 'P11机体OP040',
+          orderNO: '2022051021330742718700008',
+          planNO: '2022051021330742718700008',
+          productName: 'P11机体',
+          startTime: '2022-07-18 06:35:00',
+          staticTime: '20220718',
+          toolMachineName: 'H554009',
+          toolType: 'D120玉米铣LNMT1306PNTR',
+          tray: 'p2042',
+          useTime: 51.0,
+        },
+        {
+          endTime: '2022-07-18 08:46:00',
+          fixture: 'F3097',
+          machineName: '海科特-1',
+          opName: 'P15NG机体OP050',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-18 06:39:00',
+          staticTime: '20220718',
+          toolMachineName: 'H51011#H51012#P171001',
+          toolType: 'D40精镗刀+0.115#D12深孔钻6512-12#D12钻头302713010',
+          tray: 'p2660',
+          useTime: 127.0,
+        },
+        {
+          endTime: '2022-07-18 09:12:00',
+          fixture: 'F3671',
+          machineName: '350-3',
+          opName: 'P8GH机体总成025',
+          orderNO: '2022051021330743021600011',
+          planNO: '2022051021330743021600011',
+          productName: 'P8GH机体',
+          startTime: '2022-07-18 07:09:00',
+          staticTime: '20220718',
+          toolMachineName: 'P8总成1506',
+          toolType: '缸孔精镗刀',
+          tray: 'p3512',
+          useTime: 123.0,
+        },
+        {
+          endTime: '2022-07-18 11:12:00',
+          fixture: 'F3725',
+          machineName: '锡根',
+          opName: '12M33机体OP050',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-18 09:12:00',
+          staticTime: '20220718',
+          toolMachineName: '411#311#407',
+          toolType: 'D6.8/10钻头302650516#D32立铣302175706',
+          tray: 'p3437',
+          useTime: 120.0,
+        },
+        {
+          endTime: '2022-07-18 13:12:00',
+          fixture: 'F1118',
+          machineName: '锡根',
+          opName: '12M33机体OP050',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-18 11:12:00',
+          staticTime: '20220718',
+          toolMachineName: '411#311#407',
+          toolType: 'D6.8/10钻头302650516#D32立铣302175706',
+          tray: 'p1814',
+          useTime: 120.0,
+        },
+        {
+          endTime: '2022-07-18 15:48:00',
+          fixture: 'F1118',
+          machineName: '试漏设备',
+          opName: '12M33机体OP060',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-18 13:12:00',
+          staticTime: '20220718',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 156.0,
+        },
+        {
+          endTime: '2022-07-18 21:06:00',
+          fixture: 'F1118',
+          machineName: '试漏设备',
+          opName: '12M33机体OP060',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-18 19:00:00',
+          staticTime: '20220718',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 126.0,
+        },
+        {
+          endTime: '2022-07-18 23:24:00',
+          fixture: 'F1118',
+          machineName: '清洗机',
+          opName: '12M33机体OP070',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-18 21:06:00',
+          staticTime: '20220718',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p1477',
+          useTime: 138.0,
+        },
+        {
+          endTime: '2022-07-19 01:12:00',
+          fixture: 'F1118',
+          machineName: '清洗机',
+          opName: '12M33机体OP070',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-18 23:24:00',
+          staticTime: '20220719',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p1477',
+          useTime: 108.0,
+        },
+        {
+          endTime: '2022-07-19 03:51:00',
+          fixture: 'F1118',
+          machineName: '英赛',
+          opName: '12M33机体OP080',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-19 01:12:00',
+          staticTime: '20220719',
+          toolMachineName: '  T081101 #T015#T089',
+          toolType: 'D63铣刀LNGX130708#D35精铰303161159#D100铣刀LNGX130708R',
+          tray: 'p3280',
+          useTime: 159.0,
+        },
+        {
+          endTime: '2022-07-19 06:00:00',
+          fixture: 'F1118',
+          machineName: '英赛',
+          opName: '12M33机体OP080',
+          orderNO: '2022051021330739627200001',
+          planNO: '2022051021330739627200001',
+          productName: '12M33机体',
+          startTime: '2022-07-19 03:51:00',
+          staticTime: '20220719',
+          toolMachineName: '  T081101 #T015#T089',
+          toolType: 'D63铣刀LNGX130708#D35精铰303161159#D100铣刀LNGX130708R',
+          tray: 'p3280',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-19 07:50:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 06:00:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 110.0,
+        },
+        {
+          endTime: '2022-07-19 08:40:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 07:50:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 09:30:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 08:40:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 10:20:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 09:30:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 11:10:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 10:20:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 12:00:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 11:10:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 12:50:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 12:00:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 13:40:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP010',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-19 12:50:00',
+          staticTime: '20220719',
+          toolMachineName: 'T160330#T20331002',
+          toolType: 'D20枪钻D20.02*805#45度倒角刀D30-50-120',
+          tray: 'p1514',
+          useTime: 50.0,
+        },
+        {
+          endTime: '2022-07-19 15:29:00',
+          fixture: 'F1051',
+          machineName: '清洗机',
+          opName: '16M33总成OP025',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-19 13:40:00',
+          staticTime: '20220719',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-19 16:18:00',
+          fixture: 'F1051',
+          machineName: '清洗机',
+          opName: '16M33总成OP025',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-19 15:29:00',
+          staticTime: '20220719',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 49.0,
+        },
+        {
+          endTime: '2022-07-19 19:49:00',
+          fixture: 'F1051',
+          machineName: '清洗机',
+          opName: '16M33总成OP025',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-19 19:00:00',
+          staticTime: '20220719',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 49.0,
+        },
+        {
+          endTime: '2022-07-19 20:38:00',
+          fixture: 'F1051',
+          machineName: '清洗机',
+          opName: '16M33总成OP025',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-19 19:49:00',
+          staticTime: '20220719',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 49.0,
+        },
+        {
+          endTime: '2022-07-19 22:53:00',
+          fixture: 'F3721',
+          machineName: '英赛',
+          opName: '16M33总成OP030',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-19 20:38:00',
+          staticTime: '20220719',
+          toolMachineName: 'T123010#T021',
+          toolType: 'D63立铣LNGX130708R#D250精铣P45420',
+          tray: 'p3280',
+          useTime: 135.0,
+        },
+        {
+          endTime: '2022-07-20 00:08:00',
+          fixture: 'F3721',
+          machineName: '英赛',
+          opName: '16M33总成OP030',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-19 22:53:00',
+          staticTime: '20220720',
+          toolMachineName: 'T123010#T021',
+          toolType: 'D63立铣LNGX130708R#D250精铣P45420',
+          tray: 'p3280',
+          useTime: 75.0,
+        },
+        {
+          endTime: '2022-07-20 01:23:00',
+          fixture: 'F3721',
+          machineName: '英赛',
+          opName: '16M33总成OP030',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-20 00:08:00',
+          staticTime: '20220720',
+          toolMachineName: 'T123010#T021',
+          toolType: 'D63立铣LNGX130708R#D250精铣P45420',
+          tray: 'p3280',
+          useTime: 75.0,
+        },
+        {
+          endTime: '2022-07-20 02:38:00',
+          fixture: 'F3721',
+          machineName: '英赛',
+          opName: '16M33总成OP030',
+          orderNO: '2022051021330742423300006',
+          planNO: '2022051021330742423300006',
+          productName: '16M33总成',
+          startTime: '2022-07-20 01:23:00',
+          staticTime: '20220720',
+          toolMachineName: 'T123010#T021',
+          toolType: 'D63立铣LNGX130708R#D250精铣P45420',
+          tray: 'p3280',
+          useTime: 75.0,
+        },
+        {
+          endTime: '2022-07-20 04:25:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 02:38:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 107.0,
+        },
+        {
+          endTime: '2022-07-20 05:12:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 04:25:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 05:59:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 05:12:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 06:46:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 05:59:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 07:33:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 06:46:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 08:20:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 07:33:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 09:07:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 08:20:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 09:54:00',
+          fixture: 'F2430',
+          machineName: '英赛',
+          opName: '8M33机体OP020',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 09:07:00',
+          staticTime: '20220720',
+          toolMachineName: 'M204005#M204002',
+          toolType: 'D171粗镗ccMt120408#D183粗镗ccMt120408',
+          tray: 'p1514',
+          useTime: 47.0,
+        },
+        {
+          endTime: '2022-07-20 12:13:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 09:54:00',
+          staticTime: '20220720',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 139.0,
+        },
+        {
+          endTime: '2022-07-20 14:02:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 12:13:00',
+          staticTime: '20220720',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-20 15:51:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 14:02:00',
+          staticTime: '20220720',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-20 20:49:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 19:00:00',
+          staticTime: '20220720',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-20 22:38:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 20:49:00',
+          staticTime: '20220720',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-21 00:27:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-20 22:38:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-21 02:16:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 00:27:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-21 04:05:00',
+          fixture: 'F2430',
+          machineName: '试漏设备',
+          opName: '8M33机体OP030',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 02:16:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p3455',
+          useTime: 109.0,
+        },
+        {
+          endTime: '2022-07-21 06:05:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 04:05:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 120.0,
+        },
+        {
+          endTime: '2022-07-21 07:35:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 06:05:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 09:05:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 07:35:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 10:35:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 09:05:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 12:05:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 10:35:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 13:35:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 12:05:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 15:05:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 13:35:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 16:35:00',
+          fixture: 'F2430',
+          machineName: '清洗机',
+          opName: '8M33机体OP050',
+          orderNO: '2022051021330742024300002',
+          planNO: '2022051021330742024300002',
+          productName: '8M33机体',
+          startTime: '2022-07-21 15:05:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 90.0,
+        },
+        {
+          endTime: '2022-07-21 20:16:00',
+          fixture: 'F3097',
+          machineName: '清洗机',
+          opName: 'P15NG机体OP100',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-21 19:00:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 76.0,
+        },
+        {
+          endTime: '2022-07-21 21:02:00',
+          fixture: 'F3097',
+          machineName: '清洗机',
+          opName: 'P15NG机体OP100',
+          orderNO: '2022051021330742223800004',
+          planNO: '2022051021330742223800004',
+          productName: 'P15NG机体',
+          startTime: '2022-07-21 20:16:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 46.0,
+        },
+        {
+          endTime: '2022-07-21 22:12:00',
+          fixture: 'F3228',
+          machineName: '清洗机',
+          opName: 'H2缸盖OP040',
+          orderNO: '2022051021330743221200013',
+          planNO: '2022051021330743221200013',
+          productName: 'H2缸盖',
+          startTime: '2022-07-21 21:02:00',
+          staticTime: '20220721',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p2517',
+          useTime: 70.0,
+        },
+        {
+          endTime: '2022-07-22 00:03:00',
+          fixture: 'F3228',
+          machineName: '海科特-2',
+          opName: 'H2缸盖OP060',
+          orderNO: '2022051021330743221200013',
+          planNO: '2022051021330743221200013',
+          productName: 'H2缸盖',
+          startTime: '2022-07-21 22:12:00',
+          staticTime: '20220722',
+          toolMachineName: 'H20351',
+          toolType: '密封环槽刀P45420',
+          tray: 'p1636',
+          useTime: 111.0,
+        },
+        {
+          endTime: '2022-07-22 01:37:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 00:03:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 94.0,
+        },
+        {
+          endTime: '2022-07-22 01:08:00',
+          fixture: 'F3228',
+          machineName: '试漏设备',
+          opName: 'H2缸盖OP150',
+          orderNO: '2022051021330743221200013',
+          planNO: '2022051021330743221200013',
+          productName: 'H2缸盖',
+          startTime: '2022-07-22 00:03:00',
+          staticTime: '20220722',
+          toolMachineName: 'nan',
+          toolType: '',
+          tray: 'p1660',
+          useTime: 65.0,
+        },
+        {
+          endTime: '2022-07-22 02:11:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 01:37:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 34.0,
+        },
+        {
+          endTime: '2022-07-22 02:45:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 02:11:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 34.0,
+        },
+        {
+          endTime: '2022-07-22 03:19:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 02:45:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 34.0,
+        },
+        {
+          endTime: '2022-07-22 03:53:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 03:19:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 34.0,
+        },
+        {
+          endTime: '2022-07-22 04:27:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 03:53:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 34.0,
+        },
+        {
+          endTime: '2022-07-22 05:01:00',
+          fixture: 'F2255',
+          machineName: '海科特-2',
+          opName: 'P8H机体OP010',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 04:27:00',
+          staticTime: '20220722',
+          toolMachineName: 'P811',
+          toolType: 'D15枪钻15.00*560',
+          tray: 'p1636',
+          useTime: 34.0,
+        },
+        {
+          endTime: '2022-07-22 07:40:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 05:01:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 159.0,
+        },
+        {
+          endTime: '2022-07-22 09:49:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 07:40:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-22 11:58:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 09:49:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-22 14:07:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 11:58:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-22 16:16:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 14:07:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-22 21:09:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 19:00:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-22 23:18:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体OP025',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 21:09:00',
+          staticTime: '20220722',
+          toolMachineName: 'P82539#P8总成1510',
+          toolType: 'D92扩刀   #D63方肩铣LNGX130708',
+          tray: 'p3512',
+          useTime: 129.0,
+        },
+        {
+          endTime: '2022-07-23 01:11:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-22 23:18:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 113.0,
+        },
+        {
+          endTime: '2022-07-23 02:34:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 01:11:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 83.0,
+        },
+        {
+          endTime: '2022-07-23 03:57:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 02:34:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 83.0,
+        },
+        {
+          endTime: '2022-07-23 05:20:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 03:57:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 83.0,
+        },
+        {
+          endTime: '2022-07-23 06:43:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 05:20:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 83.0,
+        },
+        {
+          endTime: '2022-07-23 08:06:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 06:43:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 83.0,
+        },
+        {
+          endTime: '2022-07-23 09:29:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP030',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 08:06:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63012',
+          toolType: 'D30铰刀302824237',
+          tray: 'p1277',
+          useTime: 83.0,
+        },
+        {
+          endTime: '2022-07-23 11:03:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 09:29:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 94.0,
+        },
+        {
+          endTime: '2022-07-23 12:07:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 11:03:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 64.0,
+        },
+        {
+          endTime: '2022-07-23 13:11:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 12:07:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 64.0,
+        },
+        {
+          endTime: '2022-07-23 14:15:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 13:11:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 64.0,
+        },
+        {
+          endTime: '2022-07-23 15:19:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 14:15:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 64.0,
+        },
+        {
+          endTime: '2022-07-23 16:23:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 15:19:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 64.0,
+        },
+        {
+          endTime: '2022-07-23 20:04:00',
+          fixture: 'F2255',
+          machineName: '350-2',
+          opName: 'P8H机体OP035',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 19:00:00',
+          staticTime: '20220723',
+          toolMachineName: 'G63506',
+          toolType: 'D10立铣刀D10-180',
+          tray: 'p3473',
+          useTime: 64.0,
+        },
+        {
+          endTime: '2022-07-23 22:12:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 20:04:00',
+          staticTime: '20220723',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 128.0,
+        },
+        {
+          endTime: '2022-07-23 23:50:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 22:12:00',
+          staticTime: '20220723',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 98.0,
+        },
+        {
+          endTime: '2022-07-24 01:28:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-23 23:50:00',
+          staticTime: '20220724',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 98.0,
+        },
+        {
+          endTime: '2022-07-24 03:06:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-24 01:28:00',
+          staticTime: '20220724',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 98.0,
+        },
+        {
+          endTime: '2022-07-24 04:44:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-24 03:06:00',
+          staticTime: '20220724',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 98.0,
+        },
+        {
+          endTime: '2022-07-24 06:22:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-24 04:44:00',
+          staticTime: '20220724',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 98.0,
+        },
+        {
+          endTime: '2022-07-24 08:00:00',
+          fixture: 'F2255',
+          machineName: '350-3',
+          opName: 'P8H机体总成015',
+          orderNO: '2022051021330743420600015',
+          planNO: '2022051021330743420600015',
+          productName: 'P8H机体',
+          startTime: '2022-07-24 06:22:00',
+          staticTime: '20220724',
+          toolMachineName: 'P8总成1508',
+          toolType: 'D13钻头WP5H-D13.5-35-D16',
+          tray: 'p1561',
+          useTime: 98.0,
+        },
+      ],
+      orderStatisticsInfo: {
+        algorithmComparisonData: {
+          X: ['SPT', 'LPT', 'CR', 'EDD', 'ESD', 'PL'],
+          Y: [
+            -0.007452613424761111, -0.006216149984798692, -0.007363873947001564,
+            -0.006279264842106959, -0.0068665867184703735, -0.006915024917600856,
+          ],
+        },
+        fourWeekFinishRate: {
+          X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+          Y: [0.95, 0.92, 0.92, 0.99, 0.0],
+        },
+        fourWeekOutputStatistics: {
+          X: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+          Y1: [60.0, 40.0, 70.0, 50.0, 0.0],
+          Y2: [30.0, 55.0, 80.0, 70.0, 46.0],
+        },
+        orderFinishStatistics: {
+          aheadNum: 0,
+          delayNum: 15,
+          deliveryNum: 15,
+          finishRate: 1.0,
+        },
+      },
+      scheduleCycle: 9240.0,
+      schedulePattern: 2,
+      scheduleTarget: 1,
+      selectAlgorithm: 1,
+    };
+    setAllData(res);
+    // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
+    const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
+    const arrCen = oneCen.map((item, index) => {
+      if (
+        item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
+        item.supplyTime == moment(new Date()).format('YYYY/M/D')
+      ) {
+        return {
+          ...item,
+          flagBool: true,
+        };
+      } else {
+        return {
+          ...item,
+          flagBool: false,
+        };
+      }
     });
-     return () => {
-       websocketclose();
-     }
-  }, []); */
+    setMaterialTypeSixList(arrCen); //物料类型六个卡片
+    setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+    setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+    const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+      return Number(-10000 * item);
+    });
+    var bigValueLineCen = [];
+    for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
+      bigValueLineCen.push(
+        Number(
+          -10000 *
+            res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
+              return a - b;
+            })[0],
+        ),
+      );
+    }
+    //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
+    setBigValueLine(bigValueLineCen);
+    setDiffAlgorithmY(cenY); //不同算法对比信息图
+    setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+    setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
+    setFourWeekFinishRateY(
+      res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
+        return Number(100 * item);
+      }),
+    );
+    setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+    setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+    setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+    setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+    setOrderCardDetail(res.orderCardDetail);
+    setDeviceCardDetail(res.deviceCardDetail);
+    tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+    tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+    setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+    var chartDom = document.getElementById('main');
+    myChart = echarts.init(chartDom);
+    axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
+      //console.log(rawData, 'rawData______________', ROOT_PATH);
+      _rawData = rawData.data;
+      setGanTeData(res.orderScheduleDetail);
+      var cen1T = res.orderScheduleDetail.map((item, index) => {
+        return {
+          ...item,
+          currentColor: color16(),
+          yValue: index,
+        };
+      });
+      const cen2 = res.orderScheduleDetail.map((item, index) => {
+        return {
+          ...item,
+          currentColor: cen1T[index].currentColor,
+          yValue: index,
+        };
+      });
+      const cen3 = res.orderScheduleDetail.map((item, index) => {
+        return {
+          ...item,
+          currentColor: cen1T[index].currentColor,
+          yValue: index,
+        };
+      });
+      const cen4 = res.orderScheduleDetail.map((item, index) => {
+        return {
+          ...item,
+          currentColor: cen1T[index].currentColor,
+          yValue: index,
+        };
+      });
+      myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
+      initDrag();
+    });
+    //   });
+    /*   return () => {
+        websocketclose();
+      } */
+  }, []);
+  useEffect(() => {
+    console.log(deviceCardCount, 'deviceCardCount');
+    //tranDeviceCardDetail(0,5);
+  }, [num]);
   /*   const initWebSocket = () => {
       console.log(document.domain, location.port, 'websocket连接了');
       //初始化weosocket
@@ -1229,7 +4808,7 @@ const Home = function (props) {
     setLeftEchartsPieFour(echartsList4);
   };
   const tranDeviceCardDetail = (data) => {
-    // console.log(data, 'data-data-data');
+    // var data=deviceCardDetail.slice(start,end);
     const info1 = {
       deviceName: data[0].deviceName,
       runTimeRate: (data[0].runTimeRate * 100).toFixed(2) + '%',
@@ -1272,7 +4851,9 @@ const Home = function (props) {
         // containLabel: true
       },
       xAxis: {
-        data: data[0].dayOutput.X,
+        data: data[0].dayOutput.X.map((item) => {
+          return item.slice(4, 8);
+        }),
         show: true,
         axisTick: {
           show: false,
@@ -1288,7 +4869,7 @@ const Home = function (props) {
           show: false,
         },
         axisLabel: {
-          interval: 1,
+          interval: 0,
           textStyle: {
             color: '#fff',
             fontSize: 12,
@@ -1423,61 +5004,29 @@ const Home = function (props) {
     };
     setRightEchartsDayOutputOne(echartsListLeft1);
     const echartsListRight1 = {
+      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+      title: {
+        text: '状态占比',
+        show: false,
+      },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'transparent',
         axisPointer: {
-          lineStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: 'rgba(126,199,255,0)', // 0% 处的颜色
-                },
-                {
-                  offset: 0.5,
-                  color: 'rgba(126,199,255,1)', // 100% 处的颜色
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(126,199,255,0)', // 100% 处的颜色
-                },
-              ],
-              global: false, // 缺省为 false
-            },
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
           },
         },
       },
       legend: {
-        align: 'left',
-        right: '0%',
-        top: '0%',
-        type: 'plain',
-        textStyle: {
-          color: '#fff',
-          fontSize: 16,
+        show: false,
+        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          saveAsImage: {},
         },
-        // icon:'rect',
-        itemGap: 25,
-        itemWidth: 18,
-        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
-
-        data: [
-          // {
-          //     name: '上学'
-          // },
-          // {
-          //     name: '到校'
-          // },
-          // {
-          //     name: '放学'
-          // }
-        ],
       },
       grid: {
         top: '30%',
@@ -1564,183 +5113,89 @@ const Home = function (props) {
         {
           name: '待机时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: '#61D1FF',
-                  },
-                  {
-                    offset: 1,
-                    color: '#E436AA',
-                  },
-                ],
-                false,
-              ), // 线条颜色
-            },
-            borderColor: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#61D1FF',
-                },
-                {
-                  offset: 1,
-                  color: '#E436AA',
-                },
-              ],
-              false,
-            ),
+            width: 0,
           },
-          itemStyle: {
-            color: 'red',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(135, 54, 228, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(97, 209, 255, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(40, 182, 240, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'rgba(83, 132, 222, 1)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(160, 54, 228, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[0].stateRatio.Y1,
         },
         {
           name: '故障维修时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(228, 54, 170, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 107, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(0, 221, 255)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(77, 119, 255)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[0].stateRatio.Y2,
         },
         {
           name: '加工时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(160, 54, 228, 1)',
-                  },
-                  {
-                    offset: 0.5,
-                    color: 'rgba(83, 132, 222, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 182, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'RGBA(113, 102, 224, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'RGBA(78, 137, 223, 1)',
+              },
+              {
+                offset: 1,
+                color: 'RGBA(91, 124, 223, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[0].stateRatio.Y3,
         },
@@ -1759,7 +5214,9 @@ const Home = function (props) {
         // containLabel: true
       },
       xAxis: {
-        data: data[1].dayOutput.X,
+        data: data[1].dayOutput.X.map((item) => {
+          return item.slice(4, 8);
+        }),
         show: true,
         axisTick: {
           show: false,
@@ -1909,61 +5366,29 @@ const Home = function (props) {
     };
     setRightEchartsDayOutputTwo(echartsListLeft2);
     const echartsListRight2 = {
+      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+      title: {
+        text: '状态占比',
+        show: false,
+      },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'transparent',
         axisPointer: {
-          lineStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: 'rgba(126,199,255,0)', // 0% 处的颜色
-                },
-                {
-                  offset: 0.5,
-                  color: 'rgba(126,199,255,1)', // 100% 处的颜色
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(126,199,255,0)', // 100% 处的颜色
-                },
-              ],
-              global: false, // 缺省为 false
-            },
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
           },
         },
       },
       legend: {
-        align: 'left',
-        right: '0%',
-        top: '0%',
-        type: 'plain',
-        textStyle: {
-          color: '#fff',
-          fontSize: 16,
+        show: false,
+        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          saveAsImage: {},
         },
-        // icon:'rect',
-        itemGap: 25,
-        itemWidth: 18,
-        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
-
-        data: [
-          // {
-          //     name: '上学'
-          // },
-          // {
-          //     name: '到校'
-          // },
-          // {
-          //     name: '放学'
-          // }
-        ],
       },
       grid: {
         top: '30%',
@@ -2050,183 +5475,89 @@ const Home = function (props) {
         {
           name: '待机时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: '#61D1FF',
-                  },
-                  {
-                    offset: 1,
-                    color: '#E436AA',
-                  },
-                ],
-                false,
-              ), // 线条颜色
-            },
-            borderColor: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#61D1FF',
-                },
-                {
-                  offset: 1,
-                  color: '#E436AA',
-                },
-              ],
-              false,
-            ),
+            width: 0,
           },
-          itemStyle: {
-            color: 'red',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(135, 54, 228, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(97, 209, 255, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(40, 182, 240, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'rgba(83, 132, 222, 1)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(160, 54, 228, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[1].stateRatio.Y1,
         },
         {
           name: '故障维修时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(228, 54, 170, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 107, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(0, 221, 255)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(77, 119, 255)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[1].stateRatio.Y2,
         },
         {
           name: '加工时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(160, 54, 228, 1)',
-                  },
-                  {
-                    offset: 0.5,
-                    color: 'rgba(83, 132, 222, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 182, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'RGBA(113, 102, 224, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'RGBA(78, 137, 223, 1)',
+              },
+              {
+                offset: 1,
+                color: 'RGBA(91, 124, 223, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[1].stateRatio.Y3,
         },
@@ -2245,7 +5576,9 @@ const Home = function (props) {
         // containLabel: true
       },
       xAxis: {
-        data: data[2].dayOutput.X,
+        data: data[2].dayOutput.X.map((item) => {
+          return item.slice(4, 8);
+        }),
         show: true,
         axisTick: {
           show: false,
@@ -2395,61 +5728,29 @@ const Home = function (props) {
     };
     setRightEchartsDayOutputThree(echartsListLeft3);
     const echartsListRight3 = {
+      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+      title: {
+        text: '状态占比',
+        show: false,
+      },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'transparent',
         axisPointer: {
-          lineStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: 'rgba(126,199,255,0)', // 0% 处的颜色
-                },
-                {
-                  offset: 0.5,
-                  color: 'rgba(126,199,255,1)', // 100% 处的颜色
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(126,199,255,0)', // 100% 处的颜色
-                },
-              ],
-              global: false, // 缺省为 false
-            },
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
           },
         },
       },
       legend: {
-        align: 'left',
-        right: '0%',
-        top: '0%',
-        type: 'plain',
-        textStyle: {
-          color: '#fff',
-          fontSize: 16,
+        show: false,
+        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          saveAsImage: {},
         },
-        // icon:'rect',
-        itemGap: 25,
-        itemWidth: 18,
-        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
-
-        data: [
-          // {
-          //     name: '上学'
-          // },
-          // {
-          //     name: '到校'
-          // },
-          // {
-          //     name: '放学'
-          // }
-        ],
       },
       grid: {
         top: '30%',
@@ -2536,183 +5837,89 @@ const Home = function (props) {
         {
           name: '待机时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: '#61D1FF',
-                  },
-                  {
-                    offset: 1,
-                    color: '#E436AA',
-                  },
-                ],
-                false,
-              ), // 线条颜色
-            },
-            borderColor: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#61D1FF',
-                },
-                {
-                  offset: 1,
-                  color: '#E436AA',
-                },
-              ],
-              false,
-            ),
+            width: 0,
           },
-          itemStyle: {
-            color: 'red',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(135, 54, 228, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(97, 209, 255, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(40, 182, 240, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'rgba(83, 132, 222, 1)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(160, 54, 228, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[2].stateRatio.Y1,
         },
         {
           name: '故障维修时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(228, 54, 170, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 107, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(0, 221, 255)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(77, 119, 255)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[2].stateRatio.Y2,
         },
         {
           name: '加工时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(160, 54, 228, 1)',
-                  },
-                  {
-                    offset: 0.5,
-                    color: 'rgba(83, 132, 222, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 182, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'RGBA(113, 102, 224, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'RGBA(78, 137, 223, 1)',
+              },
+              {
+                offset: 1,
+                color: 'RGBA(91, 124, 223, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[2].stateRatio.Y3,
         },
@@ -2731,7 +5938,9 @@ const Home = function (props) {
         // containLabel: true
       },
       xAxis: {
-        data: data[3].dayOutput.X,
+        data: data[3].dayOutput.X.map((item) => {
+          return item.slice(4, 8);
+        }),
         show: true,
         axisTick: {
           show: false,
@@ -2881,61 +6090,29 @@ const Home = function (props) {
     };
     setRightEchartsDayOutputFour(echartsListLeft4);
     const echartsListRight4 = {
+      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+      title: {
+        text: '状态占比',
+        show: false,
+      },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'transparent',
         axisPointer: {
-          lineStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: 'rgba(126,199,255,0)', // 0% 处的颜色
-                },
-                {
-                  offset: 0.5,
-                  color: 'rgba(126,199,255,1)', // 100% 处的颜色
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(126,199,255,0)', // 100% 处的颜色
-                },
-              ],
-              global: false, // 缺省为 false
-            },
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
           },
         },
       },
       legend: {
-        align: 'left',
-        right: '0%',
-        top: '0%',
-        type: 'plain',
-        textStyle: {
-          color: '#fff',
-          fontSize: 16,
+        show: false,
+        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          saveAsImage: {},
         },
-        // icon:'rect',
-        itemGap: 25,
-        itemWidth: 18,
-        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
-
-        data: [
-          // {
-          //     name: '上学'
-          // },
-          // {
-          //     name: '到校'
-          // },
-          // {
-          //     name: '放学'
-          // }
-        ],
       },
       grid: {
         top: '30%',
@@ -3022,183 +6199,89 @@ const Home = function (props) {
         {
           name: '待机时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: '#61D1FF',
-                  },
-                  {
-                    offset: 1,
-                    color: '#E436AA',
-                  },
-                ],
-                false,
-              ), // 线条颜色
-            },
-            borderColor: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#61D1FF',
-                },
-                {
-                  offset: 1,
-                  color: '#E436AA',
-                },
-              ],
-              false,
-            ),
+            width: 0,
           },
-          itemStyle: {
-            color: 'red',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(135, 54, 228, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(97, 209, 255, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(40, 182, 240, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'rgba(83, 132, 222, 1)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(160, 54, 228, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[3].stateRatio.Y1,
         },
         {
           name: '故障维修时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(228, 54, 170, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 107, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(0, 221, 255)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(77, 119, 255)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[3].stateRatio.Y2,
         },
         {
           name: '加工时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(160, 54, 228, 1)',
-                  },
-                  {
-                    offset: 0.5,
-                    color: 'rgba(83, 132, 222, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 182, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'RGBA(113, 102, 224, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'RGBA(78, 137, 223, 1)',
+              },
+              {
+                offset: 1,
+                color: 'RGBA(91, 124, 223, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[3].stateRatio.Y3,
         },
@@ -3217,7 +6300,9 @@ const Home = function (props) {
         // containLabel: true
       },
       xAxis: {
-        data: data[4].dayOutput.X,
+        data: data[4].dayOutput.X.map((item) => {
+          return item.slice(4, 8);
+        }),
         show: true,
         axisTick: {
           show: false,
@@ -3367,61 +6452,29 @@ const Home = function (props) {
     };
     setRightEchartsDayOutputFive(echartsListLeft5);
     const echartsListRight5 = {
+      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+      title: {
+        text: '状态占比',
+        show: false,
+      },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: 'transparent',
         axisPointer: {
-          lineStyle: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: 'rgba(126,199,255,0)', // 0% 处的颜色
-                },
-                {
-                  offset: 0.5,
-                  color: 'rgba(126,199,255,1)', // 100% 处的颜色
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(126,199,255,0)', // 100% 处的颜色
-                },
-              ],
-              global: false, // 缺省为 false
-            },
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985',
           },
         },
       },
       legend: {
-        align: 'left',
-        right: '0%',
-        top: '0%',
-        type: 'plain',
-        textStyle: {
-          color: '#fff',
-          fontSize: 16,
+        show: false,
+        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
+      },
+      toolbox: {
+        show: false,
+        feature: {
+          saveAsImage: {},
         },
-        // icon:'rect',
-        itemGap: 25,
-        itemWidth: 18,
-        icon: 'path://M0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
-
-        data: [
-          // {
-          //     name: '上学'
-          // },
-          // {
-          //     name: '到校'
-          // },
-          // {
-          //     name: '放学'
-          // }
-        ],
       },
       grid: {
         top: '30%',
@@ -3508,183 +6561,89 @@ const Home = function (props) {
         {
           name: '待机时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: '#61D1FF',
-                  },
-                  {
-                    offset: 1,
-                    color: '#E436AA',
-                  },
-                ],
-                false,
-              ), // 线条颜色
-            },
-            borderColor: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#61D1FF',
-                },
-                {
-                  offset: 1,
-                  color: '#E436AA',
-                },
-              ],
-              false,
-            ),
+            width: 0,
           },
-          itemStyle: {
-            color: 'red',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(135, 54, 228, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(97, 209, 255, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(40, 182, 240, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'rgba(83, 132, 222, 1)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(160, 54, 228, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[4].stateRatio.Y1,
         },
         {
           name: '故障维修时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(228, 54, 170, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 107, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgb(0, 221, 255)',
+              },
+              {
+                offset: 1,
+                color: 'rgb(77, 119, 255)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[4].stateRatio.Y2,
         },
         {
           name: '加工时间',
           type: 'line',
-          symbol: 'circle', // 默认是空心圆（中间是白色的），改成实心圆
-          showAllSymbol: true,
-          symbolSize: 0,
+          stack: 'Total',
           smooth: true,
           lineStyle: {
-            normal: {
-              width: 0,
-              color: 'rgba(10,219,250,1)', // 线条颜色
-            },
-            borderColor: 'rgba(0,0,0,.4)',
+            width: 0,
           },
-          itemStyle: {
-            color: 'rgba(10,219,250,1)',
-            borderColor: '#646ace',
-            borderWidth: 2,
-          },
-          tooltip: {
-            show: true,
-          },
+          showSymbol: false,
           areaStyle: {
-            //区域填充样式
-            normal: {
-              //线性渐变，前4个参数分别是x0,y0,x2,y2(范围0~1);相当于图形包围盒中的百分比。如果最后一个参数是‘true’，则该四个值是绝对像素位置。
-              color: new echarts.graphic.LinearGradient(
-                0,
-                0,
-                0,
-                1,
-                [
-                  {
-                    offset: 0,
-                    color: 'rgba(160, 54, 228, 1)',
-                  },
-                  {
-                    offset: 0.5,
-                    color: 'rgba(83, 132, 222, 1)',
-                  },
-                  {
-                    offset: 1,
-                    color: 'rgba(40, 182, 240, 1)',
-                  },
-                ],
-                false,
-              ),
-              //shadowColor: 'rgba(25,163,223, 0.5)', //阴影颜色
-              shadowBlur: 20, //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
-            },
+            opacity: 0.8,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'RGBA(113, 102, 224, 1)',
+              },
+              {
+                offset: 0.5,
+                color: 'RGBA(78, 137, 223, 1)',
+              },
+              {
+                offset: 1,
+                color: 'RGBA(91, 124, 223, 1)',
+              },
+            ]),
+          },
+          emphasis: {
+            focus: 'series',
           },
           data: data[4].stateRatio.Y3,
         },
@@ -3692,328 +6651,232 @@ const Home = function (props) {
     };
     setRightEchartsStateRatioFive(echartsListRight5);
   };
-  function getArrayValue(array, key) {
-    var key = key || 'value';
-    var res = [];
-    if (array) {
-      array.forEach(function (t) {
-        res.push(t[key]);
-      });
-    }
-    console.log(res, 'arrName');
-    return res;
-  }
-
-  function array2obj(array, key) {
-    var resObj = {};
-    for (var i = 0; i < array.length; i++) {
-      resObj[array[i][key]] = array[i];
-    }
-    return resObj;
-  }
-
-  function getData(data) {
-    var color = [
-      ['rgba(41, 143, 255, 0.55)'],
-      ['rgba(37, 121, 241, 1)'],
-      ['rgba(255, 144, 35, 0.47)'],
-      ['rgba(255, 144, 35, 1)'],
-      ['rgba(41, 143, 255, 0.55)'],
-    ];
-    var radius = [
-      {
-        value1: '70%',
-        value2: '80%',
-      },
-      {
-        value1: '55%',
-        value2: '65%',
-      },
-      {
-        value1: '40%',
-        value2: '50%',
-      },
-      {
-        value1: '25%',
-        value2: '35%',
-      },
-      {
-        value1: '0%',
-        value2: '20%',
-      },
-    ];
-    var res = {
-      series: [
-        {
-          name: '刻度线',
-          type: 'gauge',
-          startAngle: 90,
-          endAngle: 450,
-          min: 0,
-          max: 100,
-          radius: '95%',
-          center: ['50%', '50%'],
-          title: { show: false },
-          detail: { show: false },
-          axisLine: {
-            show: true,
-          },
-          axisTick: { length: 0 },
-          splitLine: {
-            length: '100%',
-            show: true,
-            lineStyle: {
-              color: 'rgba(36, 143, 255, 1)',
-              width: 1,
-              type: 'solid',
-            },
-          },
-          axisLabel: { show: false },
-          pointer: { show: false },
-          data: [{ value: 0 }],
-        },
-        {
-          name: '刻度值',
-          type: 'gauge',
-          startAngle: 90,
-          endAngle: 450,
-          min: 0,
-          max: 100,
-          radius: '100%',
-          center: ['50%', '50%'],
-          title: { show: false },
-          detail: { show: false },
-          axisLine: {
-            show: false,
-          },
-          axisTick: { length: 0 },
-          splitLine: { show: false },
-          axisLabel: {
-            color: '#fffff',
-            fontSize: 12,
-            verticalAlign: 'top',
-            align: 'left',
-            margin: 0,
-          },
-          pointer: { show: false },
-          data: [{ value: 0 }],
-        },
-      ],
-      legend: [],
-    };
-    for (let i = 0; i < data.length; i++) {
-      // if (data[i].value < 60) {
-      var itemColor = {
-        type: 'linear',
-        x: 0,
-        y: 0,
-        x2: 0,
-        y2: 1,
-        colorStops: [
-          {
-            offset: 0,
-            color: color[i][0], // 0% 处的颜色
-          },
-          {
-            offset: 1,
-            color: color[i][0], // 100% 处的颜色
-          },
-        ],
-        global: false, // 缺省为 false
-      };
-      // }
-      /* else {
-          if (data[i].value < 80) {
-              var itemColor = {
-                  type: 'linear',
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [{
-                      offset: 0,
-                      color: color[1][0] // 0% 处的颜色
-                  }, {
-                      offset: 0.5,
-                      color: color[1][1] // 100% 处的颜色
-                  }, {
-                      offset: 1,
-                      color: color[1][1] // 100% 处的颜色
-                  }],
-                  global: false // 缺省为 false
-              }
-          } else {
-              if (data[i].value < 100) {
-                  var itemColor = {
-                      type: 'linear',
-                      x: 0,
-                      y: 0,
-                      x2: 0,
-                      y2: 1,
-                      colorStops: [{
-                          offset: 0,
-                          color: color[0][0] // 0% 处的颜色
-                      }, {
-                          offset: 2 / 3,
-                          color: color[0][1] // 100% 处的颜色
-                      }, {
-                          offset: 1,
-                          color: color[0][1] // 100% 处的颜色
-                      }],
-                      global: false // 缺省为 false
-                  }
-              }
-          }
-      } */
-      res.series.push({
-        name: '',
-        startAngle: 0,
-        endAngle: 450,
-        type: 'pie',
-        clockWise: true, //顺时加载
-        hoverAnimation: false, //鼠标移入变大
-        radius: [radius[i].value1, radius[i].value2],
-        center: ['50%', '50%'],
-        label: {
-          show: false,
-        },
-        itemStyle: {
-          label: {
-            show: false,
-          },
-          labelLine: {
-            show: false,
-          },
-          normal: {
-            color: itemColor,
-          },
-        },
-        data: [
-          {
-            value: data[i].value * 100,
-            name: data[i].name,
-          },
-          {
-            value: 400 / 3 - data[i].value * 100,
-            name: '',
-            itemStyle: {
-              color: 'rgba(0,0,0,0)',
-              borderWidth: 0,
-            },
-            tooltip: {
-              show: false,
-            },
-            hoverAnimation: false,
-          },
-        ],
-      });
-      res.series.push({
-        name: '',
-        startAngle: 0,
-        endAngle: 450,
-        type: 'pie',
-        silent: true,
-        z: 1,
-        clockWise: true, //顺时加载
-        hoverAnimation: false, //鼠标移入变大
-        radius: [radius[i].value1, radius[i].value2],
-        center: ['50%', '50%'],
-        label: {
-          show: false,
-        },
-        itemStyle: {
-          label: {
-            show: false,
-          },
-          labelLine: {
-            show: false,
-          },
-          borderWidth: 5,
-        },
-        data: [
-          {
-            value: 7.5,
-            itemStyle: {
-              color: '#E3F0FF',
-              borderWidth: 0,
-            },
-            tooltip: {
-              show: false,
-            },
-            hoverAnimation: false,
-          },
-          {
-            value: 2.5,
-            name: '',
-            itemStyle: {
-              color: 'rgba(0,0,0,0)',
-              borderWidth: 0,
-            },
-            tooltip: {
-              show: false,
-            },
-            hoverAnimation: false,
-          },
-        ],
-      });
-    }
-    return res;
-  }
+  /*  const nan1 = {
+     legend: [
+       {
+         show: true,
+         top: '12%',
+         left: '30%',
+         data: arrName,
+         width: 100,
+         itemGap: 28,
+         itemWidth: 0,
+         icon: 'none',
+         formatter: function (name) {
+           return '{title|' + name + '}';
+         },
+         textStyle: {
+           rich: {
+             title: {
+               fontSize: '12px',
+               fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
+               fontWeight: 'normal',
+               color: '#FFFFFF',
+             },
+             // value: {
+             //   fontSize: '12px',
+             //   fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
+             //   fontWeight: 'normal',
+             //   color: '#FFFFFF'
+             // }
+           },
+         },
+       },
+     ],
+     tooltip: {
+       show: true,
+       trigger: 'item',
+       confine: true,
+       formatter: function (param) {
+         return param.name + ' : ' + param.value + '%';
+       },
+       textStyle: {
+         rich: {
+           title: {
+             fontSize: 20,
+             lineHeight: 30,
+             color: '#6D7383',
+           },
+           value: {
+             fontSize: 18,
+             lineHeight: 20,
+             color: '#4DA1FF',
+           },
+         },
+       },
+     },
+     series: optionData.series,
+   }; */
   const nan1 = {
-    legend: [
-      {
+    angleAxis: {
+      splitLine: {
+        length: '100%',
         show: true,
-        top: '12%',
-        left: '30%',
-        data: arrName,
-        width: 100,
-        itemGap: 28,
-        itemWidth: 0,
-        icon: 'none',
-        formatter: function (name) {
-          return '{title|' + name + '}';
+        lineStyle: {
+          color: 'rgba(36, 143, 255, 1)',
+          width: 1,
+          type: 'solid',
         },
-        textStyle: {
-          rich: {
-            title: {
-              fontSize: '12px',
-              fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
-              fontWeight: 'normal',
-              color: '#FFFFFF',
-            },
-            // value: {
-            //   fontSize: '12px',
-            //   fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
-            //   fontWeight: 'normal',
-            //   color: '#FFFFFF'
-            // }
+      },
+      axisLabel: {
+        color: '#fff',
+        fontSize: 12,
+        verticalAlign: 'top',
+        align: 'left',
+        margin: 0,
+      },
+    },
+    // tooltip: {
+    //   show: true,
+    //   trigger: 'item',
+    //   confine: true,
+    //   formatter: function (param) {
+    //     return param.name + ' : ' + param.value + '%';
+    //   },
+    //   textStyle: {
+    //     rich: {
+    //       title: {
+    //         fontSize: 20,
+    //         lineHeight: 30,
+    //         color: '#6D7383',
+    //       },
+    //       value: {
+    //         fontSize: 18,
+    //         lineHeight: 20,
+    //         color: '#4DA1FF',
+    //       },
+    //     },
+    //   },
+    // },
+    radiusAxis: {
+      type: 'category',
+      data: fourWeekFinishRateX,
+      z: 10,
+      axisLabel: {
+        color: '#fff',
+        fontSize: 12,
+        verticalAlign: 'top',
+        // align: 'left',
+        // margin: 0,
+      },
+    },
+    polar: {},
+    series: [
+      {
+        type: 'bar',
+        data: [fourWeekFinishRateY[0], 0, 0, 0, 0],
+        coordinateSystem: 'polar',
+        name: 'A',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: '#FF9023',
+          },
+        },
+      },
+      {
+        type: 'bar',
+        data: [0, fourWeekFinishRateY[1], 0, 0, 0],
+        coordinateSystem: 'polar',
+        name: 'B',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: '#FF9023',
+                },
+                {
+                  offset: 1,
+                  color: '#FFB66F',
+                },
+              ],
+              false,
+            ),
+          },
+        },
+      },
+      {
+        type: 'bar',
+        data: [0, 0, fourWeekFinishRateY[2], 0, 0],
+        coordinateSystem: 'polar',
+        name: 'C',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: '#2579F1',
+                },
+                {
+                  offset: 1,
+                  color: '#281DFF',
+                },
+              ],
+              false,
+            ),
+          },
+        },
+      },
+      {
+        type: 'bar',
+        data: [0, 0, 0, fourWeekFinishRateY[3], 0],
+        coordinateSystem: 'polar',
+        name: 'B',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0.3,
+                color: '#2579F1',
+              },
+              {
+                offset: 1,
+                color: '#281DFF',
+              },
+            ]),
+          },
+        },
+      },
+      {
+        type: 'bar',
+        data: [0, 0, 0, 0, fourWeekFinishRateY[4]],
+        coordinateSystem: 'polar',
+        name: 'C',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0.3,
+                color: '#298FFF',
+              },
+              {
+                offset: 1,
+                color: '#248FFF',
+              },
+            ]),
           },
         },
       },
     ],
-    tooltip: {
-      show: true,
-      trigger: 'item',
-      confine: true,
-      formatter: function (param) {
-        return param.name + ' : ' + param.value + '%';
-      },
-      textStyle: {
-        rich: {
-          title: {
-            fontSize: 20,
-            lineHeight: 30,
-            color: '#6D7383',
-          },
-          value: {
-            fontSize: 18,
-            lineHeight: 20,
-            color: '#4DA1FF',
-          },
-        },
-      },
+    legend: {
+      show: false,
+      data: ['A', 'B', 'C'],
     },
-    series: optionData.series,
   };
   var removeDuplicateDataDimensions = ['Index', '开始时间', '结束时间', '机床名称'];
   function removeDuplicateData(arr) {
@@ -4072,9 +6935,9 @@ const Home = function (props) {
     }
     return arr;
   }
-  function makeOption(data1) {
+  function makeOption(data1, data2, data3, data4) {
     // const aaa=data1.find(item=>item.machineName=='清洗机');
-    //   console.log(data1, 'aa清洗');
+    console.log(data1, 'aa清洗');
     return {
       tooltip: {},
       animation: false,
@@ -4130,10 +6993,11 @@ const Home = function (props) {
           right: 10,
           top: 70,
           bottom: 20,
-          start: 95,
+          start: 92,
           end: 100,
           handleSize: 0,
           showDetail: false,
+          show: true,
         },
         {
           type: 'inside',
@@ -4225,8 +7089,8 @@ const Home = function (props) {
           // data: _rawData.parkingApron.data.map(function (item, index) {
           //   return [index].concat(item);
           // }),
-          data: removeDuplicateY1(data1).map((item, index) => {
-            return [index + 315].concat(item.machineName);
+          data: removeDuplicateY1(data2).map((item, index) => {
+            return [index + 310].concat(item.machineName);
           }),
         },
         {
@@ -4238,8 +7102,8 @@ const Home = function (props) {
             x: -1,
             y: 0,
           },
-          data: removeDuplicateY2(data1).map((item, index) => {
-            return [index + 318].concat(item.productName);
+          data: removeDuplicateY2(data3).map((item, index) => {
+            return [index + 310].concat(item.productName);
           }),
         },
         {
@@ -4251,8 +7115,8 @@ const Home = function (props) {
             x: -1,
             y: 0,
           },
-          data: removeDuplicateY3(data1).map((item, index) => {
-            return [index + 318].concat(item.currentColor);
+          data: removeDuplicateY3(data4).map((item, index) => {
+            return [index + 310].concat(item.currentColor);
           }),
         },
       ],
@@ -4361,7 +7225,7 @@ const Home = function (props) {
     }
     return {
       type: 'group',
-      position: [2150, y],
+      position: [2190, y],
       children: [
         {
           type: 'text',
@@ -4384,7 +7248,7 @@ const Home = function (props) {
     }
     return {
       type: 'group',
-      position: [2120, y],
+      position: [2150, y],
       children: [
         {
           type: 'rect',
@@ -4672,6 +7536,7 @@ const Home = function (props) {
             allData={allData}
             finishPlanObj={finishPlanObj}
             diffAlgorithmX={diffAlgorithmX}
+            bigValueLine={bigValueLine}
             diffAlgorithmY={diffAlgorithmY}
             materialTypeSixList={materialTypeSixList}
           />
