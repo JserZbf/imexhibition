@@ -39,6 +39,8 @@ const Home = function (props) {
   const [fourWeekEnergyConsumption, setFourWeekEnergyConsumption] = useState({});
   const [fourWeekUseTrend, setFourWeekUseTrend] = useState({});
   const [fourWeekUtilizationRate, setFourWeekUtilizationRate] = useState({});
+  const [leftEchart, setLeftEchart] = useState([]);
+  const [rightEchart, setRightEchart] = useState([]);
   const [leftEchartsPieOne, setLeftEchartsPieOne] = useState({});
   const [leftEchartsPieTwo, setLeftEchartsPieTwo] = useState({});
   const [leftEchartsPieThree, setLeftEchartsPieThree] = useState({});
@@ -65,6 +67,7 @@ const Home = function (props) {
   const [deviceUseTime, setDeviceUseTime] = useState();
   const [ganTeData, setGanTeData] = useState([]);
   const [outSideOrderDetail, setOutSideOrderDetail] = useState([]);
+  const [outSideOrderDetailTimeList, setOutSideOrderDetailTimeList] = useState([]);
   const [outSideScheduleCycle, setOutSideScheduleCycle] = useState(null);
   const [outSideSchedulePattern, setOutSideSchedulePattern] = useState(null);
   const [scheduleTarget, setOutSideScheduleTarget] = useState(null);
@@ -131,6 +134,10 @@ const Home = function (props) {
     const cen = deviceCardCount;
     setDeviceCardCount(cen + 5);
   };
+  const sorts = (a, b) => {
+    return new Date(a).getTime() - new Date(b).getTime();
+  };
+
   useEffect(() => {
     const obj = {
       source_code: 'SSS',
@@ -138,6 +145,12 @@ const Home = function (props) {
     getQuery(obj).then((res) => {
       console.log(res.code, 'res.coderes.code');
       if (res.code == 200) {
+        var cenTimeList = [];
+        res.orderDetail.forEach((item) => {
+          cenTimeList.push(item.planStart, item.planEnd);
+        });
+        var newCenTimeList = [...new Set(cenTimeList)];
+        setOutSideOrderDetailTimeList(newCenTimeList.sort(sorts));
         setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
         setOutSideScheduleCycle(res.scheduleCycle);
         setOutSideSchedulePattern(res.schedulePattern);
@@ -163,24 +176,27 @@ const Home = function (props) {
         setMaterialTypeSixList(arrCen); //物料类型六个卡片
         setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
         setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-        const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-          return Number(-10000 * item);
-        });
-        var bigValueLineCen = [];
-        for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
-          bigValueLineCen.push(
-            Number(
-              -10000 *
-                res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
-                  return a - b;
-                })[0],
-            ),
-          );
-        }
+        // const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+        //   return Number(-10000 * item);
+        // });
+        setDiffAlgorithmY([]); //不同算法对比信息图
+        // setDiffAlgorithmY(res.orderStatisticsInfo.algorithmComparisonData.Y); //不同算法对比信息图
+        // var bigValueLineCen = [];
+        // const cenYst=JSON.parse(JSON.stringify(res.orderStatisticsInfo.algorithmComparisonData.Y));
+        // for (var i = 1; i <= cenYst.length; i++) {
+        //   bigValueLineCen.push(
+        //     Number(
+        //       cenYst.sort(function (a, b) {
+        //         return b-a;
+        //       })[0],
+        //     ),
+        //   );
+        // }
         //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
-        setBigValueLine(bigValueLineCen);
-        setDiffAlgorithmY(cenY); //不同算法对比信息图
-        setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+        //  setBigValueLine(bigValueLineCen);
+        setBigValueLine([]);
+        setDiffAlgorithmX([]);
+        //  setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
         setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
         setFourWeekFinishRateY(
           res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
@@ -237,161 +253,6 @@ const Home = function (props) {
     });
   }, [count]);
   // useEffect(() => {
-  //   //initWebSocket();
-  //   var index = window.location.href.lastIndexOf('=');
-  //   var num = window.location.href.substring(index + 1, window.location.href.length);
-  //   var obj = null;
-  //   if (num.length < 50) {
-  //     obj = {
-  //       taskId: '93578990',
-  //       scheduleTarget: 1,
-  //       schedulePattern: 2,
-  //       scheduleCycle: 7,
-  //       orderDetail: [
-  //         {
-  //           planNO: '2022051021330739627200001',
-  //           productName: '12M33机体',
-  //           productNum: 2,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-11',
-  //         },
-  //         {
-  //           planNO: '2022051021330742024300002',
-  //           productName: '8M33机体',
-  //           productNum: 8,
-  //           planType: '产品加工',
-  //           planLevel: 2,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-30',
-  //         },
-  //         {
-  //           planNO: '2022051021330742123900003',
-  //           productName: 'WP3H机体',
-  //           productNum: 1,
-  //           planType: '产品加工',
-  //           planLevel: 2,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742223800004',
-  //           productName: 'P15NG机体',
-  //           productNum: 2,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742323800005',
-  //           productName: 'P8H国六缸盖',
-  //           productNum: 2,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742423300006',
-  //           productName: '16M33总成',
-  //           productNum: 4,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742523100007',
-  //           productName: 'WP8机体',
-  //           productNum: 2,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742718700008',
-  //           productName: 'P11机体',
-  //           productNum: 6,
-  //           planType: '产品加工',
-  //           planLevel: 2,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742822500009',
-  //           productName: 'WP13H缸盖',
-  //           productNum: 1,
-  //           planType: '产品加工',
-  //           planLevel: 2,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330742922000010',
-  //           productName: '46吨阀体',
-  //           productNum: 2,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330743021600011',
-  //           productName: 'P8GH机体',
-  //           productNum: 1,
-  //           planType: '产品加工',
-  //           planLevel: 2,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330743121700012',
-  //           productName: 'H2缸盖吕框架',
-  //           productNum: 1,
-  //           planType: '产品加工',
-  //           planLevel: 2,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330743221200013',
-  //           productName: 'H2缸盖',
-  //           productNum: 1,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330743320800014',
-  //           productName: 'P11H机体',
-  //           productNum: 6,
-  //           planType: '产品加工',
-  //           planLevel: 0,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-12',
-  //         },
-  //         {
-  //           planNO: '2022051021330743420600015',
-  //           productName: 'P8H机体',
-  //           productNum: 7,
-  //           planType: '产品加工',
-  //           planLevel: 1,
-  //           planStart: '2022-05-10',
-  //           planEnd: '2022-05-13',
-  //         },
-  //       ],
-  //     };
-  //   } else {
-  //     obj = JSON.parse(decodeURI(decodeURI(num)));
-  //   }
-  //   setOutSideOrderDetail(obj.orderDetail ? obj.orderDetail : []);
-  //   setOutSideScheduleCycle(obj.scheduleCycle);
-  //   setOutSideSchedulePattern(obj.schedulePattern);
-  //   setOutSideScheduleTarget(obj.scheduleTarget);
   //   //  getAllData(obj).then((res) => {
   //   // console.log(res, 'res-last-dead');
   //   const res = {
@@ -3899,6 +3760,10 @@ const Home = function (props) {
   //     selectAlgorithm: 1,
   //   };
   //   setAllData(res);
+  //   setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+  //   setOutSideScheduleCycle(res.scheduleCycle);
+  //   setOutSideSchedulePattern(res.schedulePattern);
+  //   setOutSideScheduleTarget(res.scheduleTarget);
   //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
   //   const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
   //   const arrCen = oneCen.map((item, index) => {
@@ -3928,9 +3793,9 @@ const Home = function (props) {
   //     bigValueLineCen.push(
   //       Number(
   //         -10000 *
-  //           res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
-  //             return a - b;
-  //           })[0],
+  //         res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
+  //           return a - b;
+  //         })[0],
   //       ),
   //     );
   //   }
@@ -3959,41 +3824,53 @@ const Home = function (props) {
   //     //console.log(rawData, 'rawData______________', ROOT_PATH);
   //     _rawData = rawData.data;
   //     setGanTeData(res.orderScheduleDetail);
-  //     var cen1T = res.orderScheduleDetail.map((item, index) => {
+  //     const cen0 = res.orderScheduleDetail.map((item, index) => {
   //       return {
   //         ...item,
-  //         currentColor: color16(),
   //         yValue: index,
   //       };
   //     });
-  //     const cen2 = res.orderScheduleDetail.map((item, index) => {
+  //     var colorList = removeDuplicateColor(cen0).map((item, index) => {
   //       return {
-  //         ...item,
-  //         currentColor: cen1T[index].currentColor,
-  //         yValue: index,
+  //         productName: item.productName,
+  //         color: color16(),
   //       };
   //     });
-  //     const cen3 = res.orderScheduleDetail.map((item, index) => {
-  //       return {
-  //         ...item,
-  //         currentColor: cen1T[index].currentColor,
-  //         yValue: index,
-  //       };
+  //     var cen1T = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen1T.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
   //     });
-  //     const cen4 = res.orderScheduleDetail.map((item, index) => {
-  //       return {
-  //         ...item,
-  //         currentColor: cen1T[index].currentColor,
-  //         yValue: index,
-  //       };
+  //     var cen2 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen2.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen3 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen3.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen4 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen4.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
   //     });
   //     myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
   //     initDrag();
   //   });
-  //   //   });
-  //   /*   return () => {
-  //       websocketclose();
-  //     } */
   // }, []);
   useEffect(() => {
     console.log(deviceCardCount, 'deviceCardCount');
@@ -4120,6 +3997,185 @@ const Home = function (props) {
     return [value, percent, processedValue];
   };
   const tranOrderCardDetail = (data) => {
+    const totalObj = data.map((item, index) => {
+      return {
+        leftEchartsPieInfoOne: item,
+        leftEchartsPieOne: {
+          title: {
+            text: '',
+            x: 'center',
+            y: 'center',
+            textStyle: {
+              fontWeight: 'normal',
+              color: '#0bb6f0',
+              fontSize: 20,
+            },
+          },
+          //backgroundColor: '#011128',
+          // backgroundColor:'pink',
+          color: ['#eb644b', '#313443', '#fff'],
+          tooltip: {
+            show: false,
+            formatter: '{a} <br/>{b} : {c} ({d}%)',
+          },
+          legend: {
+            show: false,
+            itemGap: 12,
+            data: ['01', '02'],
+          },
+          toolbox: {
+            show: false,
+            feature: {
+              mark: {
+                show: true,
+              },
+              dataView: {
+                show: true,
+                readOnly: false,
+              },
+              restore: {
+                show: true,
+              },
+              saveAsImage: {
+                show: true,
+              },
+            },
+          },
+          series: [
+            {
+              name: 'Line 1',
+              type: 'pie',
+              clockWise: false,
+              radius: ['70%', '80%'],
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false,
+                  },
+                  labelLine: {
+                    show: false,
+                  },
+                  shadowBlur: 40,
+                  shadowColor: 'rgba(40, 40, 40, 0.5)',
+                },
+              },
+              hoverAnimation: false,
+              data: [
+                {
+                  value: tranData(item)[0],
+                  name: '01',
+                  itemStyle: {
+                    normal: {
+                      color: '#6879F7', //已完成的圆环的颜色
+                      label: {
+                        show: false,
+                      },
+                      labelLine: {
+                        show: false,
+                      },
+                    },
+                    emphasis: {
+                      color: 'rgba(44,59,70,1)', //未完成的圆环的颜色
+                    },
+                  },
+                  label: {
+                    normal: {
+                      rich: {
+                        a: {
+                          color: '#3a7ad5',
+                          align: 'center',
+                          fontSize: 20,
+                          fontWeight: 'bold',
+                        },
+                        b: {
+                          color: '#fff',
+                          align: 'center',
+                          fontSize: 16,
+                        },
+                      },
+                      formatter: function (params) {
+                        const [value, percent, processedValue] = tranData(item);
+                        return (
+                          '{b|100%}\n\n' +
+                          '{b|计划产量' +
+                          data[0].productNum +
+                          '件}' +
+                          '\n\n{b|' +
+                          percent +
+                          '}' +
+                          '\n\n{b|已加工' +
+                          processedValue +
+                          '件}'
+                        );
+                      },
+                      position: 'center',
+                      show: true,
+                      textStyle: {
+                        fontSize: '14',
+                        fontWeight: 'normal',
+                        color: '#fff',
+                      },
+                    },
+                  },
+                },
+                {
+                  value: 100 - tranData(item)[0],
+                  name: '',
+                  itemStyle: {
+                    normal: {
+                      color: '#071D58', //未完成的圆环的颜色
+                      label: {
+                        show: false,
+                      },
+                      labelLine: {
+                        show: false,
+                      },
+                    },
+                    emphasis: {
+                      color: 'rgba(44,59,70,1)', //未完成的圆环的颜色
+                    },
+                  },
+                },
+              ],
+            },
+            {
+              name: 'Line 2',
+              type: 'pie',
+              animation: false,
+              clockWise: false,
+              radius: ['80%', '90%'],
+              itemStyle: {
+                normal: {
+                  color: '#7CA9FF', //外层圆环的颜色
+                  label: {
+                    show: false,
+                  },
+                  labelLine: {
+                    show: false,
+                  },
+                },
+                emphasis: {
+                  color: 'rgba(44,59,70,1)', //外层圆环的颜色
+                },
+              },
+              hoverAnimation: false,
+              tooltip: {
+                show: false,
+              },
+              data: [
+                {
+                  value: 100,
+                  name: '02',
+                },
+              ],
+            },
+          ],
+        },
+        leftEchartsPieInfoOneCurrent: null,
+        leftEchartsPieInfoOneSteps: [],
+      };
+    });
+    setLeftEchart(totalObj);
     setLeftEchartsPieInfoOne(data[0]);
     setLeftEchartsPieInfoTwo(data[1]);
     setLeftEchartsPieInfoThree(data[2]);
@@ -4815,2075 +4871,623 @@ const Home = function (props) {
     setLeftEchartsPieFour(echartsList4);
   };
   const tranDeviceCardDetail = (data) => {
-    // var data=deviceCardDetail.slice(start,end);
-    const info1 = {
-      deviceName: data[0].deviceName,
-      runTimeRate: (data[0].runTimeRate * 100).toFixed(2) + '%',
-      isFinishMaintain: data[0].isFinishMaintain,
-    };
-    setInfoOne(info1);
-    const info2 = {
-      deviceName: data[1].deviceName,
-      runTimeRate: (data[1].runTimeRate * 100).toFixed(2) + '%',
-      isFinishMaintain: data[1].isFinishMaintain,
-    };
-    setInfoTwo(info2);
-    const info3 = {
-      deviceName: data[2].deviceName,
-      runTimeRate: (data[2].runTimeRate * 100).toFixed(2) + '%',
-      isFinishMaintain: data[2].isFinishMaintain,
-    };
-    setInfoThree(info3);
-    const info4 = {
-      deviceName: data[3].deviceName,
-      runTimeRate: (data[3].runTimeRate * 100).toFixed(2) + '%',
-      isFinishMaintain: data[3].isFinishMaintain,
-    };
-    setInfoFour(info4);
-    const info5 = {
-      deviceName: data[4].deviceName,
-      runTimeRate: (data[4].runTimeRate * 100).toFixed(2) + '%',
-      isFinishMaintain: data[4].isFinishMaintain,
-    };
-    setInfoFive(info5);
-    const echartsListLeft1 = {
-      tooltip: {
-        trigger: 'item',
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: {
-        data: data[0].dayOutput.X.map((item) => {
-          return item.slice(4, 8);
-        }),
-        show: true,
-        axisTick: {
-          show: false,
+    var ciolColor1 = [
+      'rgba(8, 177, 255, 1)',
+      'rgba(0, 255, 136,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(0, 255, 136,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88,   1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88,   1)',
+    ];
+    var ciolColor0 = [
+      'rgba(107, 255, 243,  1)',
+      'rgba(97,253,196,  1)',
+
+      'rgba(107, 255, 243,  1)',
+      'rgba(253, 221, 97,  1)',
+
+      'rgba(107, 255, 243,  1)',
+      'rgba(253, 221, 97,  1)',
+      'rgba(107, 255, 243,  1)',
+      'rgba(253, 221, 97,  1)',
+      'rgba(107, 255, 243,  1)',
+      'rgba(97,253,196,  1)',
+
+      'rgba(107, 255, 243,  1)',
+      'rgba(253, 221, 97,  1)',
+
+      'rgba(107, 255, 243,  1)',
+      'rgba(253, 221, 97,  1)',
+      'rgba(107, 255, 243,  1)',
+      'rgba(253, 221, 97,  1)',
+    ];
+    var bottomColor0 = [
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(0, 255, 136, 0.8)',
+
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(251, 171, 88, 0.8)',
+
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(251, 171, 88, 0.8)',
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(251, 171, 88, 0.8)',
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(0, 255, 136, 0.8)',
+
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(251, 171, 88, 0.8)',
+
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(251, 171, 88, 0.8)',
+      'rgba(8, 177, 255, 0.8)',
+      'rgba(251, 171, 88, 0.8)',
+    ];
+    var bottomColor1 = [
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(100,253,212,0.8)',
+
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(253, 227, 100,0.8)',
+
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(253, 227, 100,0.8)',
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(253, 227, 100,0.8)',
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(100,253,212,0.8)',
+
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(253, 227, 100,0.8)',
+
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(253, 227, 100,0.8)',
+      'rgba(107, 255, 243, 0.8)',
+      'rgba(253, 227, 100,0.8)',
+    ];
+    var header0 = [
+      'rgba(8, 177, 255, 1)',
+      'rgba(0, 255, 136, 1)',
+
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88, 1)',
+
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88, 1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88, 1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(0, 255, 136, 1)',
+
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88, 1)',
+
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88, 1)',
+      'rgba(8, 177, 255, 1)',
+      'rgba(251, 171, 88, 1)',
+    ];
+    var header1 = [
+      'rgba(107, 255, 243, 1)',
+      'rgba(100,253,212,1)',
+
+      'rgba(107, 255, 243, 1)',
+      'rgba(253, 227, 100,1)',
+
+      'rgba(107, 255, 243, 1)',
+      'rgba(253, 227, 100,1)',
+      'rgba(107, 255, 243, 1)',
+      'rgba(253, 227, 100,1)',
+      'rgba(107, 255, 243, 1)',
+      'rgba(100,253,212,1)',
+
+      'rgba(107, 255, 243, 1)',
+      'rgba(253, 227, 100,1)',
+
+      'rgba(107, 255, 243, 1)',
+      'rgba(253, 227, 100,1)',
+      'rgba(107, 255, 243, 1)',
+      'rgba(253, 227, 100,1)',
+    ];
+    var bottom = [
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(0, 255, 136, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(0, 255, 136, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+      'rgba(31, 194, 252, 0.4)',
+      'rgba(253, 179, 88, 0.4)',
+    ];
+    const totalObj = data.map((item, index) => {
+      let sumItem = 0;
+      item.dayOutput.Y.forEach((item) => {
+        sumItem += item;
+      });
+      let topDataItem = [];
+      let bottomDataItem = [];
+      item.dayOutput.Y.forEach((item) => {
+        topDataItem.push({ name: '', value: sumItem });
+        bottomDataItem.push({ name: '', value: sumItem - item });
+      });
+      return {
+        info: {
+          deviceName: item.deviceName,
+          runTimeRate: (item.runTimeRate * 100).toFixed(2) + '%',
+          isFinishMaintain: item.isFinishMaintain,
         },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#3966EA',
-            width: 1,
+        production: {
+          grid: {
+            top: '30%',
+            left: '20%',
+            right: '25%',
+            bottom: '30%',
+            // containLabel: true
           },
-        },
-        axisTick: {
-          show: false,
-        },
-        axisLabel: {
-          interval: 0,
-          textStyle: {
-            color: '#fff',
-            fontSize: 12,
-            padding: 16,
-          },
-          margin: 5, //刻度标签与轴线之间的距离。
-        },
-      },
-      yAxis: [
-        {
-          name: '排产每日产量',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
+          tooltip: {
+            show: false,
+            formatter: function (params) {
+              let text =
+                '<p  style="font-size:16px;font-weight: 400;color:rgba(255, 255, 255, 1);margin-bottom: 20px;"><span style="display:inline-block;width:10px;height: 10px;background: ' +
+                v2L2Chart.color[params.dataIndex] +
+                ';border-radius: 50%;margin-right: 10px;"></span>' +
+                v2L2Chart.xData[params.dataIndex] +
+                '：' +
+                v2L2Chart.data[params.dataIndex] +
+                '万</p>';
+              return text;
+            },
+            backgroundColor: 'rgba(38, 68, 110, 0.8)',
             padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
+            borderColor: 'rgba(38, 68, 110, 1)',
             textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
+              color: '#fff',
             },
           },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          //三个最低下的圆片
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, 0],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#3966EA',
-          },
-          data: data[0].dayOutput.X.map((item) => {
-            return (item = 0.5);
-          }),
-        },
-        //下半截柱状图
-        {
-          name: '2020',
-          type: 'bar',
-          barWidth: 15,
-          barMinHeight: 5,
-          barGap: '-100%',
-          itemStyle: {
-            //lenged文本
-            opacity: 0.7,
-            color: '#2D529D',
-          },
-
-          data: data[0].dayOutput.Y,
-        },
-
-        {
-          // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          stack: '广告',
-          itemStyle: {
-            color: 'transparent',
-          },
-          data: data[0].dayOutput.Y,
-        },
-
-        {
-          name: '', //头部
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -3],
-          z: 12,
-          symbolPosition: 'end',
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 1,
-          },
-          data: data[0].dayOutput.Y,
-        },
-
-        {
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -10],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#E567FF',
-          },
-          symbolPosition: 'end',
-          data: data[0].dayOutput.Y,
-        },
-        {
-          name: '2019',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          z: 0,
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 0.7,
-          },
-          data: data[0].dayOutput.Y,
-        },
-      ],
-    };
-    setRightEchartsDayOutputOne(echartsListLeft1);
-    const echartsListRight1 = {
-      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-      title: {
-        text: '状态占比',
-        show: false,
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
-          },
-        },
-      },
-      legend: {
-        show: false,
-        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
-      },
-      toolbox: {
-        show: false,
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            //坐标轴轴线相关设置。数学上的x轴
+          xAxis: {
+            offset: 0,
+            position: ['top', 'bottom'],
+            data: item.dayOutput.X.map((item) => {
+              return item.slice(4, 8);
+            }),
             show: true,
-            lineStyle: {
-              color: '#fffff',
-              width: 2,
+            axisTick: {
+              show: false,
             },
-          },
-          axisLabel: {
-            //坐标轴刻度标签的相关设置
-            textStyle: {
-              color: '#fffff',
-              padding: 16,
-              fontSize: 14,
-            },
-            formatter: function (data) {
-              return data;
-            },
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: '',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          data: data[0].stateRatio.X,
-        },
-      ],
-      yAxis: [
-        {
-          name: '状态占比',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          name: '待机时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgba(40, 182, 240, 1)',
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: '#3966EA',
+                width: 1,
               },
-              {
-                offset: 0.5,
-                color: 'rgba(83, 132, 222, 1)',
+            },
+            axisLabel: {
+              interval: 1,
+              textStyle: {
+                color: '#fff',
+                fontSize: 12,
+                padding: 16,
               },
-              {
-                offset: 1,
-                color: 'rgba(160, 54, 228, 1)',
+              margin: 0, //刻度标签与轴线之间的距离。
+            },
+          },
+          yAxis: [
+            {
+              name: '排产每日产量',
+              nameTextStyle: {
+                color: '#FFFFFF',
+                fontSize: 22,
+                padding: 10,
               },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[0].stateRatio.Y1,
-        },
-        {
-          name: '故障维修时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgb(0, 221, 255)',
-              },
-              {
-                offset: 1,
-                color: 'rgb(77, 119, 255)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[0].stateRatio.Y2,
-        },
-        {
-          name: '加工时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'RGBA(113, 102, 224, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'RGBA(78, 137, 223, 1)',
-              },
-              {
-                offset: 1,
-                color: 'RGBA(91, 124, 223, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[0].stateRatio.Y3,
-        },
-      ],
-    };
-    setRightEchartsStateRatioOne(echartsListRight1);
-    const echartsListLeft2 = {
-      tooltip: {
-        trigger: 'item',
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: {
-        data: data[1].dayOutput.X.map((item) => {
-          return item.slice(4, 8);
-        }),
-        show: true,
-        axisTick: {
-          show: false,
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#3966EA',
-            width: 1,
-          },
-        },
-        axisTick: {
-          show: false,
-        },
-        axisLabel: {
-          interval: 1,
-          textStyle: {
-            color: '#fff',
-            fontSize: 12,
-            padding: 16,
-          },
-          margin: 5, //刻度标签与轴线之间的距离。
-        },
-      },
-      yAxis: [
-        {
-          name: '排产每日产量',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          //三个最低下的圆片
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, 0],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#3966EA',
-          },
-          data: data[1].dayOutput.X.map((item) => {
-            return (item = 0.5);
-          }),
-        },
-        //下半截柱状图
-        {
-          name: '2020',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          itemStyle: {
-            //lenged文本
-            opacity: 0.7,
-            color: '#2D529D',
-          },
-
-          data: data[1].dayOutput.Y,
-        },
-
-        {
-          // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          stack: '广告',
-          itemStyle: {
-            color: 'transparent',
-          },
-          data: data[1].dayOutput.Y,
-        },
-
-        {
-          name: '', //头部
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -3],
-          z: 12,
-          symbolPosition: 'end',
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 1,
-          },
-          data: data[1].dayOutput.Y,
-        },
-
-        {
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -10],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#E567FF',
-          },
-          symbolPosition: 'end',
-          data: data[1].dayOutput.Y,
-        },
-        {
-          name: '2019',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          z: 0,
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 0.7,
-          },
-          data: data[1].dayOutput.Y,
-        },
-      ],
-    };
-    setRightEchartsDayOutputTwo(echartsListLeft2);
-    const echartsListRight2 = {
-      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-      title: {
-        text: '状态占比',
-        show: false,
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
-          },
-        },
-      },
-      legend: {
-        show: false,
-        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
-      },
-      toolbox: {
-        show: false,
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            //坐标轴轴线相关设置。数学上的x轴
-            show: true,
-            lineStyle: {
-              color: '#fffff',
-              width: 2,
-            },
-          },
-          axisLabel: {
-            //坐标轴刻度标签的相关设置
-            textStyle: {
-              color: '#fffff',
-              padding: 16,
-              fontSize: 14,
-            },
-            formatter: function (data) {
-              return data;
-            },
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: '',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          data: data[1].stateRatio.X,
-        },
-      ],
-      yAxis: [
-        {
-          name: '状态占比',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          name: '待机时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgba(40, 182, 240, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'rgba(83, 132, 222, 1)',
-              },
-              {
-                offset: 1,
-                color: 'rgba(160, 54, 228, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[1].stateRatio.Y1,
-        },
-        {
-          name: '故障维修时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgb(0, 221, 255)',
-              },
-              {
-                offset: 1,
-                color: 'rgb(77, 119, 255)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[1].stateRatio.Y2,
-        },
-        {
-          name: '加工时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'RGBA(113, 102, 224, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'RGBA(78, 137, 223, 1)',
-              },
-              {
-                offset: 1,
-                color: 'RGBA(91, 124, 223, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[1].stateRatio.Y3,
-        },
-      ],
-    };
-    setRightEchartsStateRatioTwo(echartsListRight2);
-    const echartsListLeft3 = {
-      tooltip: {
-        trigger: 'item',
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: {
-        data: data[2].dayOutput.X.map((item) => {
-          return item.slice(4, 8);
-        }),
-        show: true,
-        axisTick: {
-          show: false,
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#3966EA',
-            width: 1,
-          },
-        },
-        axisTick: {
-          show: false,
-        },
-        axisLabel: {
-          interval: 1,
-          textStyle: {
-            color: '#fff',
-            fontSize: 12,
-            padding: 16,
-          },
-          margin: 5, //刻度标签与轴线之间的距离。
-        },
-      },
-      yAxis: [
-        {
-          name: '排产每日产量',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          //三个最低下的圆片
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, 0],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#3966EA',
-          },
-          data: data[2].dayOutput.X.map((item) => {
-            return (item = 0.5);
-          }),
-        },
-        //下半截柱状图
-        {
-          name: '2020',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          itemStyle: {
-            //lenged文本
-            opacity: 0.7,
-            color: '#2D529D',
-          },
-
-          data: data[2].dayOutput.Y,
-        },
-
-        {
-          // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          stack: '广告',
-          itemStyle: {
-            color: 'transparent',
-          },
-          data: data[2].dayOutput.Y,
-        },
-
-        {
-          name: '', //头部
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -3],
-          z: 12,
-          symbolPosition: 'end',
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 1,
-          },
-          data: data[2].dayOutput.Y,
-        },
-
-        {
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -10],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#E567FF',
-          },
-          symbolPosition: 'end',
-          data: data[2].dayOutput.Y,
-        },
-        {
-          name: '2019',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          z: 0,
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 0.7,
-          },
-          data: data[2].dayOutput.Y,
-        },
-      ],
-    };
-    setRightEchartsDayOutputThree(echartsListLeft3);
-    const echartsListRight3 = {
-      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-      title: {
-        text: '状态占比',
-        show: false,
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
-          },
-        },
-      },
-      legend: {
-        show: false,
-        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
-      },
-      toolbox: {
-        show: false,
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            //坐标轴轴线相关设置。数学上的x轴
-            show: true,
-            lineStyle: {
-              color: '#fffff',
-              width: 2,
-            },
-          },
-          axisLabel: {
-            //坐标轴刻度标签的相关设置
-            textStyle: {
-              color: '#fffff',
-              padding: 16,
-              fontSize: 14,
-            },
-            formatter: function (data) {
-              return data;
-            },
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: '',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          data: data[2].stateRatio.X,
-        },
-      ],
-      yAxis: [
-        {
-          name: '状态占比',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          name: '待机时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgba(40, 182, 240, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'rgba(83, 132, 222, 1)',
-              },
-              {
-                offset: 1,
-                color: 'rgba(160, 54, 228, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[2].stateRatio.Y1,
-        },
-        {
-          name: '故障维修时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgb(0, 221, 255)',
-              },
-              {
-                offset: 1,
-                color: 'rgb(77, 119, 255)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[2].stateRatio.Y2,
-        },
-        {
-          name: '加工时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'RGBA(113, 102, 224, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'RGBA(78, 137, 223, 1)',
-              },
-              {
-                offset: 1,
-                color: 'RGBA(91, 124, 223, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[2].stateRatio.Y3,
-        },
-      ],
-    };
-    setRightEchartsStateRatioThree(echartsListRight3);
-    const echartsListLeft4 = {
-      tooltip: {
-        trigger: 'item',
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: {
-        data: data[3].dayOutput.X.map((item) => {
-          return item.slice(4, 8);
-        }),
-        show: true,
-        axisTick: {
-          show: false,
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#3966EA',
-            width: 1,
-          },
-        },
-        axisTick: {
-          show: false,
-        },
-        axisLabel: {
-          interval: 1,
-          textStyle: {
-            color: '#fff',
-            fontSize: 12,
-            padding: 16,
-          },
-          margin: 5, //刻度标签与轴线之间的距离。
-        },
-      },
-      yAxis: [
-        {
-          name: '排产每日产量',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          //三个最低下的圆片
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, 0],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#3966EA',
-          },
-          data: data[3].dayOutput.X.map((item) => {
-            return (item = 0.5);
-          }),
-        },
-        //下半截柱状图
-        {
-          name: '2020',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          itemStyle: {
-            //lenged文本
-            opacity: 0.7,
-            color: '#2D529D',
-          },
-
-          data: data[3].dayOutput.Y,
-        },
-
-        {
-          // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          stack: '广告',
-          itemStyle: {
-            color: 'transparent',
-          },
-          data: data[3].dayOutput.Y,
-        },
-
-        {
-          name: '', //头部
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -3],
-          z: 12,
-          symbolPosition: 'end',
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 1,
-          },
-          data: data[3].dayOutput.Y,
-        },
-
-        {
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -10],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#E567FF',
-          },
-          symbolPosition: 'end',
-          data: data[3].dayOutput.Y,
-        },
-        {
-          name: '2019',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          z: 0,
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 0.7,
-          },
-          data: data[3].dayOutput.Y,
-        },
-      ],
-    };
-    setRightEchartsDayOutputFour(echartsListLeft4);
-    const echartsListRight4 = {
-      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-      title: {
-        text: '状态占比',
-        show: false,
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
-          },
-        },
-      },
-      legend: {
-        show: false,
-        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
-      },
-      toolbox: {
-        show: false,
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            //坐标轴轴线相关设置。数学上的x轴
-            show: true,
-            lineStyle: {
-              color: '#fffff',
-              width: 2,
-            },
-          },
-          axisLabel: {
-            //坐标轴刻度标签的相关设置
-            textStyle: {
-              color: '#fffff',
-              padding: 16,
-              fontSize: 14,
-            },
-            formatter: function (data) {
-              return data;
-            },
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: '',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          data: data[3].stateRatio.X,
-        },
-      ],
-      yAxis: [
-        {
-          name: '状态占比',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          name: '待机时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgba(40, 182, 240, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'rgba(83, 132, 222, 1)',
-              },
-              {
-                offset: 1,
-                color: 'rgba(160, 54, 228, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[3].stateRatio.Y1,
-        },
-        {
-          name: '故障维修时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgb(0, 221, 255)',
-              },
-              {
-                offset: 1,
-                color: 'rgb(77, 119, 255)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[3].stateRatio.Y2,
-        },
-        {
-          name: '加工时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'RGBA(113, 102, 224, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'RGBA(78, 137, 223, 1)',
-              },
-              {
-                offset: 1,
-                color: 'RGBA(91, 124, 223, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[3].stateRatio.Y3,
-        },
-      ],
-    };
-    setRightEchartsStateRatioFour(echartsListRight4);
-    const echartsListLeft5 = {
-      tooltip: {
-        trigger: 'item',
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: {
-        data: data[4].dayOutput.X.map((item) => {
-          return item.slice(4, 8);
-        }),
-        show: true,
-        axisTick: {
-          show: false,
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#3966EA',
-            width: 1,
-          },
-        },
-        axisTick: {
-          show: false,
-        },
-        axisLabel: {
-          interval: 1,
-          textStyle: {
-            color: '#fff',
-            fontSize: 12,
-            padding: 16,
-          },
-          margin: 5, //刻度标签与轴线之间的距离。
-        },
-      },
-      yAxis: [
-        {
-          name: '排产每日产量',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          //三个最低下的圆片
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, 0],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#3966EA',
-          },
-          data: data[4].dayOutput.X.map((item) => {
-            return (item = 0.5);
-          }),
-        },
-        //下半截柱状图
-        {
-          name: '2020',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          itemStyle: {
-            //lenged文本
-            opacity: 0.7,
-            color: '#2D529D',
-          },
-
-          data: data[4].dayOutput.Y,
-        },
-
-        {
-          // 替代柱状图 默认不显示颜色，是最下方柱图（故障维修数）的value值 - 20
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          stack: '广告',
-          itemStyle: {
-            color: 'transparent',
-          },
-          data: data[4].dayOutput.Y,
-        },
-
-        {
-          name: '', //头部
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -3],
-          z: 12,
-          symbolPosition: 'end',
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 1,
-          },
-          data: data[4].dayOutput.Y,
-        },
-
-        {
-          name: '',
-          type: 'pictorialBar',
-          symbolSize: [15, 5],
-          symbolOffset: [0, -10],
-          z: 12,
-          itemStyle: {
-            opacity: 1,
-            color: '#E567FF',
-          },
-          symbolPosition: 'end',
-          data: data[4].dayOutput.Y,
-        },
-        {
-          name: '2019',
-          type: 'bar',
-          barWidth: 15,
-          barGap: '-100%',
-          z: 0,
-          itemStyle: {
-            color: '#163F7A',
-            opacity: 0.7,
-          },
-          data: data[4].dayOutput.Y,
-        },
-      ],
-    };
-    setRightEchartsDayOutputFive(echartsListLeft5);
-    const echartsListRight5 = {
-      color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
-      title: {
-        text: '状态占比',
-        show: false,
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            backgroundColor: '#6a7985',
-          },
-        },
-      },
-      legend: {
-        show: false,
-        data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
-      },
-      toolbox: {
-        show: false,
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      grid: {
-        top: '30%',
-        left: '20%',
-        right: '25%',
-        bottom: '30%',
-        // containLabel: true
-      },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          axisLine: {
-            //坐标轴轴线相关设置。数学上的x轴
-            show: true,
-            lineStyle: {
-              color: '#fffff',
-              width: 2,
-            },
-          },
-          axisLabel: {
-            //坐标轴刻度标签的相关设置
-            textStyle: {
-              color: '#fffff',
-              padding: 16,
-              fontSize: 14,
-            },
-            formatter: function (data) {
-              return data;
-            },
-          },
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: '',
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          data: data[4].stateRatio.X,
-        },
-      ],
-      yAxis: [
-        {
-          name: '状态占比',
-          nameTextStyle: {
-            color: '#FFFFFF',
-            fontSize: 22,
-            padding: 10,
-          },
-          min: 0,
-          splitLine: {
-            show: false,
-            lineStyle: {
-              color: '#192a44',
-            },
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#FFFFFF',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#FFFFFF',
-              padding: 16,
-            },
-            formatter: function (value) {
-              if (value === 0) {
-                return value;
-              }
-              return value;
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-      ],
-      series: [
-        {
-          name: '待机时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgba(40, 182, 240, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'rgba(83, 132, 222, 1)',
-              },
-              {
-                offset: 1,
-                color: 'rgba(160, 54, 228, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[4].stateRatio.Y1,
-        },
-        {
-          name: '故障维修时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'rgb(0, 221, 255)',
-              },
-              {
-                offset: 1,
-                color: 'rgb(77, 119, 255)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[4].stateRatio.Y2,
-        },
-        {
-          name: '加工时间',
-          type: 'line',
-          stack: 'Total',
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: 'RGBA(113, 102, 224, 1)',
-              },
-              {
-                offset: 0.5,
-                color: 'RGBA(78, 137, 223, 1)',
-              },
-              {
-                offset: 1,
-                color: 'RGBA(91, 124, 223, 1)',
-              },
-            ]),
-          },
-          emphasis: {
-            focus: 'series',
-          },
-          data: data[4].stateRatio.Y3,
-        },
-      ],
-    };
-    setRightEchartsStateRatioFive(echartsListRight5);
-  };
-  /*  const nan1 = {
-     legend: [
-       {
-         show: true,
-         top: '12%',
-         left: '30%',
-         data: arrName,
-         width: 100,
-         itemGap: 28,
-         itemWidth: 0,
-         icon: 'none',
-         formatter: function (name) {
-           return '{title|' + name + '}';
-         },
-         textStyle: {
-           rich: {
-             title: {
-               fontSize: '12px',
-               fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
-               fontWeight: 'normal',
-               color: '#FFFFFF',
-             },
-             // value: {
-             //   fontSize: '12px',
-             //   fontFamily: 'PingFang-SC-Bold-, PingFang-SC-Bold',
-             //   fontWeight: 'normal',
-             //   color: '#FFFFFF'
-             // }
-           },
-         },
-       },
-     ],
-     tooltip: {
-       show: true,
-       trigger: 'item',
-       confine: true,
-       formatter: function (param) {
-         return param.name + ' : ' + param.value + '%';
-       },
-       textStyle: {
-         rich: {
-           title: {
-             fontSize: 20,
-             lineHeight: 30,
-             color: '#6D7383',
-           },
-           value: {
-             fontSize: 18,
-             lineHeight: 20,
-             color: '#4DA1FF',
-           },
-         },
-       },
-     },
-     series: optionData.series,
-   }; */
-  const nan1 = {
-    angleAxis: {
-      splitLine: {
-        length: '100%',
-        show: true,
-        lineStyle: {
-          color: 'rgba(36, 143, 255, 1)',
-          width: 1,
-          type: 'solid',
-        },
-      },
-      axisLabel: {
-        color: '#fff',
-        fontSize: 12,
-        verticalAlign: 'top',
-        align: 'left',
-        margin: 0,
-      },
-    },
-    // tooltip: {
-    //   show: true,
-    //   trigger: 'item',
-    //   confine: true,
-    //   formatter: function (param) {
-    //     return param.name + ' : ' + param.value + '%';
-    //   },
-    //   textStyle: {
-    //     rich: {
-    //       title: {
-    //         fontSize: 20,
-    //         lineHeight: 30,
-    //         color: '#6D7383',
-    //       },
-    //       value: {
-    //         fontSize: 18,
-    //         lineHeight: 20,
-    //         color: '#4DA1FF',
-    //       },
-    //     },
-    //   },
-    // },
-    radiusAxis: {
-      type: 'category',
-      data: fourWeekFinishRateX,
-      z: 10,
-      axisLabel: {
-        color: '#fff',
-        fontSize: 12,
-        verticalAlign: 'top',
-        // align: 'left',
-        // margin: 0,
-      },
-    },
-    polar: {},
-    series: [
-      {
-        type: 'bar',
-        data: [fourWeekFinishRateY[0], 0, 0, 0, 0],
-        coordinateSystem: 'polar',
-        name: 'A',
-        stack: 'a',
-        itemStyle: {
-          normal: {
-            color: '#FF9023',
-          },
-        },
-      },
-      {
-        type: 'bar',
-        data: [0, fourWeekFinishRateY[1], 0, 0, 0],
-        coordinateSystem: 'polar',
-        name: 'B',
-        stack: 'a',
-        itemStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#FF9023',
+              min: 0,
+              splitLine: {
+                show: false,
+                lineStyle: {
+                  color: '#192a44',
                 },
-                {
-                  offset: 1,
-                  color: '#FFB66F',
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: '#3966EA',
+                  width: 1,
                 },
-              ],
-              false,
-            ),
-          },
-        },
-      },
-      {
-        type: 'bar',
-        data: [0, 0, fourWeekFinishRateY[2], 0, 0],
-        coordinateSystem: 'polar',
-        name: 'C',
-        stack: 'a',
-        itemStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: '#2579F1',
+              },
+              axisLabel: {
+                show: true,
+                textStyle: {
+                  color: '#FFFFFF',
+                  padding: 16,
                 },
-                {
-                  offset: 1,
-                  color: '#281DFF',
+                formatter: function (value) {
+                  if (value === 0) {
+                    return value;
+                  }
+                  return value;
                 },
-              ],
-              false,
-            ),
-          },
+              },
+              axisTick: {
+                show: false,
+              },
+            },
+          ],
+          series: [
+            //'最低下的圆片',
+            {
+              name: '最低下的圆片',
+              stack: 'a',
+              // type: 'pictorialBar',
+              // symbolSize: [66, 12],
+              // symbolOffset: [0, 6],
+              type: 'effectScatter',
+              symbolSize: [15, 5],
+              symbolOffset: [0, 0],
+              z: 22,
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                    return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      {
+                        offset: 1,
+                        color: ciolColor0[params.dataIndex],
+                      },
+                      {
+                        offset: 0,
+                        color: ciolColor1[params.dataIndex],
+                      },
+                    ]);
+                  },
+                },
+              },
+              data: item.dayOutput.X.map((item) => {
+                return (item = 0);
+              }),
+            },
+            //下半截柱状图
+            {
+              name: '下半截柱状图',
+              stack: 'a',
+              type: 'bar',
+              barWidth: 15,
+              z: 2,
+              barGap: '-100%',
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                    return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      {
+                        offset: 1,
+                        color: bottomColor1[params.dataIndex],
+                      },
+                      {
+                        offset: 0,
+                        color: bottomColor0[params.dataIndex],
+                      },
+                    ]);
+                  },
+                },
+              },
+              data: item.dayOutput.Y,
+            },
+            //替代柱状图 默认不显示颜色，是最下方柱图的value值 - 20'
+            {
+              name: '替代柱状图 默认不显示颜色，是最下方柱图的value值 - 20',
+              // stack: '',
+              type: 'bar',
+              barWidth: 15,
+              barGap: '-100%',
+              // stack: '广告',
+              itemStyle: {
+                color: 'transparent',
+              },
+              data: item.dayOutput.Y,
+            },
+            //头部1
+            {
+              name: '头部1',
+              stack: 'a',
+              type: 'pictorialBar',
+              symbolSize: [15, 5],
+              symbolOffset: [0, -6],
+              z: 22,
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                    return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      {
+                        offset: 1,
+                        color: header1[params.dataIndex],
+                      },
+                      {
+                        offset: 0,
+                        color: header0[params.dataIndex],
+                      },
+                    ]);
+                  },
+                },
+              },
+              symbolPosition: 'end',
+              label: {
+                formatter: '{c} ',
+                color: '#fff',
+                show: true,
+                fontSize: 12,
+                fontWeight: 400,
+                fontFamily: 'zcool-gdh',
+              },
+              data: item.dayOutput.Y,
+            },
+            //头部2
+            {
+              name: '头部2',
+              stack: 'a',
+              type: 'pictorialBar',
+              symbolSize: [15, 5],
+              symbolOffset: [0, -6],
+              symbolPosition: 'end',
+              z: 22,
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                    return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                      {
+                        offset: 1,
+                        color: header1[params.dataIndex],
+                      },
+                      {
+                        offset: 0,
+                        color: header0[params.dataIndex],
+                      },
+                    ]);
+                  },
+                },
+              },
+              data: topDataItem,
+            },
+            //底色
+            {
+              name: '底色',
+              stack: 'a',
+              type: 'bar',
+              barWidth: 15,
+              z: 2,
+              barGap: '-100%',
+              // stack: '',
+              symbolPosition: 'end',
+              itemStyle: {
+                normal: {
+                  color: function (params) {
+                    return bottom[params.dataIndex];
+                  },
+                },
+              },
+              data: bottomDataItem,
+            },
+          ],
         },
-      },
-      {
-        type: 'bar',
-        data: [0, 0, 0, fourWeekFinishRateY[3], 0],
-        coordinateSystem: 'polar',
-        name: 'B',
-        stack: 'a',
-        itemStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0.3,
-                color: '#2579F1',
-              },
-              {
-                offset: 1,
-                color: '#281DFF',
-              },
-            ]),
+        stateOf: {
+          color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
+          title: {
+            text: '状态占比',
+            show: false,
           },
-        },
-      },
-      {
-        type: 'bar',
-        data: [0, 0, 0, 0, fourWeekFinishRateY[4]],
-        coordinateSystem: 'polar',
-        name: 'C',
-        stack: 'a',
-        itemStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0.3,
-                color: '#298FFF',
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross',
+              label: {
+                backgroundColor: '#6a7985',
               },
-              {
-                offset: 1,
-                color: '#248FFF',
-              },
-            ]),
+            },
           },
+          legend: {
+            show: false,
+            data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'],
+          },
+          toolbox: {
+            show: false,
+            feature: {
+              saveAsImage: {},
+            },
+          },
+          grid: {
+            top: '30%',
+            left: '20%',
+            right: '25%',
+            bottom: '30%',
+            // containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              boundaryGap: false,
+              axisLine: {
+                //坐标轴轴线相关设置。数学上的x轴
+                show: true,
+                lineStyle: {
+                  color: '#fffff',
+                  width: 2,
+                },
+              },
+              axisLabel: {
+                //坐标轴刻度标签的相关设置
+                textStyle: {
+                  color: '#fffff',
+                  padding: 16,
+                  fontSize: 14,
+                },
+                formatter: function (data) {
+                  return data;
+                },
+              },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  color: '',
+                },
+              },
+              axisTick: {
+                show: false,
+              },
+              data: item.stateRatio.X,
+            },
+          ],
+          yAxis: [
+            {
+              name: '状态占比',
+              nameTextStyle: {
+                color: '#FFFFFF',
+                fontSize: 22,
+                padding: 10,
+              },
+              min: 0,
+              splitLine: {
+                show: false,
+                lineStyle: {
+                  color: '#192a44',
+                },
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: '#FFFFFF',
+                },
+              },
+              axisLabel: {
+                show: true,
+                textStyle: {
+                  color: '#FFFFFF',
+                  padding: 16,
+                },
+                formatter: function (value) {
+                  if (value === 0) {
+                    return value;
+                  }
+                  return value;
+                },
+              },
+              axisTick: {
+                show: false,
+              },
+            },
+          ],
+          series: [
+            {
+              name: '待机时间',
+              type: 'line',
+              stack: 'Total',
+              smooth: true,
+              lineStyle: {
+                width: 0,
+              },
+              showSymbol: false,
+              areaStyle: {
+                opacity: 0.8,
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: 'rgba(40, 182, 240, 1)',
+                  },
+                  {
+                    offset: 0.5,
+                    color: 'rgba(83, 132, 222, 1)',
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(160, 54, 228, 1)',
+                  },
+                ]),
+              },
+              emphasis: {
+                focus: 'series',
+              },
+              data: item.stateRatio.Y1,
+            },
+            {
+              name: '故障维修时间',
+              type: 'line',
+              stack: 'Total',
+              smooth: true,
+              lineStyle: {
+                width: 0,
+              },
+              showSymbol: false,
+              areaStyle: {
+                opacity: 0.8,
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: 'rgb(0, 221, 255)',
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgb(77, 119, 255)',
+                  },
+                ]),
+              },
+              emphasis: {
+                focus: 'series',
+              },
+              data: item.stateRatio.Y2,
+            },
+            {
+              name: '加工时间',
+              type: 'line',
+              stack: 'Total',
+              smooth: true,
+              lineStyle: {
+                width: 0,
+              },
+              showSymbol: false,
+              areaStyle: {
+                opacity: 0.8,
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: 'RGBA(113, 102, 224, 1)',
+                  },
+                  {
+                    offset: 0.5,
+                    color: 'RGBA(78, 137, 223, 1)',
+                  },
+                  {
+                    offset: 1,
+                    color: 'RGBA(91, 124, 223, 1)',
+                  },
+                ]),
+              },
+              emphasis: {
+                focus: 'series',
+              },
+              data: item.stateRatio.Y3,
+            },
+          ],
         },
-      },
-    ],
-    legend: {
-      show: false,
-      data: ['A', 'B', 'C'],
-    },
+      };
+    });
+    setRightEchart(totalObj);
   };
   var removeDuplicateDataDimensions = ['Index', '开始时间', '结束时间', '机床名称'];
   function removeDuplicateData(arr) {
@@ -6897,7 +5501,8 @@ const Home = function (props) {
         }
       }
     }
-    return arr;
+    var xAxisListCen = [...new Set(arr)].sort(sorts);
+    return xAxisListCen;
   }
   function removeDuplicateY1(arr) {
     for (var i = 0; i < arr.length; i++) {
@@ -6914,6 +5519,20 @@ const Home = function (props) {
     return arr;
   }
   function removeDuplicateY2(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      // 首次遍历数组
+      for (var j = i + 1; j < arr.length; j++) {
+        // 再次遍历数组
+        if (arr[i].productName == arr[j].productName) {
+          // 判断连个值是否相等
+          arr.splice(j, 1); // 相等删除后者
+          j--;
+        }
+      }
+    }
+    return arr;
+  }
+  function removeDuplicateColor(arr) {
     for (var i = 0; i < arr.length; i++) {
       // 首次遍历数组
       for (var j = i + 1; j < arr.length; j++) {
@@ -7075,7 +5694,7 @@ const Home = function (props) {
           //   return [index + 150].concat(item.startTime, item.endTime, item.machineName, item.currentColor);//左右颜色
           // })
           data: removeDuplicateData(data1).map((item, index) => {
-            return [item.yValue + 315].concat(
+            return [item.yValue + 310].concat(
               item.startTime,
               item.endTime,
               item.opName,
@@ -7526,6 +6145,7 @@ const Home = function (props) {
           <LeftTop />
           <LeftCenter
             materialDemandList={allData.materialDemandList}
+            leftEchart={leftEchart}
             leftEchartsPieInfoOne={leftEchartsPieInfoOne}
             leftEchartsPieInfoTwo={leftEchartsPieInfoTwo}
             leftEchartsPieInfoThree={leftEchartsPieInfoThree}
@@ -7535,6 +6155,7 @@ const Home = function (props) {
             leftEchartsPieThree={leftEchartsPieThree}
             leftEchartsPieFour={leftEchartsPieFour}
             outSideOrderDetail={outSideOrderDetail}
+            outSideOrderDetailTimeList={outSideOrderDetailTimeList}
             outSideScheduleCycle={outSideScheduleCycle}
             outSideSchedulePattern={outSideSchedulePattern}
             scheduleTarget={scheduleTarget}
@@ -7589,11 +6210,13 @@ const Home = function (props) {
         <Col span={8}>
           <RightTop allData={allData} deviceUseTime={deviceUseTime} />
           <RightCenter
-            nan1={nan1}
+            fourWeekFinishRateX={fourWeekFinishRateX}
+            fourWeekFinishRateY={fourWeekFinishRateY}
             fourWeekOutputStatistics={fourWeekOutputStatistics}
             fourWeekEnergyConsumption={fourWeekEnergyConsumption}
             fourWeekUseTrend={fourWeekUseTrend}
             fourWeekUtilizationRate={fourWeekUtilizationRate}
+            rightEchart={rightEchart}
             rightEchartsDayOutputOne={rightEchartsDayOutputOne}
             rightEchartsStateRatioOne={rightEchartsStateRatioOne}
             rightEchartsStateRatioTwo={rightEchartsStateRatioTwo}

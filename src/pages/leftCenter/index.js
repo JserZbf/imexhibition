@@ -9,6 +9,7 @@ import ReactEchartsCom from '../../components/ReactEcharts/index';
 import axios from 'axios';
 import * as echarts from 'echarts';
 import { autoToolTip } from '../../services/echarts_auto_tooltop';
+import { RollbackOutlined } from '@ant-design/icons';
 axios.interceptors.request.use((config) => {
   config.url = config.url;
   let headers = {};
@@ -188,6 +189,7 @@ const leftCenter = function (props) {
   var dimensionsList = ['订单编号', '计划开始时间', '计划结束时间'];
   const {
     materialDemandList,
+    leftEchart,
     leftEchartsPieOne,
     leftEchartsPieTwo,
     leftEchartsPieThree,
@@ -197,6 +199,7 @@ const leftCenter = function (props) {
     leftEchartsPieInfoThree,
     leftEchartsPieInfoFour,
     outSideOrderDetail,
+    outSideOrderDetailTimeList,
     outSideScheduleCycle,
     outSideSchedulePattern,
     scheduleTarget,
@@ -211,8 +214,18 @@ const leftCenter = function (props) {
   const [leftEchartsPieInfoFourCurrent, setLeftEchartsPieInfoFourCurrent] = useState(null);
   const [leftEchartsPieInfoFourSteps, setLeftEchartsPieInfoFourSteps] = useState([]);
   const [num, setNum] = useState(1);
+  const [timers, setTimers] = useState(null);
+  useEffect(() => {
+    if (leftEchart.length) {
+      roll(100);
+    }
+    return () => {
+      clearInterval(timers);
+    };
+  }, [leftEchart]);
   let number = 1;
   useEffect(() => {
+    console.log(outSideOrderDetailTimeList, 'outSideOrderDetailTimeListoutSideOrderDetailTimeList');
     const timerID = setInterval(() => {
       number = number + 1;
       tick(number);
@@ -225,13 +238,14 @@ const leftCenter = function (props) {
     setNum(number);
   };
   useEffect(() => {
-    if (num % 2 == 0) {
-      //偶数
-      initPlanEchartsData(0, outSideOrderDetail.length / 2 + 1);
-    } else {
-      //奇数
-      initPlanEchartsData(outSideOrderDetail.length / 2 + 1, outSideOrderDetail.length);
-    }
+    // if (num % 2 == 0) {
+    //   //偶数
+    //   initPlanEchartsData(0, outSideOrderDetail.length / 2 + 1);
+    // } else {
+    //   //奇数
+    //   initPlanEchartsData(outSideOrderDetail.length / 2 + 1, outSideOrderDetail.length);
+    // }
+    initPlanEchartsData();
   }, [num]);
   useEffect(() => {
     InitialScroll(materialDemandList);
@@ -242,7 +256,7 @@ const leftCenter = function (props) {
     myChartPlan = echarts.init(chartDom);
     axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
       _rawData = rawData.data;
-      initPlanEchartsData(0, outSideOrderDetail.length / 2 + 1);
+      initPlanEchartsData();
       // myChartPlan.setOption((option = makeOption(allTime, currentTime)));
       // autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
       //   // 轮播间隔时间 默认2s
@@ -266,13 +280,13 @@ const leftCenter = function (props) {
     myChartPlan = echarts.init(chartDom);
     axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
       _rawData = rawData.data;
-      const allTime = outSideOrderDetail
-        .slice(start, end)
-        .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
-      const currentTime = outSideOrderDetail
-        .slice(start, end)
-        .filter((item) => compareTime(item.planStart, item.planEnd, new Date()));
-      myChartPlan.setOption((option = makeOption(allTime, currentTime)));
+      // const allTime = outSideOrderDetail
+      //   .slice(start, end)
+      //   .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
+      // const currentTime = outSideOrderDetail
+      //   .slice(start, end)
+      //   .filter((item) => compareTime(item.planStart, item.planEnd, new Date()));
+      myChartPlan.setOption((option = makeOption(outSideOrderDetail)));
       // autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
       //   // 轮播间隔时间 默认2s
       //   interval: 4000,
@@ -288,40 +302,50 @@ const leftCenter = function (props) {
     });
   };
   useEffect(() => {
-    if (
-      leftEchartsPieInfoOne.planStart &&
-      leftEchartsPieInfoOne.planEnd &&
-      leftEchartsPieInfoOne.schedualStart &&
-      leftEchartsPieInfoOne.schedualEnd
-    ) {
-      const initArr = [
-        {
-          name: '计划开始时间',
-          value: moment(leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
-        },
-        { name: '最晚结束时间', value: moment(leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD') },
-        {
-          name: '排产起始时间',
-          value: moment(leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
-        },
-        {
-          name: '排产结束时间',
-          value: moment(leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
-        },
-      ];
-      const cenArr = compareFN(initArr, 'value');
-      if (compareTime1(cenArr[0].value, cenArr[1].value, new Date())) {
-        setLeftEchartsPieInfoOneCurrent(0);
-      } else if (compareTime1(cenArr[1].value, cenArr[2].value, new Date())) {
-        setLeftEchartsPieInfoOneCurrent(1);
-      } else if (compareTime1(cenArr[2].value, cenArr[3].value, new Date())) {
-        setLeftEchartsPieInfoOneCurrent(2);
-      } else {
-        setLeftEchartsPieInfoOneCurrent(3);
+    leftEchart.forEach((item) => {
+      if (
+        item.leftEchartsPieInfoOne.planStart &&
+        item.leftEchartsPieInfoOne.planEnd &&
+        item.leftEchartsPieInfoOne.schedualStart &&
+        item.leftEchartsPieInfoOne.schedualEnd
+      ) {
+        const initArr = [
+          {
+            name: '计划开始时间',
+            value: moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
+          },
+          {
+            name: '最晚结束时间',
+            value: moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD'),
+          },
+          {
+            name: '排产起始时间',
+            value: moment(item.leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
+          },
+          {
+            name: '排产结束时间',
+            value: moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
+          },
+        ];
+        const cenArr = compareFN(initArr, 'value');
+        if (compareTime1(cenArr[0].value, cenArr[1].value, new Date())) {
+          item.leftEchartsPieInfoOneCurrent = 0;
+          setLeftEchartsPieInfoOneCurrent(0);
+        } else if (compareTime1(cenArr[1].value, cenArr[2].value, new Date())) {
+          item.leftEchartsPieInfoOneCurrent = 1;
+          setLeftEchartsPieInfoOneCurrent(1);
+        } else if (compareTime1(cenArr[2].value, cenArr[3].value, new Date())) {
+          item.leftEchartsPieInfoOneCurrent = 2;
+          setLeftEchartsPieInfoOneCurrent(2);
+        } else {
+          item.leftEchartsPieInfoOneCurrent = 3;
+          setLeftEchartsPieInfoOneCurrent(3);
+        }
+        item.leftEchartsPieInfoOneSteps = cenArr;
+        setLeftEchartsPieInfoOneSteps(cenArr);
       }
-      setLeftEchartsPieInfoOneSteps(cenArr);
-    }
-  }, [leftEchartsPieInfoOne]);
+    });
+  }, [leftEchart]);
   useEffect(() => {
     if (
       leftEchartsPieInfoTwo.planStart &&
@@ -462,6 +486,7 @@ const leftCenter = function (props) {
       title: '规格类型',
       dataIndex: 'Specs',
       key: 'Specs',
+      //width: 5
     },
     {
       title: '需求数量',
@@ -534,8 +559,45 @@ const leftCenter = function (props) {
       {dot}
     </Popover>
   );
-  function makeOption(allTime, currentTime) {
-    console.log(allTime, currentTime, 'allTime, currentTime');
+  const roll = (t) => {
+    var ul1 = document.getElementById('leftEchart1');
+    var ul2 = document.getElementById('leftEchart2');
+    var ulbox = document.getElementById('review_box');
+    //ul2.innerHTML = ul1.innerHTML;
+    ulbox.scrollTop = 0; // 开始无滚动时设为0
+    setTimers(setInterval(rollStart, t)); // 设置定时器，参数t用在这为间隔时间（单位毫秒），参数t越小，滚动速度越快
+    // console.log(ulbox.scrollHeight - ulbox.scrollTop === ulbox.clientHeight, ' ulbox.scrollHeight - ulbox.scrollTop === ulbox.clientHeight')
+    // 鼠标移入div时暂停滚动
+    // ulbox.onmouseover = function () {
+    //   clearInterval(timers);
+    // }
+    // 鼠标移出div后继续滚动
+    // ulbox.onmouseout = function () {
+    //   timers = setInterval(rollStart, t);
+    // }
+  };
+  // 开始滚动函数
+  const rollStart = () => {
+    // 上面声明的DOM对象为局部对象需要再次声明
+    var ul1 = document.getElementById('leftEchart1');
+    var ul2 = document.getElementById('leftEchart2');
+    var ulbox = document.getElementById('review_box');
+    if (ulbox && ul1) {
+      var result = ulbox.scrollHeight - ulbox.scrollTop === ulbox.clientHeight;
+      if (result === false) {
+        if (ulbox.scrollTop >= ul1.scrollHeight) {
+          ulbox.scrollTop = 0;
+        } else {
+          ulbox.scrollTop = ulbox.scrollTop + 2;
+        }
+      } else {
+        ulbox.scrollTop = 0;
+        rollStart();
+      }
+    }
+  };
+  function makeOption(allTime) {
+    console.log(allTime, 'allTime-allTime-allTime-allTime');
     return {
       tooltip: {},
       animation: false,
@@ -639,15 +701,7 @@ const leftCenter = function (props) {
             inside: false,
             align: 'center',
           },
-          // data: [
-          //   '2022-05-10',
-          //   '2022-05-11',
-          //   '2022-05-12',
-          //   '2022-05-13',
-          //   '2022-05-14',
-          //   '2022-05-15',
-          //   '2022-05-16',
-          // ],
+          // data: outSideOrderDetailTimeList
         },
       ],
       yAxis: {
@@ -692,7 +746,7 @@ const leftCenter = function (props) {
             ), // 线条颜色
           },
           data: allTime.map((item, index) => {
-            return [index + 310].concat(
+            return [index + 270].concat(
               item.planStart,
               item.planEnd,
               '产品名称:' +
@@ -704,51 +758,51 @@ const leftCenter = function (props) {
             );
           }),
         },
-        {
-          //内容值
-          id: 'flightDataLeft2',
-          type: 'custom',
-          renderItem: renderGanttItem,
-          // dimensions: _rawData.flight.dimensions,
-          dimensions: dimensionsList,
-          encode: {
-            x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
-            y: DIM_CATEGORY_INDEX,
-            tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
-          },
-          itemStyle: {
-            barBorderRadius: [50, 50, 50, 50],
-            color: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              1,
-              0,
-              [
-                {
-                  offset: 0,
-                  color: '#FE8B24',
-                },
-                {
-                  offset: 1,
-                  color: '#0554A6',
-                },
-              ],
-              false,
-            ), // 线条颜色
-          },
-          data: currentTime.map((item, index) => {
-            return [index + 305].concat(
-              item.planStart,
-              item.planEnd,
-              '产品名称:' +
-                item.productName +
-                '/需求数量:' +
-                item.productNum +
-                '/计划等级:' +
-                item.planLevel,
-            );
-          }),
-        },
+        // {
+        //   //内容值
+        //   id: 'flightDataLeft2',
+        //   type: 'custom',
+        //   renderItem: renderGanttItem,
+        //   // dimensions: _rawData.flight.dimensions,
+        //   dimensions: dimensionsList,
+        //   encode: {
+        //     x: [DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
+        //     y: DIM_CATEGORY_INDEX,
+        //     tooltip: [DIM_CATEGORY_INDEX, DIM_TIME_ARRIVAL, DIM_TIME_DEPARTURE],
+        //   },
+        //   itemStyle: {
+        //     barBorderRadius: [50, 50, 50, 50],
+        //     color: new echarts.graphic.LinearGradient(
+        //       0,
+        //       0,
+        //       1,
+        //       0,
+        //       [
+        //         {
+        //           offset: 0,
+        //           color: '#FE8B24',
+        //         },
+        //         {
+        //           offset: 1,
+        //           color: '#0554A6',
+        //         },
+        //       ],
+        //       false,
+        //     ), // 线条颜色
+        //   },
+        //   data: currentTime.map((item, index) => {
+        //     return [index + 305].concat(
+        //       item.planStart,
+        //       item.planEnd,
+        //       '产品名称:' +
+        //       item.productName +
+        //       '/需求数量:' +
+        //       item.productNum +
+        //       '/计划等级:' +
+        //       item.planLevel,
+        //     );
+        //   }),
+        // },
       ],
     };
   }
@@ -1142,7 +1196,7 @@ const leftCenter = function (props) {
     return true;
   };
   const setRowClass = (record) => {
-    if (record.isAdequate == '是') {
+    if (record.isAdequate == '否') {
       return 'rowClass';
     } else {
       return '';
@@ -1235,15 +1289,20 @@ const leftCenter = function (props) {
         </Col>
         <Col span={7}>
           <div
-            onMouseEnter={() => {
-              if (timer) clearTimeout(timer); // 如果之前有定时器 先把之前的定时器取消
-              clearInterval(timer);
-            }}
-            onMouseLeave={() => {
-              if (timer) clearTimeout(timer); // 如果之前有定时器 先把之前的定时器取消
-              InitialScroll(materialDemandList);
-            }}
+            // onMouseEnter={() => {
+            //   if (timer) clearTimeout(timer); // 如果之前有定时器 先把之前的定时器取消
+            //   clearInterval(timer);
+            // }}
+            // onMouseLeave={() => {
+            //   if (timer) clearTimeout(timer); // 如果之前有定时器 先把之前的定时器取消
+            //   InitialScroll(materialDemandList);
+            // }}
+            className="table-material-wrap"
           >
+            <div className="plan-mark-title">
+              <div className="jian-tou"></div>
+              <span>资源需求清单</span>
+            </div>
             <Table
               id="cyclicScroll"
               scroll={{ y: 110 }}
@@ -1258,7 +1317,69 @@ const leftCenter = function (props) {
           </div>
         </Col>
         <Col span={5} push={2}>
-          <div className="ehcarts-yield-one">
+          <div id="review_box" className="review_box">
+            <ul id="leftEchart1" className="leftEchart1">
+              {leftEchart.map((item, index) => {
+                return (
+                  <li>
+                    <ReactEchartsCom option={item.leftEchartsPieOne} />
+                    <div>
+                      <ul>
+                        <li className="title">
+                          <span>计划编号</span>
+                          <Tooltip title={item.leftEchartsPieInfoOne.planNO}>
+                            <span>{item.leftEchartsPieInfoOne.planNO}</span>
+                          </Tooltip>
+                        </li>
+                        <li className="title">
+                          <span>产品名称</span>
+                          <span>{leftEchartsPieInfoOne.productName}</span>
+                        </li>
+                        <li className="title">
+                          <span>计划等级</span>
+                          <span>{leftEchartsPieInfoOne.planLevel}</span>
+                        </li>
+                        <li className="title"></li>
+                        <li className="title-button">
+                          <span
+                            className={
+                              item.leftEchartsPieInfoOneCurrent >= 0 &&
+                              item.leftEchartsPieInfoOneCurrent != 3
+                                ? 'active'
+                                : ''
+                            }
+                          >
+                            加工中
+                          </span>
+                          <span
+                            className={
+                              item.leftEchartsPieInfoOneCurrent == '未加工' ? 'active' : ''
+                            }
+                          >
+                            未加工
+                          </span>
+                          <span className={item.leftEchartsPieInfoOneCurrent == 3 ? 'active' : ''}>
+                            已加工
+                          </span>
+                        </li>
+                      </ul>
+                      <Steps
+                        className="steps"
+                        current={item.leftEchartsPieInfoOneCurrent}
+                        progressDot={customDotOne}
+                      >
+                        {item.leftEchartsPieInfoOneSteps.map((item) => {
+                          return <Step title={item.name} description={item.value} />;
+                        })}
+                      </Steps>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <ul id="leftEchart2" className="leftEchart2"></ul>
+          </div>
+          {/* <div className="ehcarts-yield-one">
             <ReactEchartsCom option={leftEchartsPieOne} />
             <div>
               <ul>
@@ -1398,8 +1519,8 @@ const leftCenter = function (props) {
               </Steps>
             </div>
           </div>
-          <div className="ehcarts-yield-four">
-            <ReactEchartsCom option={leftEchartsPieFour} />
+          <div className="ehcarts-yield-four"> */}
+          {/* <ReactEchartsCom option={leftEchartsPieFour} />
             <div>
               <ul>
                 <li className="title">
@@ -1443,7 +1564,7 @@ const leftCenter = function (props) {
                 })}
               </Steps>
             </div>
-          </div>
+          </div> */}
         </Col>
       </Row>
     </div>

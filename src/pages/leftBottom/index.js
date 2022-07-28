@@ -28,30 +28,26 @@ const leftBottom = function (props) {
     },
   ];
   const [order, setOrder] = useState([]);
+  const [selectAlgorithm, setSelectAlgorithm] = useState(null);
   useEffect(() => {
     //console.log(allData.selectAlgorithm,'allData.selectAlgorithm');
     var selectAlgorithmCen = '';
-    if (allData.selectAlgorithm == 1) {
+    if (allData.selectAlgorithm == 0) {
       selectAlgorithmCen = 'SPT';
-    } else if (allData.selectAlgorithm == 2) {
+    } else if (allData.selectAlgorithm == 1) {
       selectAlgorithmCen = 'LPT';
-    } else if (allData.selectAlgorithm == 3) {
+    } else if (allData.selectAlgorithm == 2) {
       selectAlgorithmCen = 'CR';
-    } else if (allData.selectAlgorithm == 4) {
+    } else if (allData.selectAlgorithm == 3) {
       selectAlgorithmCen = 'EDD';
-    } else if (allData.selectAlgorithm == 5) {
+    } else if (allData.selectAlgorithm == 4) {
       selectAlgorithmCen = 'ESD';
-    } else if (allData.selectAlgorithm == 6) {
+    } else if (allData.selectAlgorithm == 5) {
       selectAlgorithmCen = 'PL';
     } else if (allData.selectAlgorithm == 7) {
       selectAlgorithmCen = 'GA';
     }
-    var scheduleTargetCen = '';
-    // if () {
-    //   scheduleTargetCen = '设备均衡'
-    // } else if () {
-    //   scheduleTargetCen = '最快交付'
-    // }
+    setSelectAlgorithm(selectAlgorithmCen);
     setOrder([
       {
         title: '排产订单号',
@@ -68,7 +64,7 @@ const leftBottom = function (props) {
       {
         title: '排产目标',
         value:
-          allData.scheduleTarget == 1 ? '设备均衡' : allData.scheduleTarget == 2 ? '最快交付' : '',
+          allData.scheduleTarget == 1 ? '设备均衡' : allData.scheduleTarget == 2 ? '最快交付' : '.',
       },
     ]);
   }, [allData]);
@@ -80,7 +76,7 @@ const leftBottom = function (props) {
         color: '#fff',
         fontSize: 14,
       },
-      top: '5%',
+      top: '0%',
       left: '2%',
     },
     tooltip: {
@@ -236,8 +232,8 @@ const leftBottom = function (props) {
           itemStyle: {
             normal: {
               label: {
-                show: false,
-                color: '#000000', //气泡中字体颜色
+                show: true,
+                color: 'white', //气泡中字体颜色
               },
             },
           },
@@ -683,11 +679,13 @@ const leftBottom = function (props) {
             <p>不同算法对比信息</p>
             <p></p>
           </div>
-          <div className="diff-infor-mess">六类算法同步测算比较,EDD算法得出方案机床使用更均衡</div>
+          <div className="diff-infor-mess">{`六类算法同步测算比较,${selectAlgorithm}算法得出方案机床使用更${
+            allData.scheduleTarget == 1 ? '均衡' : allData.scheduleTarget == 2 ? '更快' : ''
+          }`}</div>
           <ReactEchartsCom
             option={diffOption}
             width={'600px'}
-            height={'350px'}
+            height={'400px'}
             left={'-58px'}
             top={'0px'}
           />

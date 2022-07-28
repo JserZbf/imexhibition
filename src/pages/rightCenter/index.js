@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less';
 import ReactEchartsCom from '../../components/ReactEcharts/index';
 import * as echarts from 'echarts';
 const rightCenter = function (props) {
+  const [timers, setTimers] = useState(null);
   const {
-    nan1,
+    fourWeekFinishRateX,
+    fourWeekFinishRateY,
     fourWeekOutputStatistics,
     fourWeekEnergyConsumption,
     fourWeekUseTrend,
@@ -26,6 +28,7 @@ const rightCenter = function (props) {
     infoThree,
     infoFour,
     infoFive,
+    rightEchart,
   } = props;
   // const [diffOption, setDiffOption] = useState({
   //   title: {
@@ -232,10 +235,11 @@ const rightCenter = function (props) {
       x: 'center',
       y: 'bottom',
       icon: 'rect',
-      itemWidth: 25,
-      itemHeight: 10,
+      itemWidth: 45,
+      itemHeight: 25,
       textStyle: {
         color: '#1bb4f6',
+        fontSize: 20,
       },
       data: [{ name: '加工能耗' }, { name: '待机能耗' }],
     },
@@ -306,6 +310,11 @@ const rightCenter = function (props) {
             },
           ]),
         },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
         data: fourWeekEnergyConsumption.Y1,
       },
       {
@@ -328,6 +337,11 @@ const rightCenter = function (props) {
         barWidth: 30,
         barGap: '-100%',
         stack: '广告',
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
         itemStyle: {
           borderRadius: [0, 10, 10, 0],
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -363,10 +377,11 @@ const rightCenter = function (props) {
       x: 'center',
       y: 'bottom',
       icon: 'rect',
-      itemWidth: 25,
-      itemHeight: 10,
+      itemWidth: 45,
+      itemHeight: 25,
       textStyle: {
         color: '#1bb4f6',
+        fontSize: 20,
       },
       data: [{ name: '故障维修数' }, { name: '加工数' }],
     },
@@ -439,6 +454,11 @@ const rightCenter = function (props) {
             },
           ]),
         },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
         data: fourWeekOutputStatistics.Y1,
       },
       {
@@ -475,6 +495,11 @@ const rightCenter = function (props) {
             },
           ]),
         },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
         data: fourWeekOutputStatistics.Y2,
       },
     ],
@@ -487,7 +512,7 @@ const rightCenter = function (props) {
         color: '#fff',
         fontSize: 20,
       },
-      top: '5%',
+      top: '0%',
       left: 'center',
     },
     tooltip: {
@@ -499,21 +524,22 @@ const rightCenter = function (props) {
     },
     legend: {
       show: true,
-      x: '180',
+      x: 'center',
       y: 'bottom',
       icon: 'rect',
-      itemWidth: 25,
-      itemHeight: 10,
+      itemWidth: 45,
+      itemHeight: 25,
       textStyle: {
         color: '#1bb4f6',
+        fontSize: 20,
       },
       data: [{ name: '机床开工率' }, { name: '机床待机率' }, { name: '机床维修率' }],
     },
     grid: {
-      top: '15%',
+      top: '0%',
       left: '5%',
       right: '5%',
-      bottom: '15%',
+      bottom: '20%',
       // containLabel: true
     },
     xAxis: [
@@ -768,10 +794,11 @@ const rightCenter = function (props) {
       left: 'center',
       bottom: 0,
       icon: 'rect',
-      itemWidth: 25,
-      itemHeight: 10,
+      itemWidth: 45,
+      itemHeight: 25,
       textStyle: {
         color: '#1bb4f6',
+        fontSize: 20,
       },
       data: ['机床使用率', '最高设备开动率', '最低设备开动率'],
     },
@@ -856,6 +883,11 @@ const rightCenter = function (props) {
         emphasis: {
           focus: 'series',
         },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
         data: fourWeekUseTrend.Y2,
         itemStyle: {
           borderRadius: [30, 30, 0, 0],
@@ -877,6 +909,11 @@ const rightCenter = function (props) {
         //label: labelOption,
         emphasis: {
           focus: 'series',
+        },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
         },
         data: fourWeekUseTrend.Y3,
         itemStyle: {
@@ -922,49 +959,289 @@ const rightCenter = function (props) {
       info: infoFive,
     },
   ];
+  const nan1 = {
+    angleAxis: {
+      splitLine: {
+        length: '100%',
+        show: true,
+        lineStyle: {
+          color: 'rgba(36, 143, 255, 1)',
+          width: 1,
+          type: 'solid',
+        },
+      },
+      axisLabel: {
+        color: '#fff',
+        fontSize: 12,
+        verticalAlign: 'top',
+        align: 'left',
+        margin: 0,
+      },
+    },
+    legend: {
+      show: true,
+      x: 'center',
+      y: 'bottom',
+      icon: 'rect',
+      itemWidth: 45,
+      itemHeight: 25,
+      textStyle: {
+        color: '#1bb4f6',
+        fontSize: 20,
+      },
+      data: ['第一周', '第二周', '第三周', '第四周', '第五周'],
+    },
+    // tooltip: {
+    //   show: true,
+    //   trigger: 'item',
+    //   confine: true,
+    //   formatter: function (param) {
+    //     return param.name + ' : ' + param.value + '%';
+    //   },
+    //   textStyle: {
+    //     rich: {
+    //       title: {
+    //         fontSize: 20,
+    //         lineHeight: 30,
+    //         color: '#6D7383',
+    //       },
+    //       value: {
+    //         fontSize: 18,
+    //         lineHeight: 20,
+    //         color: '#4DA1FF',
+    //       },
+    //     },
+    //   },
+    // },
+    radiusAxis: {
+      type: 'category',
+      data: fourWeekFinishRateX,
+      z: 10,
+      axisLabel: {
+        show: false,
+        color: '#fff',
+        fontSize: 12,
+        verticalAlign: 'top',
+        // align: 'left',
+        // margin: 0,
+      },
+    },
+    polar: {},
+    series: [
+      {
+        type: 'bar',
+        data: [fourWeekFinishRateY[0], null, null, null, null],
+        coordinateSystem: 'polar',
+        name: '第一周',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: '#23E9FF',
+          },
+        },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
+      },
+      {
+        type: 'bar',
+        data: [null, fourWeekFinishRateY[1], null, null, null],
+        coordinateSystem: 'polar',
+        name: '第二周',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: '#FFB96F',
+          },
+        },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
+      },
+      {
+        type: 'bar',
+        data: [null, null, fourWeekFinishRateY[2], null, null],
+        coordinateSystem: 'polar',
+        name: '第三周',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: '#FF9023',
+                },
+                {
+                  offset: 1,
+                  color: '#FFB66F',
+                },
+              ],
+              false,
+            ),
+          },
+        },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
+      },
+      {
+        type: 'bar',
+        data: [null, null, null, fourWeekFinishRateY[3], null],
+        coordinateSystem: 'polar',
+        name: '第四周',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0.3,
+                color: '#2579F1',
+              },
+              {
+                offset: 1,
+                color: '#281DFF',
+              },
+            ]),
+          },
+        },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
+      },
+      {
+        type: 'bar',
+        data: [null, null, null, null, fourWeekFinishRateY[4]],
+        coordinateSystem: 'polar',
+        name: '第五周',
+        stack: 'a',
+        itemStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0.3,
+                color: '#298FFF',
+              },
+              {
+                offset: 1,
+                color: '#248FFF',
+              },
+            ]),
+          },
+        },
+        label: {
+          show: true,
+          position: 'insideRight',
+          color: 'white',
+        },
+      },
+    ],
+  };
+  useEffect(() => {
+    if (rightEchart.length) {
+      roll(100);
+    }
+    return () => {
+      clearInterval(timers);
+    };
+  }, [rightEchart]);
+  const roll = (t) => {
+    var ul1Right = document.getElementById('rightEchart1');
+    var ul2ul1Right = document.getElementById('rightEchart2');
+    var ulboxRight = document.getElementById('review_box_right');
+    //  ul2ul1Right.innerHTML = ul1Right.innerHTML;
+    ulboxRight.scrollTop = 0; // 开始无滚动时设为0
+    setTimers(setInterval(rollStart, t)); // 设置定时器，参数t用在这为间隔时间（单位毫秒），参数t越小，滚动速度越快
+    // console.log(ulbox.scrollHeight - ulbox.scrollTop === ulbox.clientHeight, ' ulbox.scrollHeight - ulbox.scrollTop === ulbox.clientHeight')
+    // 鼠标移入div时暂停滚动
+    // ulbox.onmouseover = function () {
+    //   clearInterval(timers);
+    // }
+    // 鼠标移出div后继续滚动
+    // ulbox.onmouseout = function () {
+    //   timers = setInterval(rollStart, t);
+    // }
+  };
+  // 开始滚动函数
+  const rollStart = () => {
+    // 上面声明的DOM对象为局部对象需要再次声明
+    var ul1Right = document.getElementById('rightEchart1');
+    var ul2ul1Right = document.getElementById('rightEchart2');
+    var ulboxRight = document.getElementById('review_box_right');
+    if (ulboxRight && ul1Right) {
+      var result = ulboxRight.scrollHeight - ulboxRight.scrollTop === ulboxRight.clientHeight;
+      if (result === false) {
+        if (ulboxRight.scrollTop >= ul1Right.scrollHeight) {
+          ulboxRight.scrollTop = 0;
+        } else {
+          ulboxRight.scrollTop = ulboxRight.scrollTop + 2;
+        }
+      } else {
+        ulboxRight.scrollTop = 0;
+        rollStart();
+      }
+    }
+  };
   return (
     <div className="right-center">
       <Row>
         <Col span={8} className="right-center-part1">
-          {maintainList.map((item, index) => {
-            return (
-              <div key={index} className="maintain-list">
-                <div
-                  className={
-                    item.info.isFinishMaintain == '是' ? 'finish-bao-yang' : 'unfinish-bao-yang'
-                  }
-                ></div>
-                <div className="maintain-back-list">
-                  <p>
-                    <span>设备名称:</span>
-                    <span>{item.info.deviceName}</span>
-                  </p>
-                  <p>
-                    <span>排产周期内机床开动率：</span>
-                    <span>{item.info.runTimeRate}</span>
-                  </p>
-                </div>
-                <div>
-                  <ReactEchartsCom
-                    option={item.production}
-                    width={'340px'}
-                    height={'250px'}
-                    left={'290px'}
-                    top={'7px'}
-                  />
-                </div>
-                <div>
-                  <ReactEchartsCom
-                    option={item.stateOf}
-                    width={'340px'}
-                    height={'250px'}
-                    left={'6px'}
-                    top={'2px'}
-                  />
-                </div>
-              </div>
-            );
-          })}
+          <div id="review_box_right">
+            <ul id="rightEchart1">
+              {rightEchart.map((item, index) => {
+                return (
+                  <li key={index} className="maintain-list">
+                    <div
+                      className={
+                        item.info.isFinishMaintain == '是' ? 'finish-bao-yang' : 'unfinish-bao-yang'
+                      }
+                    ></div>
+                    <div className="maintain-back-list">
+                      <p>
+                        <span>设备名称:</span>
+                        <span>{item.info.deviceName}</span>
+                      </p>
+                      <p>
+                        <span>排产周期内机床开动率：</span>
+                        <span>{item.info.runTimeRate}</span>
+                      </p>
+                    </div>
+                    <div>
+                      <ReactEchartsCom
+                        option={item.production}
+                        width={'340px'}
+                        height={'250px'}
+                        left={'290px'}
+                        top={'7px'}
+                      />
+                    </div>
+                    <div>
+                      <ReactEchartsCom
+                        option={item.stateOf}
+                        width={'340px'}
+                        height={'250px'}
+                        left={'6px'}
+                        top={'2px'}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <ul id="rightEchart2"></ul>
+          </div>
         </Col>
         <Col span={5} className="right-center-part2">
           <div className="right-center-title">最近四周趋势对比图</div>
@@ -972,8 +1249,8 @@ const rightCenter = function (props) {
           <div className="right-center-mess-line"></div>
           <ReactEchartsCom
             option={nan1}
-            width={'520px'}
-            height={'520px'}
+            width={'600px'}
+            height={'500px'}
             left={'13px'}
             top={'68px'}
           />
@@ -990,7 +1267,7 @@ const rightCenter = function (props) {
           <div className="right-center-mess-line"></div>
           <ReactEchartsCom
             option={fourWeekPption}
-            width={'650px'}
+            width={'700px'}
             height={'327px'}
             left={'0px'}
             top={'66px'}
