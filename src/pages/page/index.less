@@ -1,8 +1,24 @@
 .wrap {
-  width: 2560px;
-  height: 1600px;
+  width: 2360px;
+  height: 1640px;
   background: url('./img/total-background.png') no-repeat;
   background-size: 100% 100%;
+  position: relative;
+
+  .spin-div {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    z-index: 999;
+    .ant-spin-spinning {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
 
   p {
     margin-bottom: 0em;
@@ -100,9 +116,8 @@
       height: 71px;
       float: left;
       position: relative;
-      margin-left: 5%;
-      margin-top: 8%;
-
+      margin-left: 6%;
+      margin-top: 9%;
       li {
         position: absolute;
         text-align: center;
@@ -253,8 +268,8 @@
       width: 360px;
       height: 71px;
       position: relative;
-      margin-top: 4.5%;
-      margin-left: 0.5%;
+      margin-top: 5%;
+      margin-left: -1%;
 
       li {
         position: absolute;
@@ -299,8 +314,8 @@
       li:nth-child(2) {
         width: 180px;
         height: 71px;
-        left: 48%;
-        top: 22.5%;
+        left: 49%;
+        top: 21%;
         background: url('./img/right-classes-background.png') no-repeat;
         background-size: 100% 100%;
         line-height: 75px;
@@ -392,6 +407,7 @@
 
         // 修改选中行样式
         .ant-table-tbody {
+
           // .ant-table-measure-row{
           //  // background-color: pink;
           // }
@@ -413,12 +429,14 @@
 
         .ant-table-tbody>tr {
           height: 20px;
+
           >td {
             font-size: 14px;
             font-family: Segoe UI-Regular, Segoe UI;
             font-weight: 400;
             color: #FFFFFF;
           }
+
           >td:nth-child(3) {
             color: black;
           }
@@ -458,6 +476,7 @@
         .ant-table-header {
           border-right: #2F2F2F;
           position: relative;
+
           //滚动条整体部分
           &::-webkit-scrollbar {
             width: 6px; //y轴滚动条粗细
@@ -485,6 +504,7 @@
         //表格体的滚动条设置
         .ant-table-body {
           border-right: #2F2F2F;
+
           //滚动条整体部分
           &::-webkit-scrollbar {
             width: 6px; //y轴滚动条粗细
@@ -520,7 +540,7 @@
       justify-content: center;
       align-items: center;
       margin: 0 auto;
-
+      margin-top: 1%;
       >p:nth-child(1) {
         font-size: 39px;
         font-family: REEJI-PinboGB-Flash-Regular, REEJI-PinboGB-Flash;
@@ -614,10 +634,12 @@
 
           >div:nth-child(1) {
             flex: 0.5;
-            .span-active{
-             background: linear-gradient(180deg, #05E6F6 0%, #064CAA 100%);
+
+            .span-active {
+              background: linear-gradient(180deg, #05E6F6 0%, #064CAA 100%);
             }
-            .span{
+
+            .span {
               background: grey;
             }
           }
@@ -639,7 +661,7 @@
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
             color: #FFFFFF;
-          //  background: linear-gradient(180deg, #05E6F6 0%, #064CAA 100%);
+            //  background: linear-gradient(180deg, #05E6F6 0%, #064CAA 100%);
             box-shadow: 0px 3px 20px 1px rgba(15, 248, 255, 0.1600);
             border-radius: 6px 6px 6px 6px;
             opacity: 1;

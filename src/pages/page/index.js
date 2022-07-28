@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'dva';
-import { Table, DatePicker, InputNumber, message } from 'antd';
+import { Table, DatePicker, InputNumber, message, Spin, Alert } from 'antd';
 import moment from 'moment';
 import './index.less'
 import { getOrderData, getEditStart, getRescheduling } from 'services/home/home';
@@ -46,13 +46,12 @@ const Home = function (props) {
       render: (text, record, index) => {
         return index + 1;
       },
-      width: 20
+      width: 50
     },
     {
       title: '计划编号',
       dataIndex: 'planNO',
       key: 'planNO',
-      width: 20
     },
     {
       title: '计划等级（可选0,1,2,3）',
@@ -68,19 +67,16 @@ const Home = function (props) {
           }}
         />
       },
-      width: 100
     },
     {
       title: '产品名称',
       dataIndex: 'productName',
       key: 'productName',
-      width: 100
     },
     {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
-      width: 100
     },
     {
       title: '计划开始时间（可选）',
@@ -95,7 +91,6 @@ const Home = function (props) {
             setDataSource(newData);
           }} />
       },
-      width: 100
     },
     {
       title: '计划结束时间（可选）',
@@ -111,7 +106,6 @@ const Home = function (props) {
           }}
         />
       },
-      width: 100
     }
   ];
   const talbeData = [
@@ -242,6 +236,7 @@ const Home = function (props) {
   const [schedulePattern, setSchedulePattern] = useState(2);//排产模拟场景
   const [scheduleCycle, setScheduleCycle] = useState(7);//排产周期
   const [scheduleTarget, setScheduleTarget] = useState(1);//排产目标
+  const [spinFlag, setSpinFlag] = useState(false)
   const clickMoni = (name) => {
     setModalFlag(false)
     const cenData = moniList
@@ -275,12 +270,7 @@ const Home = function (props) {
     }
     getOrderData(obj).then(res => {
       if (res.code == 200) {
-        setDataSource(res.orderDetail.map((item, index) => {
-          return {
-            ...item,
-            index: index
-          }
-        }))
+        setDataSource(res.orderDetail)
       }
     })
   }
@@ -299,12 +289,7 @@ const Home = function (props) {
     }
     getOrderData(obj).then(res => {
       if (res.code == 200) {
-        setDataSource(res.orderDetail.map((item, index) => {
-          return {
-            ...item,
-            index: index
-          }
-        }))
+        setDataSource(res.orderDetail)
       }
     })
     const cenData = leftInfoList;
@@ -344,7 +329,8 @@ const Home = function (props) {
     setModalFlag(true);
   }
   const productionStart = () => {
-    setOverallFlag(true)
+    setOverallFlag(true);
+    setSpinFlag(true);
     var objStart = {
       "taskId": taskId + '',
       "scheduleTarget": scheduleTarget,
@@ -356,7 +342,8 @@ const Home = function (props) {
     // const url = encodeURI(encodeURI(`http://192.168.0.103:8001/page?obj=${cenObjStart}`));
     // window.open(url, '_self')
     getEditStart(objStart).then(res => {
-      setOverallFlag(false)
+      setOverallFlag(false);
+      setSpinFlag(false)
       if (res.code == 200) {
         message.success('排产完成')
       } else {
@@ -372,6 +359,7 @@ const Home = function (props) {
     //   "scheduleCycle": scheduleCycle,
     //   "orderDetail": dataSource
     // }
+    setSpinFlag(true);
     const obj = {
       "taskId": taskId,
       "scheduleTarget": scheduleTarget,
@@ -546,6 +534,7 @@ const Home = function (props) {
       }
     };
     getRescheduling(obj).then(res => {
+      setSpinFlag(false);
       if (res.code == 200) {
         message.success('重排完成')
       } else {
@@ -567,12 +556,7 @@ const Home = function (props) {
     }
     await getOrderData(obj).then(res => {
       if (res.code == 200) {
-        setDataSource(res.orderDetail.map((item, index) => {
-          return {
-            ...item,
-            index: index
-          }
-        }))
+        setDataSource(res.orderDetail)
       }
     })
   }
@@ -580,6 +564,9 @@ const Home = function (props) {
     loadData();
   }, [])
   return <div className='wrap'>
+    <div className='spin-div' style={{display:spinFlag?'block':'none'}}>
+      <Spin size="large" spinning={spinFlag} />
+    </div>
     <p className='total-title'></p>
     <div className='one-top'>
       <ul className='left-info'>
