@@ -146,6 +146,7 @@ const Gantt = ({ orderScheduleDetail }) => {
 
   const getOption = useCallback(() => {
     const { formatData, yData } = formatPropData;
+    const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
     return {
       tooltip: {
         formatter: function (params) {
@@ -162,8 +163,10 @@ const Gantt = ({ orderScheduleDetail }) => {
         type: 'time',
         axisLine: {
           show: true,
-          color: '#0F58EA',
-          width: 3,
+          lineStyle: {
+            color: '#0F58EA',
+            width: 3,
+          },
         },
         axisLabel: {
           show: true,
@@ -198,6 +201,35 @@ const Gantt = ({ orderScheduleDetail }) => {
         borderWidth: 0,
       },
       series: [
+        {
+          type: 'line',
+          markLine: {
+            silent: true,
+            symbol: 'none',
+            label: {
+              color: '#fff',
+              fontFamily: 'Arial',
+              textBorderType: 0,
+            },
+            lineStyle: {
+              color: '#0F58EA',
+              width: 3,
+              type: 'solid',
+              shadowBlur: 0,
+            },
+            data: [
+              [
+                {
+                  name: nowTime,
+                  coord: [moment().valueOf(), yData[0]],
+                },
+                {
+                  coord: [moment().valueOf(), yData.at(-1)],
+                },
+              ],
+            ],
+          },
+        },
         {
           type: 'custom',
           renderItem: renderItem,
