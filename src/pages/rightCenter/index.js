@@ -13,21 +13,6 @@ const rightCenter = function (props) {
     fourWeekEnergyConsumption,
     fourWeekUseTrend,
     fourWeekUtilizationRate,
-    rightEchartsDayOutputOne,
-    rightEchartsStateRatioOne,
-    rightEchartsDayOutputTwo,
-    rightEchartsStateRatioTwo,
-    rightEchartsDayOutputThree,
-    rightEchartsStateRatioThree,
-    rightEchartsDayOutputFour,
-    rightEchartsStateRatioFour,
-    rightEchartsDayOutputFive,
-    rightEchartsStateRatioFive,
-    infoOne,
-    infoTwo,
-    infoThree,
-    infoFour,
-    infoFive,
     rightEchart,
   } = props;
   // const [diffOption, setDiffOption] = useState({
@@ -312,8 +297,10 @@ const rightCenter = function (props) {
         },
         label: {
           show: true,
-          position: 'insideRight',
+          position: 'inside',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         data: fourWeekEnergyConsumption.Y1,
       },
@@ -339,8 +326,10 @@ const rightCenter = function (props) {
         stack: '广告',
         label: {
           show: true,
-          position: 'insideRight',
+          position: 'inside',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         itemStyle: {
           borderRadius: [0, 10, 10, 0],
@@ -458,6 +447,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         data: fourWeekOutputStatistics.Y1,
       },
@@ -499,6 +490,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         data: fourWeekOutputStatistics.Y2,
       },
@@ -887,6 +880,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         data: fourWeekUseTrend.Y2,
         itemStyle: {
@@ -914,6 +909,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         data: fourWeekUseTrend.Y3,
         itemStyle: {
@@ -932,33 +929,6 @@ const rightCenter = function (props) {
       },
     ],
   };
-  const maintainList = [
-    {
-      stateOf: rightEchartsStateRatioOne,
-      production: rightEchartsDayOutputOne,
-      info: infoOne,
-    },
-    {
-      stateOf: rightEchartsStateRatioTwo,
-      production: rightEchartsDayOutputTwo,
-      info: infoTwo,
-    },
-    {
-      stateOf: rightEchartsStateRatioThree,
-      production: rightEchartsDayOutputThree,
-      info: infoThree,
-    },
-    {
-      stateOf: rightEchartsStateRatioFour,
-      production: rightEchartsDayOutputFour,
-      info: infoFour,
-    },
-    {
-      stateOf: rightEchartsStateRatioFive,
-      production: rightEchartsDayOutputFive,
-      info: infoFive,
-    },
-  ];
   const nan1 = {
     angleAxis: {
       splitLine: {
@@ -1043,6 +1013,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
       },
       {
@@ -1060,6 +1032,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
       },
       {
@@ -1093,6 +1067,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
       },
       {
@@ -1119,6 +1095,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
       },
       {
@@ -1145,6 +1123,8 @@ const rightCenter = function (props) {
           show: true,
           position: 'insideRight',
           color: 'white',
+          fontWeight: 'bold',
+          fontSize: 18,
         },
       },
     ],

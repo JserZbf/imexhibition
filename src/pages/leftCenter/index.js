@@ -190,30 +190,12 @@ const leftCenter = function (props) {
   const {
     materialDemandList,
     leftEchart,
-    leftEchartsPieOne,
-    leftEchartsPieTwo,
-    leftEchartsPieThree,
-    leftEchartsPieFour,
-    leftEchartsPieInfoOne,
-    leftEchartsPieInfoTwo,
-    leftEchartsPieInfoThree,
-    leftEchartsPieInfoFour,
     outSideOrderDetail,
     outSideOrderDetailTimeList,
-    outSideScheduleCycle,
-    outSideSchedulePattern,
-    scheduleTarget,
+    currentTime,
   } = props;
   const [timer, setTimer] = useState(null);
-  const [leftEchartsPieInfoOneCurrent, setLeftEchartsPieInfoOneCurrent] = useState(null);
-  const [leftEchartsPieInfoOneSteps, setLeftEchartsPieInfoOneSteps] = useState([]);
-  const [leftEchartsPieInfoTwoCurrent, setLeftEchartsPieInfoTwoCurrent] = useState(null);
-  const [leftEchartsPieInfoTwoSteps, setLeftEchartsPieInfoTwoSteps] = useState([]);
-  const [leftEchartsPieInfoThreeCurrent, setLeftEchartsPieInfoThreeCurrent] = useState(null);
-  const [leftEchartsPieInfoThreeSteps, setLeftEchartsPieInfoThreeSteps] = useState([]);
-  const [leftEchartsPieInfoFourCurrent, setLeftEchartsPieInfoFourCurrent] = useState(null);
-  const [leftEchartsPieInfoFourSteps, setLeftEchartsPieInfoFourSteps] = useState([]);
-  const [num, setNum] = useState(1);
+  const [num, setNum] = useState(0);
   const [timers, setTimers] = useState(null);
   useEffect(() => {
     if (leftEchart.length) {
@@ -225,9 +207,11 @@ const leftCenter = function (props) {
   }, [leftEchart]);
   let number = 1;
   useEffect(() => {
-    console.log(outSideOrderDetailTimeList, 'outSideOrderDetailTimeListoutSideOrderDetailTimeList');
     const timerID = setInterval(() => {
       number = number + 1;
+      if (number > 4) {
+        number = 0;
+      }
       tick(number);
     }, 10000);
     return () => {
@@ -238,56 +222,49 @@ const leftCenter = function (props) {
     setNum(number);
   };
   useEffect(() => {
-    // if (num % 2 == 0) {
-    //   //偶数
-    //   initPlanEchartsData(0, outSideOrderDetail.length / 2 + 1);
-    // } else {
-    //   //奇数
-    //   initPlanEchartsData(outSideOrderDetail.length / 2 + 1, outSideOrderDetail.length);
-    // }
-    initPlanEchartsData();
+    console.log(outSideOrderDetail.length, 'outSideOrderDetail.length');
+    if (outSideOrderDetail.length == 53) {
+      if (num == 0) {
+        initPlanEchartsData(0, 10);
+      } else if (num == 1) {
+        initPlanEchartsData(10, 20);
+      } else if (num == 2) {
+        initPlanEchartsData(20, 30);
+      } else if (num == 3) {
+        initPlanEchartsData(30, 40);
+      } else if (num == 4) {
+        initPlanEchartsData(40, outSideOrderDetail.length + 1);
+      }
+    } else if (outSideOrderDetail.length == 22) {
+      if (num == 0) {
+        initPlanEchartsData(0, 10);
+      } else if (num == 1) {
+        initPlanEchartsData(10, outSideOrderDetail.length + 1);
+      } else if (num == 2) {
+        initPlanEchartsData(0, 10);
+      } else if (num == 3) {
+        initPlanEchartsData(10, outSideOrderDetail.length + 1);
+      } else if (num == 4) {
+        initPlanEchartsData(0, 10);
+      }
+    }
   }, [num]);
   useEffect(() => {
     InitialScroll(materialDemandList);
-    //console.log(materialDemandList,'materialDemandList');
   }, [materialDemandList]);
-  useEffect(() => {
-    var chartDom = document.getElementById('main-plan');
-    myChartPlan = echarts.init(chartDom);
-    axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-      _rawData = rawData.data;
-      initPlanEchartsData();
-      // myChartPlan.setOption((option = makeOption(allTime, currentTime)));
-      // autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
-      //   // 轮播间隔时间 默认2s
-      //   interval: 2000,
-      //   // 是否循环轮播所有序列
-      //   loopSeries: false,
-      //   // 第1个被轮播的序列下标
-      //   seriesIndex: 0,
-      // });
-      // window.addEventListener("resize", function () {
-      //   myChartPlan.resize();
-      // });
-      // initDrag();
-    });
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+
   const initPlanEchartsData = (start, end) => {
     var chartDom = document.getElementById('main-plan');
     myChartPlan = echarts.init(chartDom);
     axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
       _rawData = rawData.data;
-      // const allTime = outSideOrderDetail
-      //   .slice(start, end)
-      //   .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
+      var allTimeST = outSideOrderDetail.slice(start, end);
+      // .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
       // const currentTime = outSideOrderDetail
       //   .slice(start, end)
       //   .filter((item) => compareTime(item.planStart, item.planEnd, new Date()));
-      myChartPlan.setOption((option = makeOption(outSideOrderDetail)));
-      // autoToolTip(myChartPlan, makeOption(allTime, currentTime), {
+      myChartPlan.setOption((option = makeOption(allTimeST)));
+      // autoToolTip(myChartPlan, makeOption(outSideOrderDetail), {
       //   // 轮播间隔时间 默认2s
       //   interval: 4000,
       //   // 是否循环轮播所有序列
@@ -298,7 +275,7 @@ const leftCenter = function (props) {
       // window.addEventListener("resize", function () {
       //   myChartPlan.resize();
       // });
-      // initDrag();
+      initDrag();
     });
   };
   useEffect(() => {
@@ -328,135 +305,19 @@ const leftCenter = function (props) {
           },
         ];
         const cenArr = compareFN(initArr, 'value');
-        if (compareTime1(cenArr[0].value, cenArr[1].value, new Date())) {
+        if (compareTime1(cenArr[0].value, cenArr[1].value)) {
           item.leftEchartsPieInfoOneCurrent = 0;
-          setLeftEchartsPieInfoOneCurrent(0);
-        } else if (compareTime1(cenArr[1].value, cenArr[2].value, new Date())) {
+        } else if (compareTime1(cenArr[1].value, cenArr[2].value)) {
           item.leftEchartsPieInfoOneCurrent = 1;
-          setLeftEchartsPieInfoOneCurrent(1);
-        } else if (compareTime1(cenArr[2].value, cenArr[3].value, new Date())) {
+        } else if (compareTime1(cenArr[2].value, cenArr[3].value)) {
           item.leftEchartsPieInfoOneCurrent = 2;
-          setLeftEchartsPieInfoOneCurrent(2);
         } else {
           item.leftEchartsPieInfoOneCurrent = 3;
-          setLeftEchartsPieInfoOneCurrent(3);
         }
         item.leftEchartsPieInfoOneSteps = cenArr;
-        setLeftEchartsPieInfoOneSteps(cenArr);
       }
     });
   }, [leftEchart]);
-  useEffect(() => {
-    if (
-      leftEchartsPieInfoTwo.planStart &&
-      leftEchartsPieInfoTwo.planEnd &&
-      leftEchartsPieInfoTwo.schedualStart &&
-      leftEchartsPieInfoTwo.schedualEnd
-    ) {
-      const initArr = [
-        {
-          name: '计划开始时间',
-          value: moment(leftEchartsPieInfoTwo.planStart).format('YYYY-MM-DD'),
-        },
-        { name: '最晚结束时间', value: moment(leftEchartsPieInfoTwo.planEnd).format('YYYY-MM-DD') },
-        {
-          name: '排产起始时间',
-          value: moment(leftEchartsPieInfoTwo.schedualStart).format('YYYY-MM-DD'),
-        },
-        {
-          name: '排产结束时间',
-          value: moment(leftEchartsPieInfoTwo.schedualEnd).format('YYYY-MM-DD'),
-        },
-      ];
-      const cenArr = compareFN(initArr, 'value');
-      if (compareTime1(cenArr[0].value, cenArr[1].value, new Date())) {
-        setLeftEchartsPieInfoTwoCurrent(0);
-      } else if (compareTime1(cenArr[1].value, cenArr[2].value, new Date())) {
-        setLeftEchartsPieInfoTwoCurrent(1);
-      } else if (compareTime1(cenArr[2].value, cenArr[3].value, new Date())) {
-        setLeftEchartsPieInfoTwoCurrent(2);
-      } else {
-        setLeftEchartsPieInfoTwoCurrent(3);
-      }
-      setLeftEchartsPieInfoTwoSteps(cenArr);
-    }
-  }, [leftEchartsPieInfoTwo]);
-  useEffect(() => {
-    if (
-      leftEchartsPieInfoThree.planStart &&
-      leftEchartsPieInfoThree.planEnd &&
-      leftEchartsPieInfoThree.schedualStart &&
-      leftEchartsPieInfoThree.schedualEnd
-    ) {
-      const initArr = [
-        {
-          name: '计划开始时间',
-          value: moment(leftEchartsPieInfoThree.planStart).format('YYYY-MM-DD'),
-        },
-        {
-          name: '最晚结束时间',
-          value: moment(leftEchartsPieInfoThree.planEnd).format('YYYY-MM-DD'),
-        },
-        {
-          name: '排产起始时间',
-          value: moment(leftEchartsPieInfoThree.schedualStart).format('YYYY-MM-DD'),
-        },
-        {
-          name: '排产结束时间',
-          value: moment(leftEchartsPieInfoThree.schedualEnd).format('YYYY-MM-DD'),
-        },
-      ];
-      const cenArr = compareFN(initArr, 'value');
-      if (compareTime1(cenArr[0].value, cenArr[1].value, new Date())) {
-        setLeftEchartsPieInfoThreeCurrent(0);
-      } else if (compareTime1(cenArr[1].value, cenArr[2].value, new Date())) {
-        setLeftEchartsPieInfoThreeCurrent(1);
-      } else if (compareTime1(cenArr[2].value, cenArr[3].value, new Date())) {
-        setLeftEchartsPieInfoThreeCurrent(2);
-      } else {
-        setLeftEchartsPieInfoThreeCurrent(3);
-      }
-      setLeftEchartsPieInfoThreeSteps(cenArr);
-    }
-  }, [leftEchartsPieInfoThree]);
-  useEffect(() => {
-    if (
-      leftEchartsPieInfoFour.planStart &&
-      leftEchartsPieInfoFour.planEnd &&
-      leftEchartsPieInfoFour.schedualStart &&
-      leftEchartsPieInfoFour.schedualEnd
-    ) {
-      const initArr = [
-        {
-          name: '计划开始时间',
-          value: moment(leftEchartsPieInfoFour.planStart).format('YYYY-MM-DD'),
-        },
-        {
-          name: '最晚结束时间',
-          value: moment(leftEchartsPieInfoFour.planEnd).format('YYYY-MM-DD'),
-        },
-        {
-          name: '排产起始时间',
-          value: moment(leftEchartsPieInfoFour.schedualStart).format('YYYY-MM-DD'),
-        },
-        {
-          name: '排产结束时间',
-          value: moment(leftEchartsPieInfoFour.schedualEnd).format('YYYY-MM-DD'),
-        },
-      ];
-      const cenArr = compareFN(initArr, 'value');
-      if (compareTime1(cenArr[0].value, cenArr[1].value, new Date())) {
-        setLeftEchartsPieInfoFourCurrent(0);
-      } else if (compareTime1(cenArr[1].value, cenArr[2].value, new Date())) {
-        setLeftEchartsPieInfoFourCurrent(1);
-      } else if (compareTime1(cenArr[2].value, cenArr[3].value, new Date())) {
-        setLeftEchartsPieInfoFourCurrent(2);
-      } else {
-        setLeftEchartsPieInfoFourCurrent(3);
-      }
-      setLeftEchartsPieInfoFourSteps(cenArr);
-    }
-  }, [leftEchartsPieInfoFour]);
   const columns = [
     {
       title: '序号',
@@ -499,7 +360,7 @@ const leftCenter = function (props) {
       key: 'stockQuantity ',
     },
     {
-      title: '物料是否不足',
+      title: '物料是否充足',
       dataIndex: 'isAdequate',
       key: 'isAdequate ',
     },
@@ -515,42 +376,6 @@ const leftCenter = function (props) {
         // <span>
         //   step {index} status: {status}
         // </span>
-        <span>
-          step {index} status: {status}
-        </span>
-      }
-    >
-      {dot}
-    </Popover>
-  );
-  const customDotTwo = (dot, { status, index }) => (
-    //console.log(dot, status, index, 'dot,status,index)'),
-    <Popover
-      content={
-        <span>
-          step {index} status: {status}
-        </span>
-      }
-    >
-      {dot}
-    </Popover>
-  );
-  const customDotThree = (dot, { status, index }) => (
-    //console.log(dot, status, index, 'dot,status,index)'),
-    <Popover
-      content={
-        <span>
-          step {index} status: {status}
-        </span>
-      }
-    >
-      {dot}
-    </Popover>
-  );
-  const customDotFour = (dot, { status, index }) => (
-    // console.log(dot, status, index, 'dot,status,index)'),
-    <Popover
-      content={
         <span>
           step {index} status: {status}
         </span>
@@ -622,30 +447,30 @@ const leftCenter = function (props) {
         left: 'center',
       },
       dataZoom: [
-        {
-          type: 'slider',
-          xAxisIndex: 0,
-          filterMode: 'weakFilter',
-          height: 20,
-          bottom: 0,
-          start: 0,
-          end: 100,
-          handleIcon:
-            'path://M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-          handleSize: '80%',
-          showDetail: false,
-          show: false,
-        },
-        {
-          type: 'inside',
-          id: 'insideX',
-          xAxisIndex: 0,
-          filterMode: 'weakFilter',
-          start: 0,
-          end: 26,
-          zoomOnMouseWheel: false,
-          moveOnMouseMove: true,
-        },
+        // {
+        //   type: 'slider',
+        //   xAxisIndex: 0,
+        //   filterMode: 'weakFilter',
+        //   height: 20,
+        //   bottom: 0,
+        //   start: 0,
+        //   end: 100,
+        //   handleIcon:
+        //     'path://M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        //   handleSize: '80%',
+        //   showDetail: false,
+        //   show: false,
+        // },
+        // {
+        //   type: 'inside',
+        //   id: 'insideX',
+        //   xAxisIndex: 0,
+        //   filterMode: 'weakFilter',
+        //   start: 0,
+        //   end: 26,
+        //   zoomOnMouseWheel: false,
+        //   moveOnMouseMove: true,
+        // },
         // {//y轴
         //   type: 'slider',
         //   yAxisIndex: 0,
@@ -701,7 +526,7 @@ const leftCenter = function (props) {
             inside: false,
             align: 'center',
           },
-          // data: outSideOrderDetailTimeList
+          data: outSideOrderDetailTimeList,
         },
       ],
       yAxis: {
@@ -746,7 +571,7 @@ const leftCenter = function (props) {
             ), // 线条颜色
           },
           data: allTime.map((item, index) => {
-            return [index + 270].concat(
+            return [index + 311].concat(
               item.planStart,
               item.planEnd,
               '产品名称:' +
@@ -823,7 +648,7 @@ const leftCenter = function (props) {
     var y = timeArrival[1] - barHeight;
     var flightNumber = api.value(3) + '';
     var flightNumberWidth = echarts.format.getTextRect(flightNumber).width;
-    var text = barLength > flightNumberWidth + 40 && x + barLength >= 180 ? flightNumber : '';
+    var text = flightNumber;
     var rectNormal = clipRectByRect(params, {
       x: x,
       y: y,
@@ -1138,7 +963,7 @@ const leftCenter = function (props) {
     }
     return arr;
   };
-  const compareTime1 = (stime, etime, nowTime1) => {
+  const compareTime1 = (stime, etime) => {
     // 转换时间格式，并转换为时间戳
     // console.log(stime, etime, nowTime1, '6667777');
     function tranDate(time) {
@@ -1148,26 +973,16 @@ const leftCenter = function (props) {
     let startTime = tranDate(stime);
     // 结束时间
     let endTime = tranDate(etime);
-    let thisDate = nowTime1;
+    let thisDate = currentTime;
     // 根据选中日期传值，格式为 2018-9-10 20:08
-    let currentTime =
-      thisDate.getFullYear() +
-      '-' +
-      (thisDate.getMonth() + 1) +
-      '-' +
-      thisDate.getDate() +
-      ' ' +
-      thisDate.getHours() +
-      ':' +
-      thisDate.getMinutes();
-    let nowTime = tranDate(currentTime);
+    let nowTime = tranDate(thisDate);
     // 如果当前时间处于时间段内，返回true，否则返回false
     if (nowTime <= startTime || nowTime >= endTime) {
       return false;
     }
     return true;
   };
-  const compareTime = (stime, etime, nowTime1) => {
+  const compareTime = (stime, etime) => {
     // 转换时间格式，并转换为时间戳
     function tranDate(time) {
       return new Date(time.replace(/-/g, '/')).getTime();
@@ -1176,19 +991,9 @@ const leftCenter = function (props) {
     let startTime = tranDate(stime);
     // 结束时间
     let endTime = tranDate(etime);
-    let thisDate = nowTime1;
+    let thisDate = currentTime;
     // 根据选中日期传值，格式为 2018-9-10 20:08
-    let currentTime =
-      thisDate.getFullYear() +
-      '-' +
-      (thisDate.getMonth() + 1) +
-      '-' +
-      thisDate.getDate() +
-      ' ' +
-      thisDate.getHours() +
-      ':' +
-      thisDate.getMinutes();
-    let nowTime = tranDate(currentTime);
+    let nowTime = tranDate(thisDate);
     // 如果当前时间处于时间段内，返回true，否则返回false
     if (nowTime < startTime || nowTime > endTime) {
       return false;
@@ -1333,22 +1138,15 @@ const leftCenter = function (props) {
                         </li>
                         <li className="title">
                           <span>产品名称</span>
-                          <span>{leftEchartsPieInfoOne.productName}</span>
+                          <span>{item.leftEchartsPieInfoOne.productName}</span>
                         </li>
                         <li className="title">
                           <span>计划等级</span>
-                          <span>{leftEchartsPieInfoOne.planLevel}</span>
+                          <span>{item.leftEchartsPieInfoOne.planLevel}</span>
                         </li>
                         <li className="title"></li>
                         <li className="title-button">
-                          <span
-                            className={
-                              item.leftEchartsPieInfoOneCurrent >= 0 &&
-                              item.leftEchartsPieInfoOneCurrent != 3
-                                ? 'active'
-                                : ''
-                            }
-                          >
+                          <span className={item.yijiagongCount != '100%' ? 'active' : ''}>
                             加工中
                           </span>
                           <span
@@ -1358,7 +1156,7 @@ const leftCenter = function (props) {
                           >
                             未加工
                           </span>
-                          <span className={item.leftEchartsPieInfoOneCurrent == 3 ? 'active' : ''}>
+                          <span className={item.yijiagongCount == '100%' ? 'active' : ''}>
                             已加工
                           </span>
                         </li>
@@ -1379,192 +1177,6 @@ const leftCenter = function (props) {
             </ul>
             <ul id="leftEchart2" className="leftEchart2"></ul>
           </div>
-          {/* <div className="ehcarts-yield-one">
-            <ReactEchartsCom option={leftEchartsPieOne} />
-            <div>
-              <ul>
-                <li className="title">
-                  <span>计划编号</span>
-                  <Tooltip title={leftEchartsPieInfoOne.planNO}>
-                    <span>{leftEchartsPieInfoOne.planNO}</span>
-                  </Tooltip>
-                </li>
-                <li className="title">
-                  <span>产品名称</span>
-                  <span>{leftEchartsPieInfoOne.productName}</span>
-                </li>
-                <li className="title">
-                  <span>计划等级</span>
-                  <span>{leftEchartsPieInfoOne.planLevel}</span>
-                </li>
-                <li className="title"></li>
-                <li className="title-button">
-                  <span
-                    className={
-                      leftEchartsPieInfoOneCurrent >= 0 && leftEchartsPieInfoOneCurrent != 3
-                        ? 'active'
-                        : ''
-                    }
-                  >
-                    加工中
-                  </span>
-                  <span className={leftEchartsPieInfoOneCurrent == '未加工' ? 'active' : ''}>
-                    未加工
-                  </span>
-                  <span className={leftEchartsPieInfoOneCurrent == 3 ? 'active' : ''}>已加工</span>
-                </li>
-              </ul>
-              <Steps
-                className="steps"
-                current={leftEchartsPieInfoOneCurrent}
-                progressDot={customDotOne}
-              >
-                {leftEchartsPieInfoOneSteps.map((item) => {
-                  return <Step title={item.name} description={item.value} />;
-                })}
-              </Steps>
-            </div>
-          </div>
-          <div className="ehcarts-yield-two">
-            <ReactEchartsCom option={leftEchartsPieTwo} />
-            <div>
-              <ul>
-                <li className="title">
-                  <span>计划编号</span>
-                  <Tooltip title={leftEchartsPieInfoTwo.planNO}>
-                    <span>{leftEchartsPieInfoTwo.planNO}</span>
-                  </Tooltip>
-                </li>
-                <li className="title">
-                  <span>产品名称</span>
-                  <span>{leftEchartsPieInfoTwo.productName}</span>
-                </li>
-                <li className="title">
-                  <span>计划等级</span>
-                  <span>{leftEchartsPieInfoTwo.planLevel}</span>
-                </li>
-                <li className="title"></li>
-                <li className="title-button">
-                  <span
-                    className={
-                      leftEchartsPieInfoTwoCurrent >= 0 && leftEchartsPieInfoTwoCurrent != 3
-                        ? 'active'
-                        : ''
-                    }
-                  >
-                    加工中
-                  </span>
-                  <span className={leftEchartsPieInfoTwoCurrent == '未加工' ? 'active' : ''}>
-                    未加工
-                  </span>
-                  <span className={leftEchartsPieInfoTwoCurrent == 3 ? 'active' : ''}>已加工</span>
-                </li>
-              </ul>
-              <Steps
-                className="steps"
-                current={leftEchartsPieInfoTwoCurrent}
-                progressDot={customDotTwo}
-              >
-                {leftEchartsPieInfoTwoSteps.map((item) => {
-                  return <Step title={item.name} description={item.value} />;
-                })}
-              </Steps>
-            </div>
-          </div>
-          <div className="ehcarts-yield-three">
-            <ReactEchartsCom option={leftEchartsPieThree} />
-            <div>
-              <ul>
-                <li className="title">
-                  <span>计划编号</span>
-                  <Tooltip title={leftEchartsPieInfoThree.planNO}>
-                    <span>{leftEchartsPieInfoThree.planNO}</span>
-                  </Tooltip>
-                </li>
-                <li className="title">
-                  <span>产品名称</span>
-                  <span>{leftEchartsPieInfoThree.productName}</span>
-                </li>
-                <li className="title">
-                  <span>计划等级</span>
-                  <span>{leftEchartsPieInfoThree.planLevel}</span>
-                </li>
-                <li className="title"></li>
-                <li className="title-button">
-                  <span
-                    className={
-                      leftEchartsPieInfoThreeCurrent >= 0 && leftEchartsPieInfoThreeCurrent != 3
-                        ? 'active'
-                        : ''
-                    }
-                  >
-                    加工中
-                  </span>
-                  <span className={leftEchartsPieInfoThreeCurrent == '未加工' ? 'active' : ''}>
-                    未加工
-                  </span>
-                  <span className={leftEchartsPieInfoThreeCurrent == 3 ? 'active' : ''}>
-                    已加工
-                  </span>
-                </li>
-              </ul>
-              <Steps
-                className="steps"
-                current={leftEchartsPieInfoThreeCurrent}
-                progressDot={customDotThree}
-              >
-                {leftEchartsPieInfoThreeSteps.map((item) => {
-                  return <Step title={item.name} description={item.value} />;
-                })}
-              </Steps>
-            </div>
-          </div>
-          <div className="ehcarts-yield-four"> */}
-          {/* <ReactEchartsCom option={leftEchartsPieFour} />
-            <div>
-              <ul>
-                <li className="title">
-                  <span>计划编号</span>
-                  <Tooltip title={leftEchartsPieInfoFour.planNO}>
-                    <span>{leftEchartsPieInfoFour.planNO}</span>
-                  </Tooltip>
-                </li>
-                <li className="title">
-                  <span>产品名称</span>
-                  <span>{leftEchartsPieInfoFour.productName}</span>
-                </li>
-                <li className="title">
-                  <span>计划等级</span>
-                  <p>{leftEchartsPieInfoFour.planLevel}</p>
-                </li>
-                <li className="title"></li>
-                <li className="title-button">
-                  <span
-                    className={
-                      leftEchartsPieInfoFourCurrent >= 0 && leftEchartsPieInfoFourCurrent != 3
-                        ? 'active'
-                        : ''
-                    }
-                  >
-                    加工中
-                  </span>
-                  <span className={leftEchartsPieInfoFourCurrent == '未加工' ? 'active' : ''}>
-                    未加工
-                  </span>
-                  <span className={leftEchartsPieInfoFourCurrent == 3 ? 'active' : ''}>已加工</span>
-                </li>
-              </ul>
-              <Steps
-                className="steps"
-                current={leftEchartsPieInfoFourCurrent}
-                progressDot={customDotFour}
-              >
-                {leftEchartsPieInfoFourSteps.map((item) => {
-                  return <Step title={item.name} description={item.value} />;
-                })}
-              </Steps>
-            </div>
-          </div> */}
         </Col>
       </Row>
     </div>

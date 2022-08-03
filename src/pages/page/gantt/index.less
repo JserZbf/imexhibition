@@ -1,0 +1,40 @@
+.gantt {
+  width: 2316px;
+  height: 1218px;
+  background: url('../img/background/gan-te-tu-back.png') no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  right: 18.5%;
+  top: 19%;
+  .legendBox {
+    position: absolute;
+    top: 10%;
+    right: 4%;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    user-select: none;
+    height: 75%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .legendItem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 13px;
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .label {
+        color: #fff;
+      }
+    }
+  }
+}
