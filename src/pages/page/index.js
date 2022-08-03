@@ -38,6 +38,8 @@ const Home = function (props) {
     flag: true,
   }])
   const [overallFlag, setOverallFlag] = useState(false);
+  const [rescheduleDetail, setRescheduleDetail] = useState([]);
+  const [orderDetail, setOrderDetail] = useState([]);
   const columns = [
     {
       title: '序号',
@@ -231,7 +233,7 @@ const Home = function (props) {
     }
   ];
   const [dataSource, setDataSource] = useState([]);
-  const [fixList, setFixList] = useState([{ name: '四小时', flag: true }, { name: '二十四小时', flag: false }])
+  const [fixList, setFixList] = useState([{ name: '四小时', flag: true, value: 40 }, { name: '二十四小时', flag: false, value: 240 }])
   const [taskId, setTaskId] = useState(93578990)
   const [schedulePattern, setSchedulePattern] = useState(2);//排产模拟场景
   const [scheduleCycle, setScheduleCycle] = useState(7);//排产周期
@@ -329,6 +331,7 @@ const Home = function (props) {
     setModalFlag(true);
   }
   const productionStart = () => {
+    setModalFlag(false);
     setOverallFlag(true);
     setSpinFlag(true);
     var objStart = {
@@ -338,207 +341,82 @@ const Home = function (props) {
       "scheduleCycle": scheduleCycle,
       "orderDetail": dataSource
     }
-    // const cenObjStart = JSON.stringify(objStart);
-    // const url = encodeURI(encodeURI(`http://192.168.0.103:8001/page?obj=${cenObjStart}`));
-    // window.open(url, '_self')
     getEditStart(objStart).then(res => {
       setOverallFlag(false);
       setSpinFlag(false)
       if (res.code == 200) {
-        message.success('排产完成')
+        setRescheduleDetail(res.orderScheduleDetail);
+        setOrderDetail(res.orderDetail)
+        message.success({
+          content: '排产完成,请在大屏观看排产结果!',
+          style: {
+            fontSize: 22,
+            fontFamily: 'PingFang SC-Regular, PingFang SC'
+          },
+        });
       } else {
-        message.warn('排产失败')
+        message.warn({
+          content: '排产失败',
+          style: {
+            fontSize: 22,
+            fontFamily: 'PingFang SC-Regular, PingFang SC'
+          },
+        })
       }
     })
   }
   const startRest = () => {
-    // var objStart = {
-    //   "taskId": taskId + '',
-    //   "scheduleTarget": scheduleTarget,
-    //   "schedulePattern": schedulePattern,
-    //   "scheduleCycle": scheduleCycle,
-    //   "orderDetail": dataSource
-    // }
+    setModalFlag(false);
     setSpinFlag(true);
+    setOverallFlag(true);
+    var fixValue = fixList.filter(item => item.flag)
+  
     const obj = {
-      "taskId": taskId,
+      "taskId": taskId + '',
       "scheduleTarget": scheduleTarget,
       "scheduleCycle": scheduleCycle,
-      "orderDetail": dataSource,
-      "rescheduleDetail": [
-        {
-          "orderNO": "2022051021330739627200001",
-          "planNO": "2022051021330739627200001",
-          "productName": "12M33机体",
-          "opName": "12M33机体OP020",
-          "machineName": "英赛",
-          "tray": "p1514",
-          "fixture": "F3725",
-          "toolMachineName": "T151#T01006",
-          "toolType": "D160粗铣SNGX1205ANN#D215铣刀45420",
-          "useTime": 146,
-          "startTime": "2022-07-15 08:00:00",
-          "endTime": "2022-07-15 10:26:00",
-          "staticTime": "20220715",
-          "state": 0
-        },
-        {
-          "orderNO": "2022051021330742123900003",
-          "planNO": "2022051021330742123900003",
-          "productName": "WP3H机体",
-          "opName": "WP3H机体OP010",
-          "machineName": "10000-1",
-          "tray": "p3200",
-          "fixture": "F1529",
-          "toolMachineName": "T31003",
-          "toolType": "D30立铣刀D30-120-165",
-          "useTime": 128,
-          "startTime": "2022-07-15 08:00:00",
-          "endTime": "2022-07-15 10:08:00",
-          "staticTime": "20220715",
-          "state": 0
-        },
-        {
-          "orderNO": "2022051021330739627200001",
-          "planNO": "2022051021330739627200001",
-          "productName": "12M33机体",
-          "opName": "12M33机体OP050",
-          "machineName": "锡根",
-          "tray": "p3437",
-          "fixture": "F1118",
-          "toolMachineName": "411#311#407",
-          "toolType": "D6.8/10钻头302650516#D32立铣302175706",
-          "useTime": 120,
-          "startTime": "2022-07-15 10:26:00",
-          "endTime": "2022-07-15 12:26:00",
-          "staticTime": "20220715",
-          "state": 0
-        },
-        {
-          "orderNO": "2022051021330739627200001",
-          "planNO": "2022051021330739627200001",
-          "productName": "12M33机体",
-          "opName": "12M33机体OP060",
-          "machineName": "试漏设备",
-          "tray": "p3455",
-          "fixture": "F1118",
-          "toolMachineName": "nan",
-          "toolType": "",
-          "useTime": 156,
-          "startTime": "2022-07-15 12:26:00",
-          "endTime": "2022-07-15 15:02:00",
-          "staticTime": "20220715",
-          "state": 1
-        },
-        {
-          "orderNO": "2022051021330739627200001",
-          "planNO": "2022051021330739627200001",
-          "productName": "12M33机体",
-          "opName": "12M33机体OP070",
-          "machineName": "清洗机",
-          "tray": "p1477",
-          "fixture": "F1118",
-          "toolMachineName": "nan",
-          "toolType": "",
-          "useTime": 138,
-          "startTime": "2022-07-15 19:00:00",
-          "endTime": "2022-07-15 21:18:00",
-          "staticTime": "20220715",
-          "state": 1
-        },
-        {
-          "orderNO": "2022051021330739627200001",
-          "planNO": "2022051021330739627200001",
-          "productName": "12M33机体",
-          "opName": "12M33机体OP080",
-          "machineName": "英赛",
-          "tray": "p3280",
-          "fixture": "F1118",
-          "toolMachineName": "  T081101 #T089#T015",
-          "toolType": "D35精铰303161159#D63铣刀LNGX130708#D100铣刀LNGX130708R",
-          "useTime": 159,
-          "startTime": "2022-07-15 21:18:00",
-          "endTime": "2022-07-15 23:57:00",
-          "staticTime": "20220715",
-          "state": 2
-        },
-        {
-          "orderNO": "2022051021330742024300002",
-          "planNO": "2022051021330742024300002",
-          "productName": "8M33机体",
-          "opName": "8M33机体OP010",
-          "machineName": "英赛",
-          "tray": "p1514",
-          "fixture": "F2430",
-          "toolMachineName": "T160330#T20331002",
-          "toolType": "D20枪钻D20.02*805#45度倒角刀D30-50-120",
-          "useTime": 110,
-          "startTime": "2022-07-15 23:57:00",
-          "endTime": "2022-07-16 01:47:00",
-          "staticTime": "20220716",
-          "state": 2
-        },
-        {
-          "orderNO": "2022051021330742024300002",
-          "planNO": "2022051021330742024300002",
-          "productName": "8M33机体",
-          "opName": "8M33机体OP020",
-          "machineName": "英赛",
-          "tray": "p1514",
-          "fixture": "F2430",
-          "toolMachineName": "M204002#M204005",
-          "toolType": "D171粗镗ccMt120408#D183粗镗ccMt120408",
-          "useTime": 47,
-          "startTime": "2022-07-16 01:47:00",
-          "endTime": "2022-07-16 02:34:00",
-          "staticTime": "20220716",
-          "state": 2
-        },
-        {
-          "orderNO": "2022051021330742024300002",
-          "planNO": "2022051021330742024300002",
-          "productName": "8M33机体",
-          "opName": "8M33机体OP030",
-          "machineName": "试漏设备",
-          "tray": "p3455",
-          "fixture": "F2430",
-          "toolMachineName": "nan",
-          "toolType": "",
-          "useTime": 139,
-          "startTime": "2022-07-16 02:34:00",
-          "endTime": "2022-07-16 04:53:00",
-          "staticTime": "20220716",
-          "state": 2
-        },
-        {
-          "orderNO": "2022051021330742024300002",
-          "planNO": "2022051021330742024300002",
-          "productName": "8M33机体",
-          "opName": "8M33机体OP050",
-          "machineName": "清洗机",
-          "tray": "p2517",
-          "fixture": "F2430",
-          "toolMachineName": "nan",
-          "toolType": "",
-          "useTime": 120,
-          "startTime": "2022-07-16 04:53:00",
-          "endTime": "2022-07-16 06:53:00",
-          "staticTime": "20220716",
+      "orderDetail": orderDetail,
+      "rescheduleDetail": rescheduleDetail.map((item, index) => {
+        return {
+          "orderNO": item.orderNO,
+          "planNO": item.planNO,
+          "productName": item.productName,
+          "opName": item.opName,
+          "machineName": item.machineName,
+          "tray": item.tray,
+          "fixture": item.fixture,
+          "toolMachineName": item.toolMachineName,
+          "toolType": item.toolType,
+          "useTime": item.useTime,
+          "startTime": item.startTime,
+          "endTime": item.endTime,
+          "staticTime": item.staticTime,
           "state": 2
         }
-      ],
+      }),
       "faultyMachine": {
-        "英赛2号": 60,
-        "铣车五轴1号": 120,
-        "10000-4": 60
+        "海科特-1": fixValue[0].value,
       }
     };
     getRescheduling(obj).then(res => {
       setSpinFlag(false);
+      setOverallFlag(false);
       if (res.code == 200) {
-        message.success('重排完成')
+        message.success({
+          content: '重排完成,请在大屏观看排产结果',
+          style: {
+            fontSize: 22,
+            fontFamily: 'PingFang SC-Regular, PingFang SC'
+          },
+        });
       } else {
-        message.warn('重排失败')
+        message.warn({
+          content: '重排失败',
+          style: {
+            fontSize: 22,
+            fontFamily: 'PingFang SC-Regular, PingFang SC'
+          },
+        })
       }
     })
   }
@@ -564,8 +442,8 @@ const Home = function (props) {
     loadData();
   }, [])
   return <div className='wrap'>
-    <div className='spin-div' style={{display:spinFlag?'block':'none'}}>
-      <Spin size="large" spinning={spinFlag} />
+    <div className='spin-div' style={{ display: spinFlag ? 'block' : 'none' }}>
+      <Spin tip="排产中,请稍后..." size="large" spinning={spinFlag} />
     </div>
     <p className='total-title'></p>
     <div className='one-top'>
@@ -623,7 +501,7 @@ const Home = function (props) {
         {
           modalFlag ? <div><div className='left-modal'>
             <div>
-              <p><span>[设备报警]</span><span>海科特#1</span></p>
+              <p><span>[设备报警]</span><span>海科特-1</span></p>
               <p><span>故障类型:</span><span>切削液惨漏</span></p>
             </div>
             <div>
