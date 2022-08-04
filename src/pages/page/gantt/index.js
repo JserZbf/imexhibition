@@ -1,9 +1,16 @@
-import React, { memo, useMemo, useCallback, useRef } from 'react';
+import React, { memo, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import Echarts from 'echarts-for-react';
 import * as echarts from 'echarts/core';
 import moment from 'moment';
-import { groupBy, map, uniq } from 'lodash-es';
+import { groupBy, map, uniq, sortBy, head } from 'lodash-es';
 import styles from './index.less';
+
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+const HALF_DAY_MILLISECOND = 43200000; // 12小时毫秒数
+const GANTT_SCROLL_INTERVAL = 30000; // 甘特图滚动定时器间隔
+const MIN_LEGEND_SCROLL_NUM = 26; // 图例最小开启滚动数
+const LEGEND_SCROLL_INTERVAL = 60; // 图例滚动定时器间隔
+const SECOND_SCROLL_HEIGHT = 3; // 图例每秒滚动高度
 
 const randomColor = () => {
   let r = Math.floor(Math.random() * 256);
@@ -18,6 +25,26 @@ const randomColor = () => {
 
 const Gantt = ({ orderScheduleDetail }) => {
   const colorMap = useRef({});
+  const legendContainerRef = useRef(null);
+  const chartRef = useRef(null);
+  const ganttTimer = useRef(null);
+  const legendTimer = useRef(null);
+
+  const [simulationTime, setSimulationTime] = useState([]);
+
+  const init = () => {
+    legendTimer?.current && clearTimeout(legendTimer?.current);
+    ganttTimer?.current && clearTimeout(ganttTimer?.current);
+  };
+
+  useEffect(() => {
+    init();
+    initSimulationTime();
+    ganttScroll();
+    legendScroll();
+    return init;
+  }, [orderScheduleDetail]);
+
   const formatPropData = useMemo(() => {
     let yData = [];
     let formatData = [];
@@ -82,6 +109,70 @@ const Gantt = ({ orderScheduleDetail }) => {
       legendData,
     };
   }, [orderScheduleDetail]);
+
+  const getHeadDate = () => {
+    const { startTime } =
+      head(sortBy(orderScheduleDetail, (d) => moment(d.startTime).valueOf())) ?? {};
+    return moment(startTime).hour(8).minute(0).second(0);
+  };
+
+  const initSimulationTime = () => {
+    const headTime = getHeadDate();
+    const start = headTime.format(DATE_FORMAT);
+    const end = headTime.add(12, 'hours').format(DATE_FORMAT);
+    setSimulationTime([start, end]);
+  };
+
+  const ganttScroll = () => {
+    const chart = chartRef?.current?.getEchartsInstance();
+    if (!chart) return;
+    const headTime = getHeadDate();
+    const startTime = headTime.valueOf(); // 滚动的最小日期
+    const endTime = headTime.add(7, 'days').valueOf(); // 滚动的最大日期
+    ganttTimer.current = setTimeout(() => {
+      const option = chart?.getOption() ?? {};
+      const { dataZoom: [zoom] = [] } = option;
+      const { startValue, endValue } = zoom ?? {};
+      if (endValue + HALF_DAY_MILLISECOND > endTime) {
+        const start = headTime.format(DATE_FORMAT);
+        const end = headTime.add(12, 'hours').format(DATE_FORMAT);
+        setSimulationTime([start, end]);
+        chart?.dispatchAction({
+          type: 'dataZoom',
+          startValue: startTime,
+          endValue: startTime + HALF_DAY_MILLISECOND,
+        });
+      } else {
+        const start = moment(startValue + HALF_DAY_MILLISECOND).format(DATE_FORMAT);
+        const end = moment(endValue + HALF_DAY_MILLISECOND).format(DATE_FORMAT);
+        setSimulationTime([start, end]);
+        chart?.dispatchAction({
+          type: 'dataZoom',
+          startValue: startValue + HALF_DAY_MILLISECOND,
+          endValue: endValue + HALF_DAY_MILLISECOND,
+        });
+      }
+      ganttScroll();
+    }, GANTT_SCROLL_INTERVAL);
+  };
+
+  const legendScroll = () => {
+    const { legendData } = formatPropData;
+    const legendContainer = legendContainerRef?.current;
+    if (Array.isArray(legendData) && legendData.length > MIN_LEGEND_SCROLL_NUM) {
+      const scrollTop = legendContainer?.scrollTop;
+      const clientHeight = legendContainer?.clientHeight;
+      const scrollHeight = legendContainer?.scrollHeight;
+      legendTimer.current = setTimeout(() => {
+        legendContainer.scrollTop += SECOND_SCROLL_HEIGHT;
+        if (clientHeight + scrollTop >= scrollHeight) {
+          legendContainer.scrollTop = 0;
+        }
+        legendScroll();
+      }, LEGEND_SCROLL_INTERVAL);
+    }
+  };
+
   const renderItem = (params, api) => {
     let categoryIndex = api.value(0);
     let start = api.coord([api.value(1), categoryIndex]);
@@ -146,7 +237,8 @@ const Gantt = ({ orderScheduleDetail }) => {
 
   const getOption = useCallback(() => {
     const { formatData, yData } = formatPropData;
-    const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    const nowTime = moment().format(DATE_FORMAT);
+    const startTimeVal = getHeadDate().valueOf();
     return {
       tooltip: {
         formatter: function (params) {
@@ -185,8 +277,8 @@ const Gantt = ({ orderScheduleDetail }) => {
         {
           type: 'inside',
           xAxisIndex: 0,
-          start: 0,
-          end: 14,
+          startValue: startTimeVal,
+          endValue: startTimeVal + HALF_DAY_MILLISECOND,
           zoomLock: true,
           zoomOnMouseWheel: false,
         },
@@ -210,6 +302,7 @@ const Gantt = ({ orderScheduleDetail }) => {
               color: '#fff',
               fontFamily: 'Arial',
               textBorderType: 0,
+              distance: [0, 20],
             },
             lineStyle: {
               color: '#0F58EA',
@@ -260,8 +353,14 @@ const Gantt = ({ orderScheduleDetail }) => {
   };
   return (
     <div className={styles.gantt}>
-      <div className={styles.legendBox}>{renderLegendItem()}</div>
-      <Echarts option={getOption()} style={{ width: '100%', height: '100%' }} />
+      <div className={styles.simulationTime}>
+        <span>{simulationTime[0]}-</span>
+        <span>{simulationTime[1]}</span>
+      </div>
+      <div className={styles.legendBox} ref={legendContainerRef}>
+        {renderLegendItem()}
+      </div>
+      <Echarts option={getOption()} ref={chartRef} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 };

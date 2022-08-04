@@ -4,6 +4,7 @@ import { Row, Col } from 'antd';
 import './index.less';
 import ReactEchartsCom from '../../components/ReactEcharts/index';
 import * as echarts from 'echarts';
+import moment from 'moment';
 const leftBottom = function (props) {
   const {
     materialTypeSixList,
@@ -12,6 +13,7 @@ const leftBottom = function (props) {
     diffAlgorithmX,
     bigValueLine,
     diffAlgorithmY,
+    currentTime,
   } = props;
   const finishPlanList = [
     {
@@ -345,7 +347,7 @@ const leftBottom = function (props) {
         data: [
           {
             name: 'title',
-            value: dataArr,
+            value: (finishPlanObj.finishRate * 10).toFixed(0),
           },
         ],
         pointer: {
@@ -462,7 +464,7 @@ const leftBottom = function (props) {
         },
         data: [
           {
-            name: `${dataArr * 10 + '%'}`,
+            name: `${(dataArr * 10).toFixed(0) + '%'}`,
             value: dataArr,
           },
         ],
@@ -605,7 +607,12 @@ const leftBottom = function (props) {
           <ul className="material-type-list">
             {materialTypeSixList.map((item, index) => {
               return (
-                <li key={index} className={item.flagBool ? 'active-li' : 'li'}>
+                <li
+                  key={index}
+                  className={
+                    item.supplyTime == moment(currentTime).format('YYYY-MM-DD') ? 'active-li' : 'li'
+                  }
+                >
                   <p className="title">
                     {item.materialType == 'blank'
                       ? '毛坯'
