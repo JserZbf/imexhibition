@@ -4,21 +4,32 @@
   background: url('./img/total-background.png') no-repeat;
   background-size: 100% 100%;
   position: relative;
-.custom-class{
-  background: red;
-}
+
+  .custom-class {
+    background: red;
+  }
+
   .spin-div {
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
     z-index: 999;
+
     .ant-spin-spinning {
       display: block;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    }
+
+    .spin {
+      font-size: 22px;
+    }
+
+    .ant-spin.ant-spin-show-text .ant-spin-text {
+      font-size: 22px;
     }
   }
 
@@ -120,6 +131,7 @@
       position: relative;
       margin-left: 6%;
       margin-top: 9%;
+
       li {
         position: absolute;
         text-align: center;
@@ -369,7 +381,7 @@
 
     .table-data {
       width: 84%;
-      height: 243px;
+      height: 250px;
       background: url('./img/table-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
@@ -543,6 +555,7 @@
       align-items: center;
       margin: 0 auto;
       margin-top: 1%;
+
       >p:nth-child(1) {
         font-size: 39px;
         font-family: REEJI-PinboGB-Flash-Regular, REEJI-PinboGB-Flash;
@@ -772,9 +785,8 @@
   .three-bottom {
     width: 100%;
     height: 300px;
-    margin-top: 2.5%;
+    margin-top: 3.5%;
     text-align: center;
-
     >div {
       width: 202px;
       height: 202px;
