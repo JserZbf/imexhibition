@@ -7,7 +7,7 @@ import styles from './index.less';
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const HALF_DAY_MILLISECOND = 43200000; // 12小时毫秒数
-const GANTT_SCROLL_INTERVAL = 30000; // 甘特图滚动定时器间隔
+const GANTT_SCROLL_INTERVAL = 5000; // 甘特图滚动定时器间隔
 const MIN_LEGEND_SCROLL_NUM = 26; // 图例最小开启滚动数
 const LEGEND_SCROLL_INTERVAL = 60; // 图例滚动定时器间隔
 const SECOND_SCROLL_HEIGHT = 3; // 图例每秒滚动高度

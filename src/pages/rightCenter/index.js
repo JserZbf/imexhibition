@@ -14,6 +14,7 @@ const rightCenter = function (props) {
     fourWeekUseTrend,
     fourWeekUtilizationRate,
     rightEchart,
+    bigValueY1,
   } = props;
   // const [diffOption, setDiffOption] = useState({
   //   title: {
@@ -868,6 +869,20 @@ const rightCenter = function (props) {
             },
           ]),
         },
+        markPoint: {
+          itemStyle: {
+            normal: {
+              label: {
+                show: true,
+                color: 'white', //气泡中字体颜色
+              },
+            },
+          },
+          data: [
+            { type: 'max', name: 'Max' },
+            { type: 'min', name: 'Min' },
+          ],
+        },
       },
       {
         name: '最高设备开动率',
@@ -927,6 +942,63 @@ const rightCenter = function (props) {
           ]),
         },
       },
+      {
+        name: '',
+        type: 'line',
+        smooth: true, //是否平滑
+        showAllSymbol: true,
+        // symbol: 'image://./static/images/guang-circle.png',
+        symbol: 'none',
+        symbolSize: 15,
+        lineStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: 'rgba(60, 123, 253, 1)',
+              },
+              {
+                offset: 1,
+                color: 'rgba(146, 182, 255, 0.39)',
+              },
+            ]),
+            shadowBlur: 0,
+            shadowOffsetY: 5,
+            shadowOffsetX: 5,
+          },
+        },
+        label: {
+          show: false,
+          position: 'top',
+          textStyle: {
+            color: '#00ca95',
+          },
+        },
+
+        itemStyle: {
+          normal: {
+            lineStyle: {
+              width: 2,
+              type: 'dashed',
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: 'rgba(60, 123, 253, 1)',
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(146, 182, 255, 0.39)',
+                },
+              ]),
+            },
+          },
+        },
+        tooltip: {
+          show: false,
+        },
+
+        data: bigValueY1,
+      },
     ],
   };
   const nan1 = {
@@ -945,6 +1017,7 @@ const rightCenter = function (props) {
         fontSize: 12,
         verticalAlign: 'top',
         align: 'left',
+        formatter: '{value} %',
         margin: 0,
       },
     },
@@ -992,6 +1065,7 @@ const rightCenter = function (props) {
         color: '#fff',
         fontSize: 12,
         verticalAlign: 'top',
+        formatter: '{value} %',
         // align: 'left',
         // margin: 0,
       },
@@ -1015,6 +1089,7 @@ const rightCenter = function (props) {
           color: 'white',
           fontWeight: 'bold',
           fontSize: 18,
+          formatter: fourWeekFinishRateY[0] + '%',
         },
       },
       {
@@ -1034,6 +1109,7 @@ const rightCenter = function (props) {
           color: 'white',
           fontWeight: 'bold',
           fontSize: 18,
+          formatter: fourWeekFinishRateY[1] + '%',
         },
       },
       {
@@ -1069,6 +1145,7 @@ const rightCenter = function (props) {
           color: 'white',
           fontWeight: 'bold',
           fontSize: 18,
+          formatter: fourWeekFinishRateY[2] + '%',
         },
       },
       {
@@ -1097,6 +1174,7 @@ const rightCenter = function (props) {
           color: 'white',
           fontWeight: 'bold',
           fontSize: 18,
+          formatter: fourWeekFinishRateY[3] + '%',
         },
       },
       {
@@ -1125,6 +1203,7 @@ const rightCenter = function (props) {
           color: 'white',
           fontWeight: 'bold',
           fontSize: 18,
+          formatter: fourWeekFinishRateY[4] + '%',
         },
       },
     ],

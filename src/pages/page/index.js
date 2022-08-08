@@ -37,6 +37,7 @@ const Home = function (props) {
   const [fourWeekFinishRateX, setFourWeekFinishRateX] = useState([]);
   const [fourWeekFinishRateY, setFourWeekFinishRateY] = useState([]);
   const [bigValueLine, setBigValueLine] = useState([]);
+  const [bigValueY1, setBigValueY1] = useState([]);
   const [fourWeekOutputStatistics, setFourWeekOutputStatistics] = useState({});
   const [fourWeekEnergyConsumption, setFourWeekEnergyConsumption] = useState({});
   const [fourWeekUseTrend, setFourWeekUseTrend] = useState({});
@@ -116,31 +117,37 @@ const Home = function (props) {
         // const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
         //   return Number(-10000 * item);
         // });
-        setDiffAlgorithmY(
+        if (
           res.orderStatisticsInfo.algorithmComparisonData &&
-            res.orderStatisticsInfo.algorithmComparisonData.Y,
-        ); //不同算法对比信息图
-        var bigValueLineCen = [];
-        const cenYst = JSON.parse(
-          JSON.stringify(
+          res.orderStatisticsInfo.algorithmComparisonData.Y
+        ) {
+          setDiffAlgorithmY(
             res.orderStatisticsInfo.algorithmComparisonData &&
               res.orderStatisticsInfo.algorithmComparisonData.Y,
-          ),
-        );
-        for (var i = 1; i <= cenYst.length; i++) {
-          bigValueLineCen.push(
-            Number(
-              cenYst.sort(function (a, b) {
-                return b - a;
-              })[0],
+          ); //不同算法对比信息图
+          var bigValueLineCen = [];
+          const cenYst = JSON.parse(
+            JSON.stringify(
+              res.orderStatisticsInfo.algorithmComparisonData &&
+                res.orderStatisticsInfo.algorithmComparisonData.Y,
             ),
           );
+          for (var i = 1; i <= cenYst.length; i++) {
+            bigValueLineCen.push(
+              Number(
+                cenYst.sort(function (a, b) {
+                  return b - a;
+                })[0],
+              ),
+            );
+          }
+          setBigValueLine(bigValueLineCen);
+          setDiffAlgorithmX(
+            res.orderStatisticsInfo.algorithmComparisonData &&
+              res.orderStatisticsInfo.algorithmComparisonData.X,
+          );
         }
-        setBigValueLine(bigValueLineCen);
-        setDiffAlgorithmX(
-          res.orderStatisticsInfo.algorithmComparisonData &&
-            res.orderStatisticsInfo.algorithmComparisonData.X,
-        );
+
         setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
         setFourWeekFinishRateY(
           res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
@@ -150,6 +157,18 @@ const Home = function (props) {
         setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
         setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
         setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+        const cenY1 = JSON.parse(JSON.stringify(res.deviceStatisticsInfo.fourWeekUseTrend.Y1));
+        var bigValueY1Cen = [];
+        for (var i = 1; i <= res.deviceStatisticsInfo.fourWeekUseTrend.Y1.length; i++) {
+          bigValueY1Cen.push(
+            Number(
+              cenY1.sort(function (a, b) {
+                return b - a;
+              })[0],
+            ),
+          );
+        }
+        setBigValueY1(bigValueY1Cen);
         setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
         setOrderCardDetail(res.orderCardDetail);
         setDeviceCardDetail(res.deviceCardDetail);
@@ -159,6 +178,10 @@ const Home = function (props) {
         setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
       }
     });
+  }, [count]);
+  useEffect(() => {
+    //console.log(orderCardDetail,'orderCardDetail-currentTime')
+    tranOrderCardDetail(orderCardDetail);
   }, [currentTime]);
   /*   useEffect(() => {
       //  getAllData(obj).then((res) => {
@@ -290,7 +313,9 @@ const Home = function (props) {
   const compareTime = (stime, etime) => {
     // 转换时间格式，并转换为时间戳
     function tranDate(time) {
-      return new Date(time.replace(/-/g, '/')).getTime();
+      if (time) {
+        return new Date(time.replace(/-/g, '/')).getTime();
+      }
     }
     // 开始时间
     let startTime = tranDate(stime);
@@ -360,13 +385,21 @@ const Home = function (props) {
           //  console.log(moment(new Date()).format('YYYY-MM-DD'),'moment(new Date())');
           //  console.log(addDate(startTime, index),'addDate(startTime, index)');
           value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
-          processedValue = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
-          percent = (cenValue / obj.productNum) * 100 * index + '%';
+          processedValue = ((obj.productNum / GetNumberOfDays(startTime, endTime)) * index).toFixed(
+            0,
+          );
+          percent = ((cenValue / obj.productNum) * 100 * index).toFixed(0) + '%';
+          console.log(
+            value,
+            processedValue,
+            percent,
+            'value,processedValue,percent----12312132313',
+          );
         }
       }
     } else if (cen == 'right') {
       value = 100;
-      processedValue = obj.productNum;
+      processedValue = obj.productNum.toFixed(0);
       percent = 100 + '%';
     }
     return [value, percent, processedValue];
@@ -1191,7 +1224,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 1);
@@ -1203,7 +1236,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
     } else if (moniCount >= 60 && moniCount < 120) {
@@ -1222,7 +1255,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 2);
@@ -1234,7 +1267,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
     } else if (moniCount >= 120 && moniCount < 180) {
@@ -1253,7 +1286,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 3);
@@ -1265,7 +1298,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
     } else if (moniCount >= 180 && moniCount < 240) {
@@ -1284,7 +1317,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 4);
@@ -1296,7 +1329,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
     } else if (moniCount >= 240 && moniCount < 300) {
@@ -1315,7 +1348,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 5);
@@ -1327,7 +1360,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
     } else if (moniCount >= 300 && moniCount < 360) {
@@ -1346,7 +1379,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 6);
@@ -1358,10 +1391,10 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
-    } else if (moniCount >= 360 && moniCount < 420) {
+    } else if (moniCount >= 360 && moniCount <= 421) {
       let now = new Date();
       // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
       let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
@@ -1377,7 +1410,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       } else {
         now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 7);
@@ -1389,7 +1422,7 @@ const Home = function (props) {
         let s = checkTime(now.getSeconds()); // 秒
         return [
           year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates + '   ' + h + ':' + m + ':' + s,
+          year + '/' + month + '/' + dates,
         ];
       }
     }
@@ -1470,7 +1503,7 @@ const Home = function (props) {
               •APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。
             </div>
           </div>
-          <Gantt orderScheduleDetail={mockData.orderScheduleDetail ?? []} />
+          <Gantt orderScheduleDetail={orderScheduleDetail ?? []} />
           {/* <Gantt orderScheduleDetail={orderScheduleDetail ?? []} /> */}
           {/* <div id="main"></div> */}
         </Col>
@@ -1484,6 +1517,7 @@ const Home = function (props) {
             fourWeekUseTrend={fourWeekUseTrend}
             fourWeekUtilizationRate={fourWeekUtilizationRate}
             rightEchart={rightEchart}
+            bigValueY1={bigValueY1}
           />
           <RightBottom rightBottomInfor={rightBottomInfor} />
         </Col>

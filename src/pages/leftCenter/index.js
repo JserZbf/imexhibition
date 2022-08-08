@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { Row, Col, Steps, Popover, Table, Tooltip } from 'antd';
@@ -197,6 +197,8 @@ const leftCenter = function (props) {
   const [timer, setTimer] = useState(null);
   const [num, setNum] = useState(0);
   const [timers, setTimers] = useState(null);
+  const mainPlan = useRef(null);
+  const [inSideOrderDetailTimeList, setInSideOrderDetailTimeList] = useState([]);
   useEffect(() => {
     if (leftEchart.length) {
       roll(100);
@@ -214,10 +216,21 @@ const leftCenter = function (props) {
       }
       tick(number);
     }, 10000);
+    var cenData = [];
+    for (var i = 1; i <= 7; i++) {
+      cenData.push(GetDateStr(i));
+    }
+    setInSideOrderDetailTimeList(cenData);
     return () => {
       clearInterval(timerID);
     };
   }, []);
+  const checkTime = (i) => {
+    if (i < 10) {
+      i = '0' + i;
+    }
+    return i;
+  };
   const tick = (number) => {
     setNum(number);
   };
@@ -234,7 +247,7 @@ const leftCenter = function (props) {
       } else if (num == 4) {
         initPlanEchartsData(40, outSideOrderDetail.length + 1);
       }
-    } else if (outSideOrderDetail.length == 22) {
+    } else if (outSideOrderDetail.length == 21) {
       if (num == 0) {
         initPlanEchartsData(0, 10);
       } else if (num == 1) {
@@ -250,8 +263,18 @@ const leftCenter = function (props) {
   }, [num]);
   useEffect(() => {
     InitialScroll(materialDemandList);
+    return () => {
+      return clearInterval(timer);
+    };
   }, [materialDemandList]);
-
+  const GetDateStr = (AddDayCount) => {
+    var dd = new Date();
+    dd.setDate(dd.getDate() + AddDayCount); //获取AddDayCount天后的日期
+    var y = dd.getFullYear();
+    var m = dd.getMonth() + 1; //获取当前月份的日期
+    var d = dd.getDate();
+    return y + '-' + checkTime(m) + '-' + checkTime(d);
+  };
   const initPlanEchartsData = (start, end) => {
     var chartDom = document.getElementById('main-plan');
     myChartPlan = echarts.init(chartDom);
@@ -314,9 +337,13 @@ const leftCenter = function (props) {
           item.leftEchartsPieInfoOneCurrent = 3;
         }
         item.leftEchartsPieInfoOneSteps = cenArr;
+        // var stepsArr = [1, 2, 3, 4, 5, 6, 7, 8]
+        // item.leftEchartsPieInfoOneSteps = stepsArr.map(item => {
+        //   return { name: '', value: GetDateStr(item) }
+        // })
       }
     });
-  }, [leftEchart]);
+  }, [leftEchart, currentTime]);
   const columns = [
     {
       title: '序号',
@@ -525,7 +552,7 @@ const leftCenter = function (props) {
             inside: false,
             align: 'center',
           },
-          data: outSideOrderDetailTimeList,
+          data: inSideOrderDetailTimeList,
         },
       ],
       yAxis: {
@@ -1016,7 +1043,7 @@ const leftCenter = function (props) {
         v.scrollTop = 0;
         // setTimeout(() => { v.scrollTop = 0 }, 1000)
       }
-    }, 100);
+    }, 200);
     setTimer(time); // 定时器保存变量 利于停止
     // }
   };
@@ -1042,7 +1069,7 @@ const leftCenter = function (props) {
               <div className="jian-tou"></div>
               <span>计划号集合</span>
             </div>
-            <div id="main-plan"></div>
+            <div id="main-plan" ref={mainPlan}></div>
             {/* <ul className='data-list'>
             <li>
               <span>产品名称</span>
