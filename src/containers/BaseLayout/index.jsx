@@ -13,56 +13,57 @@ import styles from './index.less';
 @withRouter
 @connect(() => ({}), () => ({}))
 class Layout extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            errorMessage: undefined,
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      errorMessage: undefined,
+    };
+  }
+
+  componentDidMount() {}
+
+  componentDidCatch(error, info) {
+    console.error('Layout Catched Error:', error, info);
+    this.setState({
+      errorMessage: error.message || 'Layout Catched Error with no message.',
+    });
+  }
+
+  render() {
+    const { errorMessage } = this.state;
+    const {
+      children,
+      location: { pathname },
+    } = this.props;
+    if (errorMessage) {
+      return (
+        <Error
+          message={errorMessage}
+          returnButtonText="返回首页"
+          onReturn={() => {
+            this.setState({
+              errorMessage: undefined,
+            });
+          }}
+        />
+      );
     }
 
-    componentDidMount() {
-    }
-
-    componentDidCatch(error, info) {
-        console.error('Layout Catched Error:', error, info);
-        this.setState({
-            errorMessage: error.message || 'Layout Catched Error with no message.',
-        });
-    }
-
-    render() {
-
-        const { errorMessage } = this.state;
-        const { children, location: { pathname } } = this.props;
-        if (errorMessage) {
-            return (
-                <Error
-                    message={errorMessage}
-                    returnButtonText="返回首页"
-                    onReturn={() => {
-                        this.setState({
-                            errorMessage: undefined,
-                        });
-                    }}
-                />
-            );
-        }
-
-        return (
-            <ConfigProvider locale={zhCN}>
-                <DocumentTitle title="重庆研究院">
-                <div className={styles.content}>{children}</div>
-                </DocumentTitle>
-            </ConfigProvider>
-        );
-    }
+    return (
+      <ConfigProvider locale={zhCN}>
+        <DocumentTitle title="重庆研究院展厅排产系统">
+          <div className={styles.content}>{children}</div>
+        </DocumentTitle>
+      </ConfigProvider>
+    );
+  }
 }
 
 Layout.propTypes = {
-    children: PropTypes.node,
-    location: PropTypes.shape({
-        pathname: PropTypes.string,
-    }),
+  children: PropTypes.node,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }),
 };
 
 export default Layout;
