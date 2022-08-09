@@ -29,7 +29,7 @@ export default {
   dynamicImport: {
     loading: 'components/Spin',
   },
-  title: 'ems',
+  title: '重庆研究院展厅排产系统',
   headScripts: [
     // header里面插入script脚本
   ].filter((i) => i),
