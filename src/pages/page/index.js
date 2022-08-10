@@ -4,6 +4,8 @@ import { Table, DatePicker, InputNumber, message, Spin, Alert } from 'antd';
 import moment from 'moment';
 import './index.less'
 import { getOrderData, getEditStart, getRescheduling } from 'services/home/home';
+import LeftModal from './Modal/leftModal'
+import RightModal from './Modal/rightModal'
 const Home = function (props) {
   const dateFormat = 'YYYY-MM-DD';
   // const [value, setValue] = useState(1);
@@ -94,7 +96,10 @@ const Home = function (props) {
             record['planStart'] = dateString;
             newData[index] = record;
             setDataSource(newData);
-          }} />
+          }}
+          onFocus={() => { document.activeElement.blur(); }}
+        />
+
       },
     },
     {
@@ -109,6 +114,7 @@ const Home = function (props) {
             newData[index] = record;
             setDataSource(newData);
           }}
+          onFocus={() => { document.activeElement.blur(); }}
         />
       },
     }
@@ -411,207 +417,207 @@ const Home = function (props) {
           "海科特-1": fixValue[0].value,
         }
       };
-     /*  const obj = {
-        "taskId": "91123fbf-c235-4ebf-8c00-a5ff584ff2f4",
-        "scheduleTarget": "6",
-        "scheduleCycle": "6",
-        "orderDetail": [
-          {
-            "planNO": "2022051021330739627200001",
-            "productName": "12M33机体",
-            "productNum": 1,
-            "planType": "产品加工",
-            "planLevel": 0,
-            "planStart": "2022-05-10",
-            "planEnd": "2022-05-16"
-          },
-          {
-            "planNO": "2022051021330742024300002",
-            "productName": "8M33机体",
-            "productNum": 1,
-            "planType": "产品加工",
-            "planLevel": 2,
-            "planStart": "2022-05-10",
-            "planEnd": "2022-05-12"
-          },
-          {
-            "planNO": "2022051021330742123900003",
-            "productName": "WP3H机体",
-            "productNum": 1,
-            "planType": "产品加工",
-            "planLevel": 2,
-            "planStart": "2022-05-10",
-            "planEnd": "2022-05-12"
-          }
-        ],
-        "rescheduleDetail": [
-          {
-            "orderNO": "2022051021330739627200001",
-            "planNO": "2022051021330739627200001",
-            "productName": "12M33机体",
-            "opName": "12M33机体OP020",
-            "machineName": "英赛",
-            "tray": "p1514",
-            "fixture": "F3725",
-            "toolMachineName": "T151#T01006",
-            "toolType": "D160粗铣SNGX1205ANN#D215铣刀45420",
-            "useTime": 146,
-            "startTime": "2022-07-15 08:00:00",
-            "endTime": "2022-07-15 10:26:00",
-            "staticTime": "20220715",
-            "state": 0
-          },
-          {
-            "orderNO": "2022051021330742123900003",
-            "planNO": "2022051021330742123900003",
-            "productName": "WP3H机体",
-            "opName": "WP3H机体OP010",
-            "machineName": "10000-1",
-            "tray": "p3200",
-            "fixture": "F1529",
-            "toolMachineName": "T31003",
-            "toolType": "D30立铣刀D30-120-165",
-            "useTime": 128,
-            "startTime": "2022-07-15 08:00:00",
-            "endTime": "2022-07-15 10:08:00",
-            "staticTime": "20220715",
-            "state": 0
-          },
-          {
-            "orderNO": "2022051021330739627200001",
-            "planNO": "2022051021330739627200001",
-            "productName": "12M33机体",
-            "opName": "12M33机体OP050",
-            "machineName": "锡根",
-            "tray": "p3437",
-            "fixture": "F1118",
-            "toolMachineName": "411#311#407",
-            "toolType": "D6.8/10钻头302650516#D32立铣302175706",
-            "useTime": 120,
-            "startTime": "2022-07-15 10:26:00",
-            "endTime": "2022-07-15 12:26:00",
-            "staticTime": "20220715",
-            "state": 0
-          },
-          {
-            "orderNO": "2022051021330739627200001",
-            "planNO": "2022051021330739627200001",
-            "productName": "12M33机体",
-            "opName": "12M33机体OP060",
-            "machineName": "试漏设备",
-            "tray": "p3455",
-            "fixture": "F1118",
-            "toolMachineName": "nan",
-            "toolType": "",
-            "useTime": 156,
-            "startTime": "2022-07-15 12:26:00",
-            "endTime": "2022-07-15 15:02:00",
-            "staticTime": "20220715",
-            "state": 1
-          },
-          {
-            "orderNO": "2022051021330739627200001",
-            "planNO": "2022051021330739627200001",
-            "productName": "12M33机体",
-            "opName": "12M33机体OP070",
-            "machineName": "清洗机",
-            "tray": "p1477",
-            "fixture": "F1118",
-            "toolMachineName": "nan",
-            "toolType": "",
-            "useTime": 138,
-            "startTime": "2022-07-15 19:00:00",
-            "endTime": "2022-07-15 21:18:00",
-            "staticTime": "20220715",
-            "state": 1
-          },
-          {
-            "orderNO": "2022051021330739627200001",
-            "planNO": "2022051021330739627200001",
-            "productName": "12M33机体",
-            "opName": "12M33机体OP080",
-            "machineName": "英赛",
-            "tray": "p3280",
-            "fixture": "F1118",
-            "toolMachineName": "  T081101 #T089#T015",
-            "toolType": "D35精铰303161159#D63铣刀LNGX130708#D100铣刀LNGX130708R",
-            "useTime": 159,
-            "startTime": "2022-07-15 21:18:00",
-            "endTime": "2022-07-15 23:57:00",
-            "staticTime": "20220715",
-            "state": 2
-          },
-          {
-            "orderNO": "2022051021330742024300002",
-            "planNO": "2022051021330742024300002",
-            "productName": "8M33机体",
-            "opName": "8M33机体OP010",
-            "machineName": "英赛",
-            "tray": "p1514",
-            "fixture": "F2430",
-            "toolMachineName": "T160330#T20331002",
-            "toolType": "D20枪钻D20.02*805#45度倒角刀D30-50-120",
-            "useTime": 110,
-            "startTime": "2022-07-15 23:57:00",
-            "endTime": "2022-07-16 01:47:00",
-            "staticTime": "20220716",
-            "state": 2
-          },
-          {
-            "orderNO": "2022051021330742024300002",
-            "planNO": "2022051021330742024300002",
-            "productName": "8M33机体",
-            "opName": "8M33机体OP020",
-            "machineName": "英赛",
-            "tray": "p1514",
-            "fixture": "F2430",
-            "toolMachineName": "M204002#M204005",
-            "toolType": "D171粗镗ccMt120408#D183粗镗ccMt120408",
-            "useTime": 47,
-            "startTime": "2022-07-16 01:47:00",
-            "endTime": "2022-07-16 02:34:00",
-            "staticTime": "20220716",
-            "state": 2
-          },
-          {
-            "orderNO": "2022051021330742024300002",
-            "planNO": "2022051021330742024300002",
-            "productName": "8M33机体",
-            "opName": "8M33机体OP030",
-            "machineName": "试漏设备",
-            "tray": "p3455",
-            "fixture": "F2430",
-            "toolMachineName": "nan",
-            "toolType": "",
-            "useTime": 139,
-            "startTime": "2022-07-16 02:34:00",
-            "endTime": "2022-07-16 04:53:00",
-            "staticTime": "20220716",
-            "state": 2
-          },
-          {
-            "orderNO": "2022051021330742024300002",
-            "planNO": "2022051021330742024300002",
-            "productName": "8M33机体",
-            "opName": "8M33机体OP050",
-            "machineName": "清洗机",
-            "tray": "p2517",
-            "fixture": "F2430",
-            "toolMachineName": "nan",
-            "toolType": "",
-            "useTime": 120,
-            "startTime": "2022-07-16 04:53:00",
-            "endTime": "2022-07-16 06:53:00",
-            "staticTime": "20220716",
-            "state": 2
-          }
-        ],
-        "faultyMachine": {
-          "英赛2号": 60,
-          "铣车五轴1号": 120,
-          "10000-4": 60
-        }
-      } */
+      /*  const obj = {
+         "taskId": "91123fbf-c235-4ebf-8c00-a5ff584ff2f4",
+         "scheduleTarget": "6",
+         "scheduleCycle": "6",
+         "orderDetail": [
+           {
+             "planNO": "2022051021330739627200001",
+             "productName": "12M33机体",
+             "productNum": 1,
+             "planType": "产品加工",
+             "planLevel": 0,
+             "planStart": "2022-05-10",
+             "planEnd": "2022-05-16"
+           },
+           {
+             "planNO": "2022051021330742024300002",
+             "productName": "8M33机体",
+             "productNum": 1,
+             "planType": "产品加工",
+             "planLevel": 2,
+             "planStart": "2022-05-10",
+             "planEnd": "2022-05-12"
+           },
+           {
+             "planNO": "2022051021330742123900003",
+             "productName": "WP3H机体",
+             "productNum": 1,
+             "planType": "产品加工",
+             "planLevel": 2,
+             "planStart": "2022-05-10",
+             "planEnd": "2022-05-12"
+           }
+         ],
+         "rescheduleDetail": [
+           {
+             "orderNO": "2022051021330739627200001",
+             "planNO": "2022051021330739627200001",
+             "productName": "12M33机体",
+             "opName": "12M33机体OP020",
+             "machineName": "英赛",
+             "tray": "p1514",
+             "fixture": "F3725",
+             "toolMachineName": "T151#T01006",
+             "toolType": "D160粗铣SNGX1205ANN#D215铣刀45420",
+             "useTime": 146,
+             "startTime": "2022-07-15 08:00:00",
+             "endTime": "2022-07-15 10:26:00",
+             "staticTime": "20220715",
+             "state": 0
+           },
+           {
+             "orderNO": "2022051021330742123900003",
+             "planNO": "2022051021330742123900003",
+             "productName": "WP3H机体",
+             "opName": "WP3H机体OP010",
+             "machineName": "10000-1",
+             "tray": "p3200",
+             "fixture": "F1529",
+             "toolMachineName": "T31003",
+             "toolType": "D30立铣刀D30-120-165",
+             "useTime": 128,
+             "startTime": "2022-07-15 08:00:00",
+             "endTime": "2022-07-15 10:08:00",
+             "staticTime": "20220715",
+             "state": 0
+           },
+           {
+             "orderNO": "2022051021330739627200001",
+             "planNO": "2022051021330739627200001",
+             "productName": "12M33机体",
+             "opName": "12M33机体OP050",
+             "machineName": "锡根",
+             "tray": "p3437",
+             "fixture": "F1118",
+             "toolMachineName": "411#311#407",
+             "toolType": "D6.8/10钻头302650516#D32立铣302175706",
+             "useTime": 120,
+             "startTime": "2022-07-15 10:26:00",
+             "endTime": "2022-07-15 12:26:00",
+             "staticTime": "20220715",
+             "state": 0
+           },
+           {
+             "orderNO": "2022051021330739627200001",
+             "planNO": "2022051021330739627200001",
+             "productName": "12M33机体",
+             "opName": "12M33机体OP060",
+             "machineName": "试漏设备",
+             "tray": "p3455",
+             "fixture": "F1118",
+             "toolMachineName": "nan",
+             "toolType": "",
+             "useTime": 156,
+             "startTime": "2022-07-15 12:26:00",
+             "endTime": "2022-07-15 15:02:00",
+             "staticTime": "20220715",
+             "state": 1
+           },
+           {
+             "orderNO": "2022051021330739627200001",
+             "planNO": "2022051021330739627200001",
+             "productName": "12M33机体",
+             "opName": "12M33机体OP070",
+             "machineName": "清洗机",
+             "tray": "p1477",
+             "fixture": "F1118",
+             "toolMachineName": "nan",
+             "toolType": "",
+             "useTime": 138,
+             "startTime": "2022-07-15 19:00:00",
+             "endTime": "2022-07-15 21:18:00",
+             "staticTime": "20220715",
+             "state": 1
+           },
+           {
+             "orderNO": "2022051021330739627200001",
+             "planNO": "2022051021330739627200001",
+             "productName": "12M33机体",
+             "opName": "12M33机体OP080",
+             "machineName": "英赛",
+             "tray": "p3280",
+             "fixture": "F1118",
+             "toolMachineName": "  T081101 #T089#T015",
+             "toolType": "D35精铰303161159#D63铣刀LNGX130708#D100铣刀LNGX130708R",
+             "useTime": 159,
+             "startTime": "2022-07-15 21:18:00",
+             "endTime": "2022-07-15 23:57:00",
+             "staticTime": "20220715",
+             "state": 2
+           },
+           {
+             "orderNO": "2022051021330742024300002",
+             "planNO": "2022051021330742024300002",
+             "productName": "8M33机体",
+             "opName": "8M33机体OP010",
+             "machineName": "英赛",
+             "tray": "p1514",
+             "fixture": "F2430",
+             "toolMachineName": "T160330#T20331002",
+             "toolType": "D20枪钻D20.02*805#45度倒角刀D30-50-120",
+             "useTime": 110,
+             "startTime": "2022-07-15 23:57:00",
+             "endTime": "2022-07-16 01:47:00",
+             "staticTime": "20220716",
+             "state": 2
+           },
+           {
+             "orderNO": "2022051021330742024300002",
+             "planNO": "2022051021330742024300002",
+             "productName": "8M33机体",
+             "opName": "8M33机体OP020",
+             "machineName": "英赛",
+             "tray": "p1514",
+             "fixture": "F2430",
+             "toolMachineName": "M204002#M204005",
+             "toolType": "D171粗镗ccMt120408#D183粗镗ccMt120408",
+             "useTime": 47,
+             "startTime": "2022-07-16 01:47:00",
+             "endTime": "2022-07-16 02:34:00",
+             "staticTime": "20220716",
+             "state": 2
+           },
+           {
+             "orderNO": "2022051021330742024300002",
+             "planNO": "2022051021330742024300002",
+             "productName": "8M33机体",
+             "opName": "8M33机体OP030",
+             "machineName": "试漏设备",
+             "tray": "p3455",
+             "fixture": "F2430",
+             "toolMachineName": "nan",
+             "toolType": "",
+             "useTime": 139,
+             "startTime": "2022-07-16 02:34:00",
+             "endTime": "2022-07-16 04:53:00",
+             "staticTime": "20220716",
+             "state": 2
+           },
+           {
+             "orderNO": "2022051021330742024300002",
+             "planNO": "2022051021330742024300002",
+             "productName": "8M33机体",
+             "opName": "8M33机体OP050",
+             "machineName": "清洗机",
+             "tray": "p2517",
+             "fixture": "F2430",
+             "toolMachineName": "nan",
+             "toolType": "",
+             "useTime": 120,
+             "startTime": "2022-07-16 04:53:00",
+             "endTime": "2022-07-16 06:53:00",
+             "staticTime": "20220716",
+             "state": 2
+           }
+         ],
+         "faultyMachine": {
+           "英赛2号": 60,
+           "铣车五轴1号": 120,
+           "10000-4": 60
+         }
+       } */
       getRescheduling(obj).then(res => {
         setSpinFlag(false);
         setOverallFlag(false);
@@ -657,11 +663,13 @@ const Home = function (props) {
   useEffect(() => {
     loadData();
   }, [])
-  const closeModalLeft = () => {
-    modalFlagLeftRef.current.style.display = 'none';
+  const closeModalLeft = async () => {
+    await setModalFlagLeft(false)
+    // modalFlagLeftRef.current.style.display = 'none';
   }
-  const closeModalRight = () => {
-    modalFlagRightRef.current.style.display = 'none';
+  const closeModalRight =async () => {
+    await setModalFlagRight(false)
+    // modalFlagRightRef.current.style.display = 'none';
   }
   return <div className='wrap'>
     <div className='spin-div' style={{ display: spinFlag ? 'block' : 'none' }}>
@@ -720,51 +728,8 @@ const Home = function (props) {
       <div className='workshop-pic' onClick={() => {
         clickMoal();
       }}>
-        <div className='left-modal' ref={modalFlagLeftRef} style={{ display: modalFlagLeft ? 'block' : 'none' }}>
-          <p className='close' onClick={() => { closeModalLeft() }}>×</p>
-          <div>
-            <p><span>[设备报警]</span><span>海科特-1</span></p>
-            <p><span>故障类型:</span><span>切削液惨漏</span></p>
-          </div>
-          <div>
-            <div>
-              <p>故障详情:</p>
-              <p>订单1008647828/13D配油盘OP010中断</p>
-            </div>
-            <div>
-              <p>故障时间:</p>
-              <p>2020-01-04  2:00 p.m.v</p>
-            </div>
-          </div>
-          <div>
-            <div>
-              <p>预计维修时间</p>
-              <p>
-                {
-                  fixList.map((item, index) => {
-                    return <span key={index} className={item.flag ? 'span-active' : 'span'} onClick={() => { clickFix(item.name) }}>{item.name}</span>
-                  })
-                }
-              </p>
-            </div>
-            <div>
-              <p>备注</p>
-              <p>123123</p>
-            </div>
-          </div>
-          <div>
-          </div>
-        </div>
-        <div className='right-modal' ref={modalFlagRightRef} style={{ display: modalFlagRight ? 'block' : 'none' }}>
-          <span className='close' onClick={() => { closeModalRight() }}>×</span>
-          <div className='content'>
-            <p><span>测漏设备</span><span>机械手6关节漏油</span></p>
-            <p><span>推荐维修方案</span><span>重新固定，加关节油</span></p>
-            <p><span>推荐维修记录</span><span>2022/5/13 更换单向阀</span></p>
-            <p><span>备件型号与库存</span><span>无</span></p>
-            <p><span>设备电气图纸</span><span>暂无</span></p>
-          </div>
-        </div>
+        <LeftModal fixList={fixList} modalFlagLeft={modalFlagLeft} clickFix={clickFix} ref={modalFlagLeftRef} closeModalLeft={closeModalLeft} />
+        <RightModal ref={modalFlagRightRef} modalFlagRight={modalFlagRight} closeModalRight={closeModalRight} />
       </div>
     </div>
     <div className='three-bottom'>
