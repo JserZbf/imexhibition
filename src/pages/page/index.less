@@ -1,6 +1,6 @@
 .wrap {
-  width: 2360px;
-  height: 1640px;
+  width: 2560px;
+  height: 1600px;
   background: url('./img/total-background.png') no-repeat;
   background-size: 100% 100%;
   position: relative;
@@ -593,7 +593,16 @@
         left: -26%;
         top: -80%;
 
-        >div:nth-child(1) {
+        .close {
+          position: absolute;
+          right: 6%;
+          top: 0%;
+          font-size: 64px;
+          color: #15E8FF;
+          cursor: pointer;
+        }
+
+        >div:nth-child(2) {
           width: 100%;
           height: 80px;
           font-size: 21px;
@@ -608,7 +617,7 @@
           padding: 0% 10%;
         }
 
-        >div:nth-child(2) {
+        >div:nth-child(3) {
           width: 100%;
           height: 330px;
           display: flex;
@@ -639,7 +648,7 @@
           }
         }
 
-        >div:nth-child(3) {
+        >div:nth-child(4) {
           width: 100%;
           position: absolute;
           left: 21%;
@@ -717,61 +726,72 @@
         top: -80%;
         overflow: hidden;
 
-        >p {
+        .close {
           position: absolute;
-          font-size: 21px;
-          font-family: PingFang SC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #FFFFFF;
-          width: 100%;
-        }
-
-        >p:nth-child(1) {
-          font-size: 21px;
-          font-family: PingFang SC-Bold, PingFang SC;
-          font-weight: bold;
+          right: 6%;
+          top: 0%;
+          font-size: 64px;
           color: #15E8FF;
-          left: 19%;
-          top: 19%;
-
-          >span:nth-child(2) {
-            margin-left: 35%;
-          }
+          cursor: pointer;
         }
 
-        >p:nth-child(2) {
-          left: 19%;
-          top: 32%;
-
-          >span:nth-child(2) {
-            margin-left: 30%;
+        .content {
+          >p {
+            position: absolute;
+            font-size: 21px;
+            font-family: PingFang SC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #FFFFFF;
+            width: 100%;
           }
-        }
 
-        >p:nth-child(3) {
-          left: 19%;
-          top: 44%;
+          >p:nth-child(1) {
+            font-size: 21px;
+            font-family: PingFang SC-Bold, PingFang SC;
+            font-weight: bold;
+            color: #15E8FF;
+            left: 19%;
+            top: 19%;
 
-          >span:nth-child(2) {
-            margin-left: 30%;
+            >span:nth-child(2) {
+              margin-left: 35%;
+            }
           }
-        }
 
-        >p:nth-child(4) {
-          left: 19%;
-          top: 56%;
+          >p:nth-child(2) {
+            left: 19%;
+            top: 32%;
 
-          >span:nth-child(2) {
-            margin-left: 28%;
+            >span:nth-child(2) {
+              margin-left: 30%;
+            }
           }
-        }
 
-        >p:nth-child(5) {
-          left: 19%;
-          top: 68%;
+          >p:nth-child(3) {
+            left: 19%;
+            top: 44%;
 
-          >span:nth-child(2) {
-            margin-left: 30%;
+            >span:nth-child(2) {
+              margin-left: 30%;
+            }
+          }
+
+          >p:nth-child(4) {
+            left: 19%;
+            top: 56%;
+
+            >span:nth-child(2) {
+              margin-left: 28%;
+            }
+          }
+
+          >p:nth-child(5) {
+            left: 19%;
+            top: 68%;
+
+            >span:nth-child(2) {
+              margin-left: 30%;
+            }
           }
         }
       }
@@ -787,6 +807,7 @@
     height: 300px;
     margin-top: 3.5%;
     text-align: center;
+
     >div {
       width: 202px;
       height: 202px;
