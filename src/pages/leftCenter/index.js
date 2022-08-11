@@ -201,7 +201,7 @@ const leftCenter = function (props) {
   const [inSideOrderDetailTimeList, setInSideOrderDetailTimeList] = useState([]);
   useEffect(() => {
     if (leftEchart.length) {
-      roll(100);
+      // roll(100);
     }
     return () => {
       clearInterval(timers);
@@ -308,42 +308,144 @@ const leftCenter = function (props) {
         item.leftEchartsPieInfoOne.schedualStart &&
         item.leftEchartsPieInfoOne.schedualEnd
       ) {
-        const initArr = [
+        // const initArr = [
+        //   {
+        //     name: '计划开始时间',
+        //     value: moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
+        //   },
+        //   {
+        //     name: '最晚结束时间',
+        //     value: moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD'),
+        //   },
+        //   {
+        //     name: '排产起始时间',
+        //     value: moment(item.leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
+        //   },
+        //   {
+        //     name: '排产结束时间',
+        //     value: moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
+        //   },
+        // ];
+        // const cenArr = compareFN(initArr, 'value');
+        // if (compareTime1(cenArr[0].value, cenArr[1].value)) {
+        //   item.leftEchartsPieInfoOneCurrent = 0;
+        // } else if (compareTime1(cenArr[1].value, cenArr[2].value)) {
+        //   item.leftEchartsPieInfoOneCurrent = 1;
+        // } else if (compareTime1(cenArr[2].value, cenArr[3].value)) {
+        //   item.leftEchartsPieInfoOneCurrent = 2;
+        // } else {
+        //   item.leftEchartsPieInfoOneCurrent = 3;
+        // }
+        // item.leftEchartsPieInfoOneSteps = cenArr;
+        // const initArr = [
+        //   {
+        //     name: '计划开始时间',
+        //     value: moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
+        //   },
+        //   {
+        //     name: '最晚结束时间',
+        //     value: moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD'),
+        //   },
+        //   {
+        //     name: '排产起始时间',
+        //     value: moment(item.leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
+        //   },
+        //   {
+        //     name: '排产结束时间',
+        //     value: moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
+        //   },
+        // ];
+        var planStartValue = moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD');
+        var planEndValue = moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD');
+        var schedualStartValue = moment(item.leftEchartsPieInfoOne.schedualStart).format(
+          'YYYY-MM-DD',
+        );
+        var schedualEndValue = moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD');
+
+        var initArr = [
+          //map if判断status
           {
-            name: '计划开始时间',
-            value: moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
+            value: GetDateStr(1),
+            color: [],
+            status: [],
+            index: null,
           },
           {
-            name: '最晚结束时间',
-            value: moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD'),
+            value: GetDateStr(2),
+            color: [],
+            status: [],
+            index: null,
+          },
+
+          {
+            value: GetDateStr(3),
+            color: [],
+            status: [],
+            index: null,
           },
           {
-            name: '排产起始时间',
-            value: moment(item.leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
+            value: GetDateStr(4),
+            color: [],
+            status: [],
+            index: null,
           },
           {
-            name: '排产结束时间',
-            value: moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
+            value: GetDateStr(5),
+            color: [],
+            status: [],
+            index: null,
+          },
+          {
+            value: GetDateStr(6),
+            color: [],
+            status: [],
+            index: null,
+          },
+          {
+            value: GetDateStr(7),
+            color: [],
+            status: [],
+            index: null,
+          },
+          {
+            value: GetDateStr(8),
+            color: [],
+            status: [],
+            index: null,
           },
         ];
-        const cenArr = compareFN(initArr, 'value');
-        if (compareTime1(cenArr[0].value, cenArr[1].value)) {
-          item.leftEchartsPieInfoOneCurrent = 0;
-        } else if (compareTime1(cenArr[1].value, cenArr[2].value)) {
-          item.leftEchartsPieInfoOneCurrent = 1;
-        } else if (compareTime1(cenArr[2].value, cenArr[3].value)) {
-          item.leftEchartsPieInfoOneCurrent = 2;
-        } else {
-          item.leftEchartsPieInfoOneCurrent = 3;
-        }
-        item.leftEchartsPieInfoOneSteps = cenArr;
-        // var stepsArr = [1, 2, 3, 4, 5, 6, 7, 8]
-        // item.leftEchartsPieInfoOneSteps = stepsArr.map(item => {
-        //   return { name: '', value: GetDateStr(item) }
-        // })
+        initArr.forEach((item, index) => {
+          if (item.value == planStartValue) {
+            item.color.push('skyblue');
+            item.status.push('start');
+            item.index = index;
+          }
+          if (item.value == planEndValue) {
+            item.color.push('skyblue');
+            item.status.push('end');
+            item.index = index;
+          }
+          if (item.value == schedualStartValue) {
+            item.color.push('green');
+            item.status.push('start');
+          }
+          if (item.value == schedualEndValue) {
+            item.color.push('green');
+            item.status.push('end');
+          }
+        });
+        console.log(
+          planStartValue,
+          planEndValue,
+          schedualStartValue,
+          schedualEndValue,
+          'planStartValue-schedualEndValue',
+        );
+        console.log(initArr, 'initArrCen----initArrCen');
+        item.leftEchartsPieInfoOneSteps = initArr;
       }
     });
-  }, [leftEchart, currentTime]);
+  }, [leftEchart /* , currentTime */]);
   const columns = [
     {
       title: '序号',
@@ -1152,7 +1254,7 @@ const leftCenter = function (props) {
             <ul id="leftEchart1" className="leftEchart1">
               {leftEchart.map((item, index) => {
                 return (
-                  <li>
+                  <li key={index}>
                     <ReactEchartsCom option={item.leftEchartsPieOne} />
                     <div>
                       <ul>
@@ -1187,15 +1289,42 @@ const leftCenter = function (props) {
                           </span>
                         </li>
                       </ul>
-                      <Steps
+                      {/* <Steps
                         className="steps"
-                        current={item.leftEchartsPieInfoOneCurrent}
+                        // current={item.leftEchartsPieInfoOneCurrent}
                         progressDot={customDotOne}
                       >
                         {item.leftEchartsPieInfoOneSteps.map((item) => {
-                          return <Step title={item.name} description={item.value} />;
+                          return <Step title={item.name} description={item.value} status={item.status} />;
                         })}
-                      </Steps>
+                      </Steps> */}
+                      <ul className="steps-div">
+                        {item.leftEchartsPieInfoOneSteps.map((item, index) => {
+                          return (
+                            <li key={index}>
+                              <span
+                                style={{
+                                  background: item.color.length ? item.color[0] : '#f0f0f0',
+                                }}
+                              ></span>
+                              <span
+                                style={{
+                                  background:
+                                    item.color.length && item.status[0] == 'start'
+                                      ? item.color[0]
+                                      : '#f0f0f0',
+                                  display: index === 7 ? 'none' : 'block',
+                                }}
+                              ></span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <ul className="steps-div-date">
+                        {item.leftEchartsPieInfoOneSteps.map((item, index) => {
+                          return <li key={index}>{item.value}</li>;
+                        })}
+                      </ul>
                     </div>
                   </li>
                 );

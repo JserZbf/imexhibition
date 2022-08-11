@@ -317,8 +317,11 @@ const Gantt = ({ orderScheduleDetail }) => {
                   coord: [moment().valueOf(), yData[0]],
                 },
                 {
-                  coord: [moment().valueOf(), yData.at(-1)],
+                  coord: [moment().valueOf(), yData],
                 },
+                // {
+                //   coord: [moment().valueOf(), yData.at(-1)],
+                // },
               ],
             ],
           },

@@ -179,126 +179,126 @@ const Home = function (props) {
       }
     });
   }, [count]);
-  useEffect(() => {
-    //console.log(orderCardDetail,'orderCardDetail-currentTime')
-    tranOrderCardDetail(orderCardDetail);
-  }, [currentTime]);
   /*   useEffect(() => {
-      //  getAllData(obj).then((res) => {
-      // console.log(res, 'res-last-dead');
-      const res = mockData;
-      setAllData(res);
-      setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
-      setOutSideScheduleCycle(res.scheduleCycle);
-      setOutSideSchedulePattern(res.schedulePattern);
-      setOutSideScheduleTarget(res.scheduleTarget);
-      // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-      const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
-      const arrCen = oneCen.map((item, index) => {
-        if (
-          item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
-          item.supplyTime == moment(new Date()).format('YYYY/M/D')
-        ) {
-          return {
-            ...item,
-            flagBool: true,
-          };
-        } else {
-          return {
-            ...item,
-            flagBool: false,
-          };
-        }
-      });
-      setMaterialTypeSixList(arrCen); //物料类型六个卡片
-      setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
-      setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-      const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-        return Number(-10000 * item);
-      });
-      var bigValueLineCen = [];
-      for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
-        bigValueLineCen.push(
-          Number(
-            -10000 *
-            res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
-              return a - b;
-            })[0],
-          ),
-        );
-      }
-      //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
-      setBigValueLine(bigValueLineCen);
-      setDiffAlgorithmY(cenY); //不同算法对比信息图
-      setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
-      setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
-      setFourWeekFinishRateY(
-        res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
-          return Number(100 * item);
-        }),
-      );
-      setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
-      setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
-      setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
-      setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
-      setOrderCardDetail(res.orderCardDetail);
-      setDeviceCardDetail(res.deviceCardDetail);
-      tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
-      tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
-      setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
-      // var chartDom = document.getElementById('main');
-      // myChart = echarts.init(chartDom);
-      axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-        // console.log(rawData, 'rawData______________', ROOT_PATH);
-        _rawData = rawData.data;
-        setGanTeData(res.orderScheduleDetail);
-        const cen0 = res.orderScheduleDetail.map((item, index) => {
-          return {
-            ...item,
-            yValue: index,
-          };
-        });
-        var colorList = removeDuplicateColor(cen0).map((item, index) => {
-          return {
-            productName: item.productName,
-            color: color16(),
-          };
-        });
-        var cen1T = []
-        res.orderScheduleDetail.forEach((item, index) => {
-          colorList.forEach((item1, index1) => {
-            if (item.productName == item1.productName) {
-              cen1T.push({ ...item, currentColor: item1.color, yValue: index })
-            }
-          })
-        });
-        var cen2 = []
-        res.orderScheduleDetail.forEach((item, index) => {
-          colorList.forEach((item1, index1) => {
-            if (item.productName == item1.productName) {
-              cen2.push({ ...item, currentColor: item1.color, yValue: index })
-            }
-          })
-        });
-        var cen3 = []
-        res.orderScheduleDetail.forEach((item, index) => {
-          colorList.forEach((item1, index1) => {
-            if (item.productName == item1.productName) {
-              cen3.push({ ...item, currentColor: item1.color, yValue: index })
-            }
-          })
-        });
-        var cen4 = []
-        res.orderScheduleDetail.forEach((item, index) => {
-          colorList.forEach((item1, index1) => {
-            if (item.productName == item1.productName) {
-              cen4.push({ ...item, currentColor: item1.color, yValue: index })
-            }
-          })
-        });
-        // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
-      });
-    }, []); */
+      //console.log(orderCardDetail,'orderCardDetail-currentTime')
+     // tranOrderCardDetail(orderCardDetail);
+    }, [currentTime]); */
+  //   useEffect(() => {
+  //     //  getAllData(obj).then((res) => {
+  //     // console.log(res, 'res-last-dead');
+  //     const res = mockData;
+  //     setAllData(res);
+  //     setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+  //     setOutSideScheduleCycle(res.scheduleCycle);
+  //     setOutSideSchedulePattern(res.schedulePattern);
+  //     setOutSideScheduleTarget(res.scheduleTarget);
+  //     // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
+  //     const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
+  //     const arrCen = oneCen.map((item, index) => {
+  //       if (
+  //         item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
+  //         item.supplyTime == moment(new Date()).format('YYYY/M/D')
+  //       ) {
+  //         return {
+  //           ...item,
+  //           flagBool: true,
+  //         };
+  //       } else {
+  //         return {
+  //           ...item,
+  //           flagBool: false,
+  //         };
+  //       }
+  //     });
+  //     setMaterialTypeSixList(arrCen); //物料类型六个卡片
+  //     setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+  //     setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+  //     const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+  //       return Number(-10000 * item);
+  //     });
+  //     var bigValueLineCen = [];
+  //     for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
+  //       bigValueLineCen.push(
+  //         Number(
+  //           -10000 *
+  //           res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
+  //             return a - b;
+  //           })[0],
+  //         ),
+  //       );
+  //     }
+  //     //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
+  //     setBigValueLine(bigValueLineCen);
+  //     setDiffAlgorithmY(cenY); //不同算法对比信息图
+  //     setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+  //     setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
+  //     setFourWeekFinishRateY(
+  //       res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
+  //         return Number(100 * item);
+  //       }),
+  //     );
+  //     setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+  //     setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+  //     setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+  //     setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+  //     setOrderCardDetail(res.orderCardDetail);
+  //     setDeviceCardDetail(res.deviceCardDetail);
+  //     tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+  //     tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+  //     setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+  //     // var chartDom = document.getElementById('main');
+  //     // myChart = echarts.init(chartDom);
+  //   //  axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
+  //       // console.log(rawData, 'rawData______________', ROOT_PATH);
+  //     //  _rawData = rawData.data;
+  //      // setGanTeData(res.orderScheduleDetail);
+  //       const cen0 = res.orderScheduleDetail.map((item, index) => {
+  //         return {
+  //           ...item,
+  //           yValue: index,
+  //         };
+  //       });
+  //     /*   var colorList = removeDuplicateColor(cen0).map((item, index) => {
+  //         return {
+  //           productName: item.productName,
+  //           color: color16(),
+  //         };
+  //       });
+  //       var cen1T = []
+  //       res.orderScheduleDetail.forEach((item, index) => {
+  //         colorList.forEach((item1, index1) => {
+  //           if (item.productName == item1.productName) {
+  //             cen1T.push({ ...item, currentColor: item1.color, yValue: index })
+  //           }
+  //         })
+  //       });
+  //       var cen2 = []
+  //       res.orderScheduleDetail.forEach((item, index) => {
+  //         colorList.forEach((item1, index1) => {
+  //           if (item.productName == item1.productName) {
+  //             cen2.push({ ...item, currentColor: item1.color, yValue: index })
+  //           }
+  //         })
+  //       });
+  //       var cen3 = []
+  //       res.orderScheduleDetail.forEach((item, index) => {
+  //         colorList.forEach((item1, index1) => {
+  //           if (item.productName == item1.productName) {
+  //             cen3.push({ ...item, currentColor: item1.color, yValue: index })
+  //           }
+  //         })
+  //       });
+  //       var cen4 = []
+  //       res.orderScheduleDetail.forEach((item, index) => {
+  //         colorList.forEach((item1, index1) => {
+  //           if (item.productName == item1.productName) {
+  //             cen4.push({ ...item, currentColor: item1.color, yValue: index })
+  //           }
+  //         })
+  //       }); */
+  //       // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
+  // //    });
+  //   }, []);
   const tick = (number) => {
     setCount(number);
   };
@@ -406,6 +406,7 @@ const Home = function (props) {
   };
   const tranOrderCardDetail = (data) => {
     const totalObj = data.map((item, index) => {
+      console.log(tranData(item)[0], 'tranData(item)[0]----tranData(item)[0]');
       return {
         leftEchartsPieInfoOne: item,
         leftEchartsPieOne: {
