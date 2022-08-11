@@ -4,8 +4,6 @@ import { Table, DatePicker, InputNumber, message, Spin, Alert } from 'antd';
 import moment from 'moment';
 import './index.less'
 import { getOrderData, getEditStart, getRescheduling } from 'services/home/home';
-import LeftModal from './Modal/leftModal'
-import RightModal from './Modal/rightModal'
 const Home = function (props) {
   const dateFormat = 'YYYY-MM-DD';
   // const [value, setValue] = useState(1);
@@ -355,7 +353,7 @@ const Home = function (props) {
     }
     getEditStart(objStart).then(res => {
       setOverallFlag(false);
-      setSpinFlag(false)
+      setSpinFlag(false);
       if (res.code == 200) {
         setRescheduleDetail(res.orderScheduleDetail);
         setOrderDetail(res.orderDetail)
@@ -375,6 +373,9 @@ const Home = function (props) {
           },
         })
       }
+    }).catch(err=>{
+      setOverallFlag(false);
+      setSpinFlag(false)
     })
   }
   const startRest = () => {
@@ -638,6 +639,9 @@ const Home = function (props) {
             },
           })
         }
+      }).catch(err=>{
+        setOverallFlag(false);
+        setSpinFlag(false)
       })
     }
 
@@ -663,13 +667,13 @@ const Home = function (props) {
   useEffect(() => {
     loadData();
   }, [])
-  const closeModalLeft = async () => {
-    await setModalFlagLeft(false)
-    // modalFlagLeftRef.current.style.display = 'none';
+  const closeModalLeft = () => {
+    setModalFlagLeft(false)
+  //  modalFlagLeftRef.current.style.display = 'none';
   }
-  const closeModalRight =async () => {
-    await setModalFlagRight(false)
-    // modalFlagRightRef.current.style.display = 'none';
+  const closeModalRight = () => {
+    setModalFlagRight(false)
+   //modalFlagRightRef.current.style.display = 'none';
   }
   return <div className='wrap'>
     <div className='spin-div' style={{ display: spinFlag ? 'block' : 'none' }}>
@@ -723,13 +727,56 @@ const Home = function (props) {
       </div>
       <div className='workshop-mess'>
         <p>车间俯视图</p>
-        <p>点击设备模拟</p>
+        <p>点击模拟设备故障</p>
       </div>
       <div className='workshop-pic' onClick={() => {
         clickMoal();
       }}>
-        <LeftModal fixList={fixList} modalFlagLeft={modalFlagLeft} clickFix={clickFix} ref={modalFlagLeftRef} closeModalLeft={closeModalLeft} />
-        <RightModal ref={modalFlagRightRef} modalFlagRight={modalFlagRight} closeModalRight={closeModalRight} />
+        <div className={modalFlagLeft ? 'left-modal' : 'left-modal-none'} ref={modalFlagLeftRef}>
+          <p className='close' onClick={() => { closeModalLeft() }}>×</p>
+          <div>
+            <p><span>[设备报警]</span><span>海科特-1</span></p>
+            <p><span>故障类型:</span><span>切削液惨漏</span></p>
+          </div>
+          <div>
+            <div>
+              <p>故障详情:</p>
+              <p>订单1008647828/13D配油盘OP010中断</p>
+            </div>
+            <div>
+              <p>故障时间:</p>
+              <p>2020-01-04  2:00 p.m.v</p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <p>预计维修时间</p>
+              <p>
+                {
+                  fixList.map((item, index) => {
+                    return <span key={index} className={item.flag ? 'span-active' : 'span'} onClick={() => { clickFix(item.name) }}>{item.name}</span>
+                  })
+                }
+              </p>
+            </div>
+            <div>
+              <p>备注</p>
+              <p>123123</p>
+            </div>
+          </div>
+          <div>
+          </div>
+        </div>
+        <div className={modalFlagRight ? 'right-modal' : 'right-modal-none'} ref={modalFlagRightRef}>
+          <span className='close' onClick={() => { closeModalRight() }}>×</span>
+          <div className='content'>
+            <p><span>测漏设备</span><span>机械手6关节漏油</span></p>
+            <p><span>推荐维修方案</span><span>重新固定，加关节油</span></p>
+            <p><span>推荐维修记录</span><span>2022/5/13 更换单向阀</span></p>
+            <p><span>备件型号与库存</span><span>无</span></p>
+            <p><span>设备电气图纸</span><span>暂无</span></p>
+          </div>
+        </div>
       </div>
     </div>
     <div className='three-bottom'>

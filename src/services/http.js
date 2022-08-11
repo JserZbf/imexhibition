@@ -104,7 +104,18 @@ export class Http {
     const error = new Error(response.statusText || codeMessage[response.status]);
     error.status = response.status;
     error.data = response;
+   if(response.status!=504){
     throw error;
+   }else{
+     message.warn({
+      content: '网关超时',
+      style: {
+        fontSize: 22,
+        fontFamily: 'PingFang SC-Regular, PingFang SC'
+      },
+    })
+   }
+   
   }
 
   checkErrCode(dataObj) {

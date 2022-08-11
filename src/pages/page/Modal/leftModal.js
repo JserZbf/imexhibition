@@ -1,9 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useMemo} from 'react';
 import { connect } from 'dva';
 
 const leftModal = function (props) {
-    const { fixList, clickFix, modalFlagLeft,closeModalLeft} = props;
-    return <div className={modalFlagLeft ? 'left-modal' : 'left-modal-none'}>
+    const { fixList, clickFix, modalFlagLeft, closeModalLeft } = props;
+    const aaa=useMemo(() => {
+        console.log(modalFlagLeft, '123123-123123123')
+        return modalFlagLeft;
+    }, [])
+    console.log(aaa,'aaa-aaa')
+    return modalFlagLeft ? <div className='left-modal'>
         <p className='close' onClick={() => { closeModalLeft() }}>×</p>
         <div>
             <p><span>[设备报警]</span><span>海科特-1</span></p>
@@ -37,7 +42,7 @@ const leftModal = function (props) {
         </div>
         <div>
         </div>
-    </div>;
+    </div> : '';
 };
 
 export default connect()(leftModal);
