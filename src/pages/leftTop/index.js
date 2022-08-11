@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import './index.less';
-const LeftTop = function (props) {
+
+const LeftTop = (props) => {
   const { currentTime } = props;
   // const setJumpNumber = (startNum, targetNum, time = 1, selector) => {
   //   let dom = document.querySelector(selector);
