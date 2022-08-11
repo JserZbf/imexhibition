@@ -4,13 +4,13 @@ import * as echarts from 'echarts/core';
 import moment from 'moment';
 import { groupBy, map, uniq, sortBy, head } from 'lodash-es';
 import styles from './index.less';
-
-const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-const HALF_DAY_MILLISECOND = 43200000; // 12小时毫秒数
-const GANTT_SCROLL_INTERVAL = 5000; // 甘特图滚动定时器间隔
-const MIN_LEGEND_SCROLL_NUM = 26; // 图例最小开启滚动数
-const LEGEND_SCROLL_INTERVAL = 60; // 图例滚动定时器间隔
-const SECOND_SCROLL_HEIGHT = 3; // 图例每秒滚动高度
+import {
+  MOMENT_FORMAT,
+  ONE_DAY_MILLISECOND,
+  MIN_LEGEND_SCROLL_NUM,
+  LEGEND_SCROLL_INTERVAL,
+  SECOND_SCROLL_HEIGHT,
+} from '../constant';
 
 const randomColor = () => {
   let r = Math.floor(Math.random() * 256);
@@ -23,27 +23,39 @@ const randomColor = () => {
   return '#' + color;
 };
 
-const Gantt = ({ orderScheduleDetail }) => {
+const Gantt = ({ orderScheduleDetail, simTime }) => {
   const colorMap = useRef({});
   const legendContainerRef = useRef(null);
   const chartRef = useRef(null);
-  const ganttTimer = useRef(null);
   const legendTimer = useRef(null);
+  const currentZoomData = useRef([]);
 
   const [simulationTime, setSimulationTime] = useState([]);
 
   const init = () => {
     legendTimer?.current && clearTimeout(legendTimer?.current);
-    ganttTimer?.current && clearTimeout(ganttTimer?.current);
   };
 
+  const headDate = useMemo(() => {
+    const { startTime } =
+      head(sortBy(orderScheduleDetail, (d) => moment(d.startTime).valueOf())) ?? {};
+    return moment(startTime).startOf('day');
+  }, [orderScheduleDetail]);
+
   useEffect(() => {
-    init();
-    initSimulationTime();
-    ganttScroll();
-    legendScroll();
+    if (orderScheduleDetail?.length) {
+      init();
+      initSimulationTime();
+      legendScroll();
+    }
     return init;
   }, [orderScheduleDetail]);
+
+  useEffect(() => {
+    if (simTime?.includes('00:00:00') && simTime !== headDate?.format(MOMENT_FORMAT)) {
+      ganttScroll();
+    }
+  }, [simTime]);
 
   const formatPropData = useMemo(() => {
     let yData = [];
@@ -110,50 +122,41 @@ const Gantt = ({ orderScheduleDetail }) => {
     };
   }, [orderScheduleDetail]);
 
-  const getHeadDate = () => {
-    const { startTime } =
-      head(sortBy(orderScheduleDetail, (d) => moment(d.startTime).valueOf())) ?? {};
-    return moment(startTime).hour(8).minute(0).second(0);
-  };
-
   const initSimulationTime = () => {
-    const headTime = getHeadDate();
-    const start = headTime.format(DATE_FORMAT);
-    const end = headTime.add(12, 'hours').format(DATE_FORMAT);
+    const start = headDate.format(MOMENT_FORMAT);
+    const end = moment(headDate).endOf('day').format(MOMENT_FORMAT);
     setSimulationTime([start, end]);
   };
 
   const ganttScroll = () => {
     const chart = chartRef?.current?.getEchartsInstance();
     if (!chart) return;
-    const headTime = getHeadDate();
-    const startTime = headTime.valueOf(); // 滚动的最小日期
-    const endTime = headTime.add(7, 'days').valueOf(); // 滚动的最大日期
-    ganttTimer.current = setTimeout(() => {
-      const option = chart?.getOption() ?? {};
-      const { dataZoom: [zoom] = [] } = option;
-      const { startValue, endValue } = zoom ?? {};
-      if (endValue + HALF_DAY_MILLISECOND > endTime) {
-        const start = headTime.format(DATE_FORMAT);
-        const end = headTime.add(12, 'hours').format(DATE_FORMAT);
-        setSimulationTime([start, end]);
-        chart?.dispatchAction({
-          type: 'dataZoom',
-          startValue: startTime,
-          endValue: startTime + HALF_DAY_MILLISECOND,
-        });
-      } else {
-        const start = moment(startValue + HALF_DAY_MILLISECOND).format(DATE_FORMAT);
-        const end = moment(endValue + HALF_DAY_MILLISECOND).format(DATE_FORMAT);
-        setSimulationTime([start, end]);
-        chart?.dispatchAction({
-          type: 'dataZoom',
-          startValue: startValue + HALF_DAY_MILLISECOND,
-          endValue: endValue + HALF_DAY_MILLISECOND,
-        });
-      }
-      ganttScroll();
-    }, GANTT_SCROLL_INTERVAL);
+    const startTime = headDate.valueOf(); // 滚动的最小日期
+    const endTime = moment(headDate).endOf('day').add(7, 'days').valueOf(); // 滚动的最大日期
+    const option = chart?.getOption() ?? {};
+    const { dataZoom: [zoom] = [] } = option;
+    const { startValue, endValue } = zoom ?? {};
+    if (endValue + ONE_DAY_MILLISECOND > endTime) {
+      const start = headDate.format(MOMENT_FORMAT);
+      const end = moment(headDate).endOf('day').format(MOMENT_FORMAT);
+      setSimulationTime([start, end]);
+      currentZoomData.current = [startTime, moment(headDate).endOf('day').valueOf()];
+      chart?.dispatchAction({
+        type: 'dataZoom',
+        startValue: startTime,
+        endValue: moment(headDate).endOf('day').valueOf(),
+      });
+    } else {
+      const start = moment(startValue + ONE_DAY_MILLISECOND).format(MOMENT_FORMAT);
+      const end = moment(endValue + ONE_DAY_MILLISECOND).format(MOMENT_FORMAT);
+      setSimulationTime([start, end]);
+      currentZoomData.current = [startValue + ONE_DAY_MILLISECOND, endValue + ONE_DAY_MILLISECOND];
+      chart?.dispatchAction({
+        type: 'dataZoom',
+        startValue: startValue + ONE_DAY_MILLISECOND,
+        endValue: endValue + ONE_DAY_MILLISECOND,
+      });
+    }
   };
 
   const legendScroll = () => {
@@ -237,8 +240,8 @@ const Gantt = ({ orderScheduleDetail }) => {
 
   const getOption = useCallback(() => {
     const { formatData, yData } = formatPropData;
-    const nowTime = moment().format(DATE_FORMAT);
-    const startTimeVal = getHeadDate().valueOf();
+    const startTimeVal = headDate.valueOf();
+    const [start, end] = currentZoomData?.current || [];
     return {
       tooltip: {
         formatter: function (params) {
@@ -277,8 +280,8 @@ const Gantt = ({ orderScheduleDetail }) => {
         {
           type: 'inside',
           xAxisIndex: 0,
-          startValue: startTimeVal,
-          endValue: startTimeVal + HALF_DAY_MILLISECOND,
+          startValue: start || startTimeVal,
+          endValue: end || startTimeVal + ONE_DAY_MILLISECOND - 1000,
           zoomLock: true,
           zoomOnMouseWheel: false,
         },
@@ -313,11 +316,12 @@ const Gantt = ({ orderScheduleDetail }) => {
             data: [
               [
                 {
-                  name: nowTime,
-                  coord: [moment().valueOf(), yData[0]],
+                  name: simTime,
+                  coord: [moment(simTime).valueOf(), yData[0]],
                 },
                 {
-                  coord: [moment().valueOf(), yData],
+                  coord: [moment(simTime).valueOf(), yData],
+                  //coord: [moment(simTime).valueOf(), yData.at(-1)],
                 },
                 // {
                 //   coord: [moment().valueOf(), yData.at(-1)],
@@ -340,7 +344,7 @@ const Gantt = ({ orderScheduleDetail }) => {
         },
       ],
     };
-  }, [orderScheduleDetail]);
+  }, [orderScheduleDetail, simTime]);
   const renderLegendItem = () => {
     return formatPropData?.legendData?.map((item) => {
       return (
@@ -357,7 +361,7 @@ const Gantt = ({ orderScheduleDetail }) => {
   return (
     <div className={styles.gantt}>
       <div className={styles.simulationTime}>
-        <span>{simulationTime[0]}-</span>
+        <span>{simulationTime[0]}--</span>
         <span>{simulationTime[1]}</span>
       </div>
       <div className={styles.legendBox} ref={legendContainerRef}>

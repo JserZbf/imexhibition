@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { head, last, sortBy } from 'lodash-es';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less';
@@ -12,6 +13,7 @@ import RightCenter from '../rightCenter/index';
 import RightBottom from '../rightBottom/index';
 import Gantt from './gantt';
 import mockData from './mock.json';
+import { MOMENT_FORMAT, SIM_TIME_STEP, TIMER_INTERVAL } from './constant';
 import { getAllData, getQuery } from 'services/home/home';
 // 添加请求拦截器
 import axios from 'axios';
@@ -27,6 +29,7 @@ axios.interceptors.request.use((config) => {
     headers,
   };
 });
+
 const Home = function (props) {
   const [allData, setAllData] = useState({});
   const [materialTypeSixList, setMaterialTypeSixList] = useState([]);
@@ -58,46 +61,97 @@ const Home = function (props) {
   const [orderScheduleDetail, setOrderScheduleDetail] = useState([]);
   const [currentTime, setCurrentTime] = useState(null);
   const [moniTime, setMoniTime] = useState(null);
-  let number = 0;
+
+  const timerRef = useRef(null);
+  const [simTime, setTime] = useState('');
+
+  const addTime = (startTime, endTime) => {
+    timerRef.current = setTimeout(() => {
+      setTime((prev) => {
+        if (!prev) {
+          return moment(startTime).format(MOMENT_FORMAT);
+        }
+        const newDate = moment(prev).add(SIM_TIME_STEP, 'seconds');
+        const newDateStr = newDate.format(MOMENT_FORMAT);
+        if (newDateStr.includes('00:00:00')) {
+          const end = moment(newDate).endOf('day');
+          filterData(newDate, end);
+        }
+        // 增加后的时间大于结束时间 要从头开始
+        if (newDate?.valueOf() > endTime?.valueOf()) {
+          return moment(startTime).format(MOMENT_FORMAT);
+        }
+        return newDate.format(MOMENT_FORMAT);
+      });
+      addTime(startTime, endTime);
+    }, TIMER_INTERVAL * 1000);
+  };
+
+  // 过滤业务数据
+  // 参数为Moment类型
+  const filterData = (start, end) => {
+    // TODO
+    console.log(1, start.format(MOMENT_FORMAT), '----', end.format(MOMENT_FORMAT));
+  };
+  const initClearTimeout = () => {
+    timerRef?.current && clearTimeout(timerRef?.current);
+  };
+  useEffect(() => {
+    return initClearTimeout;
+  }, []);
+
+  // let number = 0;
   useEffect(() => {
     const timerIDs = setInterval(() => {
-      number = number + 0.1;
-      tick(number);
+      // number = number + 0.1;
+      tick();
     }, 3000);
     return () => {
       clearInterval(timerIDs);
     };
   }, []);
-  let numbers = 0;
-  useEffect(() => {
-    const timerIDS = setInterval(() => {
-      numbers = numbers + 1;
-      ticks(numbers);
-    }, 10000);
-    return () => {
-      clearInterval(timerIDS);
-    };
-  }, []);
-  let moniCount = 0;
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (moniCount > 420) {
-        moniCount = 0;
-      }
-      moniCount = moniCount + 1;
-      setCurrentTime(showLeftTime(moniCount)[0]);
-      setMoniTime(showLeftTime(moniCount)[1]);
-    }, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  // let numbers = 0;
+  // useEffect(() => {
+  //   const timerIDS = setInterval(() => {
+  //     numbers = numbers + 1;
+  //     ticks(numbers);
+  //   }, 10000);
+  //   return () => {
+  //     clearInterval(timerIDS);
+  //   };
+  // }, []);
+  // let moniCount = 0;
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     if (moniCount > 420) {
+  //       moniCount = 0;
+  //     }
+  //     moniCount = moniCount + 1;
+  //     setCurrentTime(showLeftTime(moniCount)[0]);
+  //     setMoniTime(showLeftTime(moniCount)[1]);
+  //   }, 1000);
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, []);
   useEffect(() => {
     const obj = {
       source_code: 'SSS',
     };
     getQuery(obj).then((res) => {
       if (res.code == 200) {
+        initClearTimeout(); // 返回新的排产结果清空之前的定时器
+        const { orderDetail } = res;
+        const sortOrderByStartTime = sortBy(orderDetail, (o) => moment(o.planStart)?.valueOf());
+        const startTime = moment(head(sortOrderByStartTime)?.planStart).startOf('day');
+        const endDay = moment(startTime).endOf('day');
+        // 目前暂定结束时间为开始时间 + 7天
+        const endTime = moment(endDay).add(7, 'days');
+        // 灵活范围-根据订单获取结束时间
+        // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
+        filterData(moment(startTime), moment(endDay)); // 过滤出排产结果第一天的数据
+        addTime(startTime, endTime);
+
         var cenTimeList = [];
         res.orderDetail.forEach((item) => {
           cenTimeList.push(item.planStart, item.planEnd);
@@ -300,7 +354,7 @@ const Home = function (props) {
   // //    });
   //   }, []);
   const tick = (number) => {
-    setCount(number);
+    setCount((n) => n + 1);
   };
   const ticks = (number) => {
     setNum(number);
@@ -1447,7 +1501,7 @@ const Home = function (props) {
     <div className="wrap">
       <Row>
         <Col span={8}>
-          <LeftTop currentTime={moniTime} />
+          <LeftTop currentTime={simTime} />
           <LeftCenter
             materialDemandList={allData.materialDemandList}
             leftEchart={leftEchart}
@@ -1504,7 +1558,7 @@ const Home = function (props) {
               •APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。
             </div>
           </div>
-          <Gantt orderScheduleDetail={orderScheduleDetail ?? []} />
+          <Gantt orderScheduleDetail={orderScheduleDetail ?? []} simTime={simTime} />
           {/* <Gantt orderScheduleDetail={orderScheduleDetail ?? []} /> */}
           {/* <div id="main"></div> */}
         </Col>
