@@ -320,12 +320,9 @@ const Gantt = ({ orderScheduleDetail, simTime }) => {
                   coord: [moment(simTime).valueOf(), yData[0]],
                 },
                 {
-                  coord: [moment(simTime).valueOf(), yData],
-                  //coord: [moment(simTime).valueOf(), yData.at(-1)],
+                  coord: [moment(simTime).valueOf(), yData?.[yData?.length - 1]],
+                  // coord: [moment().valueOf(), yData.at(-1)],
                 },
-                // {
-                //   coord: [moment().valueOf(), yData.at(-1)],
-                // },
               ],
             ],
           },
