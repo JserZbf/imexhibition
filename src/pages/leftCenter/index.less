@@ -546,8 +546,9 @@
             display: flex;
             margin-left: 2.13%;
             color: white;
+
             > li {
-              width: 36%;
+              width: 71px;
               margin-left: 4.2%;
             }
           }
@@ -557,11 +558,12 @@
             height: 20px;
             display: flex;
             margin-left: 8%;
-            margin-top: 2%;
+            margin-top: 8%;
 
             > li {
               width: 61px;
               display: flex;
+              position: relative;
 
               > span {
                 display: inline-block;
@@ -579,6 +581,18 @@
                 height: 4px;
                 margin-top: 14%;
                 // background: green;
+              }
+
+              > span:nth-child(3) {
+                position: absolute;
+                left: 0%;
+                top: -177%;
+                font-size: 13px;
+                font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+                font-weight: normal;
+                color: white;
+                line-height: 15px;
+                width: 100px;
               }
             }
           }

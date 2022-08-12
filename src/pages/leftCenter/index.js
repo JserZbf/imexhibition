@@ -367,12 +367,14 @@ const leftCenter = function (props) {
             color: '',
             status: '',
             index: null,
+            content: '',
           },
           {
             value: GetDateStr(2),
             color: '',
             status: '',
             index: null,
+            content: '',
           },
 
           {
@@ -380,36 +382,42 @@ const leftCenter = function (props) {
             color: '',
             status: '',
             index: null,
+            content: '',
           },
           {
             value: GetDateStr(4),
             color: '',
             status: '',
             index: null,
+            content: '',
           },
           {
             value: GetDateStr(5),
             color: '',
             status: '',
             index: null,
+            content: '',
           },
           {
             value: GetDateStr(6),
             color: '',
             status: '',
             index: null,
+            content: '',
           },
           {
             value: GetDateStr(7),
             color: '',
             status: '',
             index: null,
+            content: '',
           },
           {
             value: GetDateStr(8),
             color: '',
             status: [],
             index: null,
+            content: '',
           },
         ];
         initArr.forEach((item, index) => {
@@ -431,6 +439,18 @@ const leftCenter = function (props) {
             item.color = 'red';
             item.status = 'end';
             item.index = index;
+          }
+          if (item.value == planStartValue) {
+            item.content = '计划开始时间';
+          }
+          if (item.value == planEndValue) {
+            item.content = '计划结束时间';
+          }
+          if (item.value == schedualStartValue) {
+            item.content = '排产开始时间';
+          }
+          if (item.value == schedualEndValue) {
+            item.content = '排产结束时间';
           }
         });
         console.log(
@@ -1312,6 +1332,7 @@ const leftCenter = function (props) {
                                   display: index === 7 ? 'none' : 'block',
                                 }}
                               ></span>
+                              {/* <span>{item.content}</span> */}
                             </li>
                           );
                         })}
