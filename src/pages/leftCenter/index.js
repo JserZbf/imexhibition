@@ -5,6 +5,7 @@ import { Row, Col, Steps, Popover, Table, Tooltip } from 'antd';
 const { Step } = Steps;
 import './index.less';
 import ReactEchartsCom from '../../components/ReactEcharts/index';
+import Gantt from './gantt';
 // 添加请求拦截器
 import axios from 'axios';
 import * as echarts from 'echarts';
@@ -276,29 +277,29 @@ const leftCenter = function (props) {
     return y + '-' + checkTime(m) + '-' + checkTime(d);
   };
   const initPlanEchartsData = (start, end) => {
-    var chartDom = document.getElementById('main-plan');
-    myChartPlan = echarts.init(chartDom);
-    axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-      _rawData = rawData.data;
-      var allTimeST = outSideOrderDetail.slice(start, end);
-      // .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
-      // const currentTime = outSideOrderDetail
-      //   .slice(start, end)
-      //   .filter((item) => compareTime(item.planStart, item.planEnd, new Date()));
-      myChartPlan.setOption((option = makeOption(allTimeST)));
-      // autoToolTip(myChartPlan, makeOption(outSideOrderDetail), {
-      //   // 轮播间隔时间 默认2s
-      //   interval: 4000,
-      //   // 是否循环轮播所有序列
-      //   loopSeries: false,
-      //   // 第1个被轮播的序列下标
-      //   seriesIndex: 0,
-      // });
-      // window.addEventListener("resize", function () {
-      //   myChartPlan.resize();
-      // });
-      initDrag();
-    });
+    // var chartDom = document.getElementById('main-plan');
+    // myChartPlan = echarts.init(chartDom);
+    // axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
+    //   _rawData = rawData.data;
+    //   var allTimeST = outSideOrderDetail.slice(start, end);
+    //   // .filter((item) => !compareTime(item.planStart, item.planEnd, new Date()));
+    //   // const currentTime = outSideOrderDetail
+    //   //   .slice(start, end)
+    //   //   .filter((item) => compareTime(item.planStart, item.planEnd, new Date()));
+    //   myChartPlan.setOption((option = makeOption(allTimeST)));
+    //   // autoToolTip(myChartPlan, makeOption(outSideOrderDetail), {
+    //   //   // 轮播间隔时间 默认2s
+    //   //   interval: 4000,
+    //   //   // 是否循环轮播所有序列
+    //   //   loopSeries: false,
+    //   //   // 第1个被轮播的序列下标
+    //   //   seriesIndex: 0,
+    //   // });
+    //   // window.addEventListener("resize", function () {
+    //   //   myChartPlan.resize();
+    //   // });
+    //   initDrag();
+    // });
   };
   useEffect(() => {
     leftEchart.forEach((item) => {
@@ -1152,72 +1153,13 @@ const leftCenter = function (props) {
   return (
     <div className="left-center">
       <Row>
-        //
         <Col span={9}>
           <div className="plan-mark-total">
-            <ul className="back-line-list">
-              <li className="one"></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-            </ul>
             <div className="plan-mark-title">
               <div className="jian-tou"></div>
               <span>计划号集合</span>
             </div>
-            <div id="main-plan" ref={mainPlan}></div>
-            {/* <ul className='data-list'>
-            <li>
-              <span>产品名称</span>
-              <span className='line'></span>
-              <span>需求数量</span>
-              <span className='line'></span>
-              <span>计划等级</span>
-            </li>
-            <li>
-              <span>产品名称</span>
-              <span className='line'></span>
-              <span>需求数量</span>
-              <span className='line'></span>
-              <span>计划等级</span>
-            </li>
-            <li>
-              <span>产品名称</span>
-              <span className='line'></span>
-              <span>需求数量</span>
-              <span className='line'></span>
-              <span>计划等级</span>
-            </li>
-            <li>
-              <span>产品名称</span>
-              <span className='line'></span>
-              <span>需求数量</span>
-              <span className='line'></span>
-              <span>计划等级</span>
-            </li>
-            <li>
-              <span>产品名称</span>
-              <span className='line'></span>
-              <span>需求数量</span>
-              <span className='line'></span>
-              <span>计划等级</span>
-            </li>
-          </ul>
-          <ul className='data-last-line'>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li>计划开始时间</li>
-            <li>计划结束时间</li>
-          </ul> */}
+            <Gantt orderDetail={outSideOrderDetail} />
           </div>
         </Col>
         <Col span={7}>
