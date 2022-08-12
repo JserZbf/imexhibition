@@ -73,13 +73,15 @@ const Home = function (props) {
         }
         const newDate = moment(prev).add(SIM_TIME_STEP, 'seconds');
         const newDateStr = newDate.format(MOMENT_FORMAT);
-        if (newDateStr.includes('00:00:00')) {
-          const end = moment(newDate).endOf('day');
-          filterData(newDate, end);
-        }
         // 增加后的时间大于结束时间 要从头开始
         if (newDate?.valueOf() > endTime?.valueOf()) {
+          const end = moment(startTime).endOf('day');
+          filterData(moment(startTime), moment(end));
           return moment(startTime).format(MOMENT_FORMAT);
+        }
+        if (newDateStr.includes('00:00:00')) {
+          const end = moment(newDate).endOf('day');
+          filterData(moment(newDate), moment(end));
         }
         return newDate.format(MOMENT_FORMAT);
       });
