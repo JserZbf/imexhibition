@@ -2,46 +2,57 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'dva';
 import { Table, DatePicker, InputNumber, message, Spin, Alert } from 'antd';
 import moment from 'moment';
-import './index.less'
+import './index.less';
 import { getOrderData, getEditStart, getRescheduling } from 'services/home/home';
-import LeftModal from './Modal/leftModal'
-import RightModal from './Modal/rightModal'
-const Home = function (props) {
+import AutoScale from '@/components/AutoScale';
+import LeftModal from './Modal/leftModal';
+import RightModal from './Modal/RightModal';
+const Home = function ({ scale }) {
   const dateFormat = 'YYYY-MM-DD';
   // const [value, setValue] = useState(1);
   const modalFlagLeftRef = useRef(null);
-  const modalFlagRightRef = useRef(null)
+  const modalFlagRightRef = useRef(null);
   const [modalFlagLeft, setModalFlagLeft] = useState(false);
   const [modalFlagRight, setModalFlagRight] = useState(false);
-  const [moniList, setMoniList] = useState([{
-    name: '模拟场景1',
-    value: '物料未到位',
-    flag: false,
-  }, {
-    name: '模拟场景2',
-    value: '机床保养任务',
-    flag: false,
-  }, {
-    name: '模拟场景3',
-    value: '使用智能算法优化',
-    flag: true,
-  }])
-  const [rightInfoList, setRightInfoList] = useState([{
-    name: '排产周期',
-    value: '7日'
-  }, {
-    name: '班次信息',
-    value: '两班'
-  }])
-  const [leftInfoList, setLeftInfoList] = useState([{
-    name: '',
-    value: '最快交付',
-    flag: false
-  }, {
-    name: '',
-    value: '设备均衡',
-    flag: true,
-  }])
+  const [moniList, setMoniList] = useState([
+    {
+      name: '模拟场景1',
+      value: '物料未到位',
+      flag: false,
+    },
+    {
+      name: '模拟场景2',
+      value: '机床保养任务',
+      flag: false,
+    },
+    {
+      name: '模拟场景3',
+      value: '使用智能算法优化',
+      flag: true,
+    },
+  ]);
+  const [rightInfoList, setRightInfoList] = useState([
+    {
+      name: '排产周期',
+      value: '7日',
+    },
+    {
+      name: '班次信息',
+      value: '两班',
+    },
+  ]);
+  const [leftInfoList, setLeftInfoList] = useState([
+    {
+      name: '',
+      value: '最快交付',
+      flag: false,
+    },
+    {
+      name: '',
+      value: '设备均衡',
+      flag: true,
+    },
+  ]);
   const [overallFlag, setOverallFlag] = useState(false);
   const [rescheduleDetail, setRescheduleDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
@@ -53,7 +64,7 @@ const Home = function (props) {
       render: (text, record, index) => {
         return index + 1;
       },
-      width: 50
+      width: 50,
     },
     {
       title: '计划编号',
@@ -65,14 +76,20 @@ const Home = function (props) {
       dataIndex: 'planLevel',
       key: 'planLevel',
       render: (text, record, index) => {
-        return <InputNumber min={0} max={3} disabled={overallFlag} value={record['planLevel']}
-          onChange={(e) => {
-            const newData = [...dataSource];
-            record['planLevel'] = e;
-            newData[index] = record;
-            setDataSource(newData);
-          }}
-        />
+        return (
+          <InputNumber
+            min={0}
+            max={3}
+            disabled={overallFlag}
+            value={record['planLevel']}
+            onChange={(e) => {
+              const newData = [...dataSource];
+              record['planLevel'] = e;
+              newData[index] = record;
+              setDataSource(newData);
+            }}
+          />
+        );
       },
     },
     {
@@ -90,16 +107,22 @@ const Home = function (props) {
       dataIndex: 'planStart',
       key: 'planStart',
       render: (text, record, index) => {
-        return <DatePicker defaultValue={moment(record.planStart, dateFormat)} disabled={overallFlag} format={dateFormat}
-          onChange={(date, dateString) => {
-            const newData = [...dataSource];
-            record['planStart'] = dateString;
-            newData[index] = record;
-            setDataSource(newData);
-          }}
-          onFocus={() => { document.activeElement.blur(); }}
-        />
-
+        return (
+          <DatePicker
+            defaultValue={moment(record.planStart, dateFormat)}
+            disabled={overallFlag}
+            format={dateFormat}
+            onChange={(date, dateString) => {
+              const newData = [...dataSource];
+              record['planStart'] = dateString;
+              newData[index] = record;
+              setDataSource(newData);
+            }}
+            onFocus={() => {
+              document.activeElement.blur();
+            }}
+          />
+        );
       },
     },
     {
@@ -107,17 +130,24 @@ const Home = function (props) {
       dataIndex: 'planEnd',
       key: 'planEnd',
       render: (text, record, index) => {
-        return <DatePicker defaultValue={moment(record.planEnd, dateFormat)} disabled={overallFlag} format={dateFormat}
-          onChange={(date, dateString) => {
-            const newData = [...dataSource];
-            record['planEnd'] = dateString;
-            newData[index] = record;
-            setDataSource(newData);
-          }}
-          onFocus={() => { document.activeElement.blur(); }}
-        />
+        return (
+          <DatePicker
+            defaultValue={moment(record.planEnd, dateFormat)}
+            disabled={overallFlag}
+            format={dateFormat}
+            onChange={(date, dateString) => {
+              const newData = [...dataSource];
+              record['planEnd'] = dateString;
+              newData[index] = record;
+              setDataSource(newData);
+            }}
+            onFocus={() => {
+              document.activeElement.blur();
+            }}
+          />
+        );
       },
-    }
+    },
   ];
   const talbeData = [
     {
@@ -239,32 +269,35 @@ const Home = function (props) {
       address: 'Sidney No. 1 Lake Park',
       tags: ['cool', 'teacher'],
       flag: 3,
-    }
+    },
   ];
   const [dataSource, setDataSource] = useState([]);
-  const [fixList, setFixList] = useState([{ name: '四小时', flag: true, value: 40 }, { name: '二十四小时', flag: false, value: 240 }])
-  const [taskId, setTaskId] = useState(93578990)
-  const [schedulePattern, setSchedulePattern] = useState(2);//排产模拟场景
-  const [scheduleCycle, setScheduleCycle] = useState(7);//排产周期
-  const [scheduleTarget, setScheduleTarget] = useState(1);//排产目标
-  const [spinFlag, setSpinFlag] = useState(false)
+  const [fixList, setFixList] = useState([
+    { name: '四小时', flag: true, value: 40 },
+    { name: '二十四小时', flag: false, value: 240 },
+  ]);
+  const [taskId, setTaskId] = useState(93578990);
+  const [schedulePattern, setSchedulePattern] = useState(2); //排产模拟场景
+  const [scheduleCycle, setScheduleCycle] = useState(7); //排产周期
+  const [scheduleTarget, setScheduleTarget] = useState(1); //排产目标
+  const [spinFlag, setSpinFlag] = useState(false);
   const clickMoni = (name) => {
     setModalFlagLeft(false);
-    setModalFlagRight(false)
-    const cenData = moniList
-    const cen = cenData.map(item => {
+    setModalFlagRight(false);
+    const cenData = moniList;
+    const cen = cenData.map((item) => {
       if (item.name == name) {
         return {
           ...item,
-          flag: true
-        }
+          flag: true,
+        };
       } else {
         return {
           ...item,
-          flag: false
-        }
+          flag: false,
+        };
       }
-    })
+    });
     setMoniList(cen);
     var cenSchedulePattern = null;
     if (name == '模拟场景1') {
@@ -276,16 +309,16 @@ const Home = function (props) {
     }
     setSchedulePattern(cenSchedulePattern);
     const obj = {
-      "schedulePattern": cenSchedulePattern,
-      "scheduleCycle": scheduleCycle,
-      "scheduleTarget": scheduleTarget
-    }
-    getOrderData(obj).then(res => {
+      schedulePattern: cenSchedulePattern,
+      scheduleCycle: scheduleCycle,
+      scheduleTarget: scheduleTarget,
+    };
+    getOrderData(obj).then((res) => {
       if (res.code == 200) {
-        setDataSource(res.orderDetail)
+        setDataSource(res.orderDetail);
       }
-    })
-  }
+    });
+  };
   const clickLeftInfo = (name) => {
     var cenScheduleTarget = null;
     if (name == '最快交付') {
@@ -293,77 +326,77 @@ const Home = function (props) {
     } else if (name == '设备均衡') {
       cenScheduleTarget = 1;
     }
-    setScheduleTarget(cenScheduleTarget)
+    setScheduleTarget(cenScheduleTarget);
     const obj = {
-      "schedulePattern": schedulePattern,
-      "scheduleCycle": scheduleCycle,
-      "scheduleTarget": cenScheduleTarget
-    }
-    getOrderData(obj).then(res => {
+      schedulePattern: schedulePattern,
+      scheduleCycle: scheduleCycle,
+      scheduleTarget: cenScheduleTarget,
+    };
+    getOrderData(obj).then((res) => {
       if (res.code == 200) {
-        setDataSource(res.orderDetail)
+        setDataSource(res.orderDetail);
       }
-    })
+    });
     const cenData = leftInfoList;
-    const cen = cenData.map(item => {
+    const cen = cenData.map((item) => {
       if (item.value == name) {
         return {
           ...item,
-          flag: true
-        }
+          flag: true,
+        };
       } else {
         return {
           ...item,
-          flag: false
-        }
+          flag: false,
+        };
       }
-    })
+    });
     setLeftInfoList(cen);
-  }
+  };
   const clickFix = (name) => {
     const cenFixList = fixList;
-    const cen = cenFixList.map(item => {
+    const cen = cenFixList.map((item) => {
       if (item.name == name) {
         return {
           ...item,
-          flag: true
-        }
+          flag: true,
+        };
       } else {
         return {
           ...item,
-          flag: false
-        }
+          flag: false,
+        };
       }
-    })
+    });
     setFixList(cen);
-  }
+  };
   const clickMoal = () => {
     setModalFlagLeft(true);
     setModalFlagRight(true);
-  }
+  };
   const productionStart = () => {
     setModalFlagLeft(false);
     setModalFlagRight(false);
     setOverallFlag(true);
     setSpinFlag(true);
     var objStart = {
-      "taskId": taskId + '',
-      "scheduleTarget": scheduleTarget,
-      "schedulePattern": schedulePattern,
-      "scheduleCycle": scheduleCycle,
-      "orderDetail": dataSource
-    }
-    getEditStart(objStart).then(res => {
+      taskId: taskId + '',
+      scheduleTarget: scheduleTarget,
+      schedulePattern: schedulePattern,
+      scheduleCycle: scheduleCycle,
+      orderDetail: dataSource,
+    };
+    getEditStart(objStart).then((res) => {
       setOverallFlag(false);
-      setSpinFlag(false)
+      setSpinFlag(false);
       if (res.code == 200) {
         setRescheduleDetail(res.orderScheduleDetail);
-        setOrderDetail(res.orderDetail)
+        setOrderDetail(res.orderDetail);
         message.success({
           content: '排产完成,请在大屏观看排产结果!',
           style: {
             fontSize: 22,
-            fontFamily: 'PingFang SC-Regular, PingFang SC'
+            fontFamily: 'PingFang SC-Regular, PingFang SC',
           },
         });
       } else {
@@ -371,51 +404,51 @@ const Home = function (props) {
           content: '排产失败',
           style: {
             fontSize: 22,
-            fontFamily: 'PingFang SC-Regular, PingFang SC'
+            fontFamily: 'PingFang SC-Regular, PingFang SC',
           },
-        })
+        });
       }
-    })
-  }
+    });
+  };
   const startRest = () => {
     if (rescheduleDetail.length == 0 || orderDetail.length == 0) {
       message.warn({
         content: '请先点击排产开始',
         style: {
           fontSize: 22,
-          fontFamily: 'PingFang SC-Regular, PingFang SC'
+          fontFamily: 'PingFang SC-Regular, PingFang SC',
         },
-      })
+      });
     } else {
       setModalFlagLeft(false);
       setModalFlagRight(false);
       setSpinFlag(true);
       setOverallFlag(true);
-      var fixValue = fixList.filter(item => item.flag)
+      var fixValue = fixList.filter((item) => item.flag);
       const obj = {
-        "taskId": taskId,
-        "scheduleTarget": scheduleTarget,
-        "scheduleCycle": scheduleCycle,
-        "orderDetail": orderDetail.map((item, index) => {
+        taskId: taskId,
+        scheduleTarget: scheduleTarget,
+        scheduleCycle: scheduleCycle,
+        orderDetail: orderDetail.map((item, index) => {
           return {
-            "planNO": item.planNO,
-            "productName": item.productName,
-            "productNum": item.productNum,
-            "planType": item.planType,
-            "planLevel": item.planLevel,
-            "planStart": item.planStart,
-            "planEnd": item.planEnd
-          }
+            planNO: item.planNO,
+            productName: item.productName,
+            productNum: item.productNum,
+            planType: item.planType,
+            planLevel: item.planLevel,
+            planStart: item.planStart,
+            planEnd: item.planEnd,
+          };
         }),
-        "rescheduleDetail": rescheduleDetail.map((item, index) => {
+        rescheduleDetail: rescheduleDetail.map((item, index) => {
           return {
             ...item,
-            "state": 2
-          }
+            state: 2,
+          };
         }),
-        "faultyMachine": {
-          "海科特-1": fixValue[0].value,
-        }
+        faultyMachine: {
+          '海科特-1': fixValue[0].value,
+        },
       };
       /*  const obj = {
          "taskId": "91123fbf-c235-4ebf-8c00-a5ff584ff2f4",
@@ -618,7 +651,7 @@ const Home = function (props) {
            "10000-4": 60
          }
        } */
-      getRescheduling(obj).then(res => {
+      getRescheduling(obj).then((res) => {
         setSpinFlag(false);
         setOverallFlag(false);
         if (res.code == 200) {
@@ -626,7 +659,7 @@ const Home = function (props) {
             content: '重排完成,请在大屏观看排产结果',
             style: {
               fontSize: 22,
-              fontFamily: 'PingFang SC-Regular, PingFang SC'
+              fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
           });
         } else {
@@ -634,14 +667,13 @@ const Home = function (props) {
             content: '重排失败',
             style: {
               fontSize: 22,
-              fontFamily: 'PingFang SC-Regular, PingFang SC'
+              fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
-          })
+          });
         }
-      })
+      });
     }
-
-  }
+  };
   // useMemo(() => {
   //   const cen = talbeData.filter(item => value === item.flag);
   //   setDataSource(cen);
@@ -650,96 +682,145 @@ const Home = function (props) {
   const loadData = async () => {
     //   console.log(schedulePattern, 'schedulePattern-schedulePattern');
     const obj = {
-      "schedulePattern": schedulePattern,
-      "scheduleCycle": scheduleCycle,
-      "scheduleTarget": scheduleTarget
-    }
-    await getOrderData(obj).then(res => {
+      schedulePattern: schedulePattern,
+      scheduleCycle: scheduleCycle,
+      scheduleTarget: scheduleTarget,
+    };
+    await getOrderData(obj).then((res) => {
       if (res.code == 200) {
-        setDataSource(res.orderDetail)
+        setDataSource(res.orderDetail);
       }
-    })
-  }
+    });
+  };
   useEffect(() => {
     loadData();
-  }, [])
-  const closeModalLeft = async () => {
-    await setModalFlagLeft(false)
-    // modalFlagLeftRef.current.style.display = 'none';
-  }
-  const closeModalRight =async () => {
-    await setModalFlagRight(false)
-    // modalFlagRightRef.current.style.display = 'none';
-  }
-  return <div className='wrap'>
-    <div className='spin-div' style={{ display: spinFlag ? 'block' : 'none' }}>
-      <Spin tip="排产中,请稍后..." size="large" spinning={spinFlag} />
-    </div>
-    <p className='total-title'></p>
-    <div className='one-top'>
-      <ul className='left-info'>
-        {
-          leftInfoList.map((item, index) => {
-            return <li key={index} className={index == 0 ? item.flag ? 'fastest-active' : 'fastest-normal' : item.flag ? 'facility-active' : 'facility-normal'} onClick={() => { clickLeftInfo(item.value) }}>
-            </li>
-          })
-        }
-      </ul>
-      <ul className='moni-list' >
-        {
-          moniList.map((item, index) => {
-            return <li key={index} className={item.flag ? 'li-active' : 'li'} onClick={() => { clickMoni(item.name) }}>
-              <span>{item.name}</span>
-              <span>{item.value}</span>
-            </li>
-          })
-        }
-      </ul>
-      <div className='right-info'>
-        <ul>
-          {
-            rightInfoList.map((item, index) => {
-              return <li key={index}>
+  }, []);
+  const closeModalLeft = () => {
+    setModalFlagLeft(false);
+  };
+  const closeModalRight = () => {
+    setModalFlagRight(false);
+  };
+  // return <div className='wrap' style={{transform: `scale(${scale})`}}>
+  return (
+    <div className="wrap">
+      <div className="spin-div" style={{ display: spinFlag ? 'block' : 'none' }}>
+        <Spin tip="排产中,请稍后..." size="large" spinning={spinFlag} />
+      </div>
+      <p className="total-title"></p>
+      <div className="one-top">
+        <ul className="left-info">
+          {leftInfoList.map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={
+                  index == 0
+                    ? item.flag
+                      ? 'fastest-active'
+                      : 'fastest-normal'
+                    : item.flag
+                    ? 'facility-active'
+                    : 'facility-normal'
+                }
+                onClick={() => {
+                  clickLeftInfo(item.value);
+                }}
+              ></li>
+            );
+          })}
+        </ul>
+        <ul className="moni-list">
+          {moniList.map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={item.flag ? 'li-active' : 'li'}
+                onClick={() => {
+                  clickMoni(item.name);
+                }}
+              >
                 <span>{item.name}</span>
                 <span>{item.value}</span>
               </li>
-            })
-          }
+            );
+          })}
         </ul>
-        <div onClick={() => { productionStart() }}>排产开始</div>
+        <div className="right-info">
+          <ul>
+            {rightInfoList.map((item, index) => {
+              return (
+                <li key={index}>
+                  <span>{item.name}</span>
+                  <span>{item.value}</span>
+                </li>
+              );
+            })}
+          </ul>
+          <div
+            onClick={() => {
+              productionStart();
+            }}
+          >
+            排产开始
+          </div>
+        </div>
       </div>
-    </div>
-    <div className='two-center'>
-      <div className='table-data'>
-        {/* <Table
+      <div className="two-center">
+        <div className="table-data">
+          {/* <Table
           className='table-material'
           rowClassName={tableClassName}
           columns={columns}
           scroll={{ x: 'max-content', y: 680 }}
           pagination={false}
           dataSource={dataSource} /> */}
-        <Table id="cyclicScroll" className='table-material' columns={columns} scroll={{ x: 'max-content', y: 181 }} dataSource={dataSource} pagination={false} />
-
+          <Table
+            id="cyclicScroll"
+            className="table-material"
+            columns={columns}
+            scroll={{ x: 'max-content', y: 181 }}
+            dataSource={dataSource}
+            pagination={false}
+          />
+        </div>
+        <div className="workshop-mess">
+          <p>车间俯视图</p>
+          <p>点击设备模拟</p>
+        </div>
+        <div
+          className="workshop-pic"
+          onClick={() => {
+            clickMoal();
+          }}
+        >
+          <LeftModal
+            fixList={fixList}
+            modalFlagLeft={modalFlagLeft}
+            clickFix={clickFix}
+            ref={modalFlagLeftRef}
+            closeModalLeft={closeModalLeft}
+          />
+          <RightModal
+            ref={modalFlagRightRef}
+            modalFlagRight={modalFlagRight}
+            closeModalRight={closeModalRight}
+          />
+        </div>
       </div>
-      <div className='workshop-mess'>
-        <p>车间俯视图</p>
-        <p>点击设备模拟</p>
-      </div>
-      <div className='workshop-pic' onClick={() => {
-        clickMoal();
-      }}>
-        <LeftModal fixList={fixList} modalFlagLeft={modalFlagLeft} clickFix={clickFix} ref={modalFlagLeftRef} closeModalLeft={closeModalLeft} />
-        <RightModal ref={modalFlagRightRef} modalFlagRight={modalFlagRight} closeModalRight={closeModalRight} />
+      <div className="three-bottom">
+        <div
+          onClick={() => {
+            startRest();
+          }}
+        ></div>
+        <p>开始重排</p>
       </div>
     </div>
-    <div className='three-bottom'>
-      <div onClick={() => { startRest() }}></div>
-      <p>开始重排</p>
-    </div>
-  </div>;
+  );
 };
 
-export default connect()(Home)
+export default connect()(AutoScale(Home));
 // export default connect((state) => ({ /* allData: state.allData */ }), (dispatch) => ({
 //   getOrderData: (payload) => dispatch({ type: 'page/getOrderData', payload }),
 // })
