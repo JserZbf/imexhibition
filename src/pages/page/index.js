@@ -110,30 +110,30 @@ const Home = function (props) {
       clearInterval(timerIDs);
     };
   }, []);
-  // let numbers = 0;
-  // useEffect(() => {
-  //   const timerIDS = setInterval(() => {
-  //     numbers = numbers + 1;
-  //     ticks(numbers);
-  //   }, 10000);
-  //   return () => {
-  //     clearInterval(timerIDS);
-  //   };
-  // }, []);
-  // let moniCount = 0;
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     if (moniCount > 420) {
-  //       moniCount = 0;
-  //     }
-  //     moniCount = moniCount + 1;
-  //     setCurrentTime(showLeftTime(moniCount)[0]);
-  //     setMoniTime(showLeftTime(moniCount)[1]);
-  //   }, 1000);
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // }, []);
+  let numbers = 0;
+  useEffect(() => {
+    const timerIDS = setInterval(() => {
+      numbers = numbers + 1;
+      ticks(numbers);
+    }, 10000);
+    return () => {
+      clearInterval(timerIDS);
+    };
+  }, []);
+  let moniCount = 0;
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (moniCount > 420) {
+        moniCount = 0;
+      }
+      moniCount = moniCount + 1;
+      setCurrentTime(showLeftTime(moniCount)[0]);
+      setMoniTime(showLeftTime(moniCount)[1]);
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
   useEffect(() => {
     const obj = {
       source_code: 'SSS',
@@ -430,25 +430,14 @@ const Home = function (props) {
       percent = 0 + '%';
       processedValue = 0;
     } else if (cen == 'center') {
-      // console.log(startTime, endTime, 'start-endTime');
-      // console.log(moment(new Date()).format('YYYY-MM-DD'), 'moment(new Date())');
-      // console.log(addDate('2022-07-01', 1),'addDate(startTime, index)-123');
       var tranDatas = GetNumberOfDays(startTime, endTime);
       for (var index = 0; index <= tranDatas; index++) {
         if (moment(currentTime).format('YYYY-MM-DD') == addDate(startTime, index)) {
-          //  console.log(moment(new Date()).format('YYYY-MM-DD'),'moment(new Date())');
-          //  console.log(addDate(startTime, index),'addDate(startTime, index)');
           value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
           processedValue = ((obj.productNum / GetNumberOfDays(startTime, endTime)) * index).toFixed(
             0,
           );
           percent = ((cenValue / obj.productNum) * 100 * index).toFixed(0) + '%';
-          console.log(
-            value,
-            processedValue,
-            percent,
-            'value,processedValue,percent----12312132313',
-          );
         }
       }
     } else if (cen == 'right') {
