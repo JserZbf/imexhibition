@@ -711,9 +711,9 @@ const Home = function ({ scale }) {
   const closeModalRight = () => {
     setModalFlagRight(false);
   };
-  // return <div className='wrap' style={{transform: `scale(${scale})`}}>
   return (
     <div className="wrap">
+      {/* <div className='wrap' style={{transform: `scale(${scale})`}}> */}
       <div className="spin-div" style={{ display: spinFlag ? 'block' : 'none' }}>
         <Spin tip="排产中,请稍后..." size="large" spinning={spinFlag} />
       </div>
@@ -800,8 +800,14 @@ const Home = function ({ scale }) {
         </div>
         <div
           className="workshop-pic"
-          onClick={() => {
-            clickMoal();
+          onClick={(e) => {
+            e.stopPropagation();
+            const {
+              target: { className },
+            } = e;
+            if (className === 'workshop-pic') {
+              clickMoal();
+            }
           }}
         >
           <LeftModal
