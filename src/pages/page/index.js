@@ -386,29 +386,34 @@ const Home = function ({ scale }) {
       scheduleCycle: scheduleCycle,
       orderDetail: dataSource,
     };
-    getEditStart(objStart).then((res) => {
-      setOverallFlag(false);
-      setSpinFlag(false);
-      if (res.code == 200) {
-        setRescheduleDetail(res.orderScheduleDetail);
-        setOrderDetail(res.orderDetail);
-        message.success({
-          content: '排产完成,请在大屏观看排产结果!',
-          style: {
-            fontSize: 22,
-            fontFamily: 'PingFang SC-Regular, PingFang SC',
-          },
-        });
-      } else {
-        message.warn({
-          content: '排产失败',
-          style: {
-            fontSize: 22,
-            fontFamily: 'PingFang SC-Regular, PingFang SC',
-          },
-        });
-      }
-    });
+    getEditStart(objStart)
+      .then((res) => {
+        setOverallFlag(false);
+        setSpinFlag(false);
+        if (res.code == 200) {
+          setRescheduleDetail(res.orderScheduleDetail);
+          setOrderDetail(res.orderDetail);
+          message.success({
+            content: '排产完成,请在大屏观看排产结果!',
+            style: {
+              fontSize: 22,
+              fontFamily: 'PingFang SC-Regular, PingFang SC',
+            },
+          });
+        } else {
+          message.warn({
+            content: '排产失败',
+            style: {
+              fontSize: 22,
+              fontFamily: 'PingFang SC-Regular, PingFang SC',
+            },
+          });
+        }
+      })
+      .catch((err) => {
+        setOverallFlag(false);
+        setSpinFlag(false);
+      });
   };
   const startRest = () => {
     if (rescheduleDetail.length == 0 || orderDetail.length == 0) {
@@ -651,27 +656,32 @@ const Home = function ({ scale }) {
            "10000-4": 60
          }
        } */
-      getRescheduling(obj).then((res) => {
-        setSpinFlag(false);
-        setOverallFlag(false);
-        if (res.code == 200) {
-          message.success({
-            content: '重排完成,请在大屏观看排产结果',
-            style: {
-              fontSize: 22,
-              fontFamily: 'PingFang SC-Regular, PingFang SC',
-            },
-          });
-        } else {
-          message.warn({
-            content: '重排失败',
-            style: {
-              fontSize: 22,
-              fontFamily: 'PingFang SC-Regular, PingFang SC',
-            },
-          });
-        }
-      });
+      getRescheduling(obj)
+        .then((res) => {
+          setSpinFlag(false);
+          setOverallFlag(false);
+          if (res.code == 200) {
+            message.success({
+              content: '重排完成,请在大屏观看排产结果',
+              style: {
+                fontSize: 22,
+                fontFamily: 'PingFang SC-Regular, PingFang SC',
+              },
+            });
+          } else {
+            message.warn({
+              content: '重排失败',
+              style: {
+                fontSize: 22,
+                fontFamily: 'PingFang SC-Regular, PingFang SC',
+              },
+            });
+          }
+        })
+        .catch((err) => {
+          setOverallFlag(false);
+          setSpinFlag(false);
+        });
     }
   };
   // useMemo(() => {
@@ -786,7 +796,7 @@ const Home = function ({ scale }) {
         </div>
         <div className="workshop-mess">
           <p>车间俯视图</p>
-          <p>点击设备模拟</p>
+          <p>点击模拟设备故障</p>
         </div>
         <div
           className="workshop-pic"
