@@ -65,7 +65,7 @@ const Home = function (props) {
   const timerRef = useRef(null);
   const [simTime, setTime] = useState('');
 
-  const addTime = (startTime, endTime) => {
+  const addTime = (startTime, endTime, orderCardDetail) => {
     timerRef.current = setTimeout(() => {
       setTime((prev) => {
         if (!prev) {
@@ -76,24 +76,27 @@ const Home = function (props) {
         // 增加后的时间大于结束时间 要从头开始
         if (newDate?.valueOf() > endTime?.valueOf()) {
           const end = moment(startTime).endOf('day');
-          filterData(moment(startTime), moment(end));
+          filterData(moment(startTime), moment(end), orderCardDetail);
           return moment(startTime).format(MOMENT_FORMAT);
         }
         if (newDateStr.includes('00:00:00')) {
           const end = moment(newDate).endOf('day');
-          filterData(moment(newDate), moment(end));
+          filterData(moment(newDate), moment(end), orderCardDetail);
         }
         return newDate.format(MOMENT_FORMAT);
       });
-      addTime(startTime, endTime);
+      addTime(startTime, endTime, orderCardDetail);
     }, TIMER_INTERVAL * 1000);
   };
 
   // 过滤业务数据
   // 参数为Moment类型
-  const filterData = (start, end) => {
+  const filterData = (start, end, orderCardDetail) => {
     // TODO
-    console.log(1, start.format(MOMENT_FORMAT), '----', end.format(MOMENT_FORMAT));
+    console.log(1, start.format(MOMENT_FORMAT), '', end.format(MOMENT_FORMAT));
+    const cuurrentTimeCen = start.format('YYYY-MM-DD');
+    setCurrentTime(cuurrentTimeCen);
+    tranOrderCardDetail(orderCardDetail, cuurrentTimeCen);
   };
   const initClearTimeout = () => {
     timerRef?.current && clearTimeout(timerRef?.current);
@@ -123,19 +126,19 @@ const Home = function (props) {
     };
   }, []);
   let moniCount = 0;
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (moniCount > 420) {
-        moniCount = 0;
-      }
-      moniCount = moniCount + 1;
-      setCurrentTime(showLeftTime(moniCount)[0]);
-      setMoniTime(showLeftTime(moniCount)[1]);
-    }, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     if (moniCount > 420) {
+  //       moniCount = 0;
+  //     }
+  //     moniCount = moniCount + 1;
+  //     setCurrentTime(showLeftTime(moniCount)[0]);
+  //     setMoniTime(showLeftTime(moniCount)[1]);
+  //   }, 1000);
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, []);
   useEffect(() => {
     const obj = {
       source_code: 'SSS',
@@ -151,8 +154,8 @@ const Home = function (props) {
         const endTime = moment(endDay).add(7, 'days');
         // 灵活范围-根据订单获取结束时间
         // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
-        filterData(moment(startTime), moment(endDay)); // 过滤出排产结果第一天的数据
-        addTime(startTime, endTime);
+        filterData(moment(startTime), moment(endDay), res.orderCardDetail); // 过滤出排产结果第一天的数据
+        addTime(startTime, endTime, res.orderCardDetail);
 
         var cenTimeList = [];
         res.orderDetail.forEach((item) => {
@@ -229,7 +232,7 @@ const Home = function (props) {
         setOrderCardDetail(res.orderCardDetail);
         setDeviceCardDetail(res.deviceCardDetail);
         setOrderScheduleDetail(res.orderScheduleDetail);
-        tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+        //  tranOrderCardDetail(res.orderCardDetail,moment(startTime).format('YYYY-MM-DD')); //计划状态卡片四个饼图option
         tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
         setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
       }
@@ -366,7 +369,7 @@ const Home = function (props) {
   const sorts = (a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
   };
-  const compareTime = (stime, etime) => {
+  const compareTime = (stime, etime, currentTime) => {
     // 转换时间格式，并转换为时间戳
     function tranDate(time) {
       if (time) {
@@ -389,7 +392,7 @@ const Home = function (props) {
     //   thisDate.getHours() +
     //   ':' +
     //   thisDate.getMinutes();
-    let nowTime = tranDate(thisDate);
+    let nowTime = tranDate(currentTime);
     // 如果当前时间处于时间段内，返回true，否则返回false
     if (nowTime > startTime && nowTime < endTime) {
       return 'center';
@@ -398,7 +401,6 @@ const Home = function (props) {
     } else if (nowTime > endTime) {
       return 'right';
     }
-    return true;
   };
   const GetNumberOfDays = (date1, date2) => {
     //获得天数
@@ -419,10 +421,11 @@ const Home = function (props) {
     var d = diffTime.getDate() < 10 ? '0' + diffTime.getDate() : diffTime.getDate();
     return diffTime.getFullYear() + '-' + m + '-' + d;
   };
-  const tranData = (obj) => {
+  const tranData = (obj, currentTime) => {
     var startTime = moment(obj.schedualStart).format('YYYY-MM-DD');
     var endTime = moment(obj.schedualEnd).format('YYYY-MM-DD');
-    const cen = compareTime(startTime, endTime);
+    const cen = compareTime(startTime, endTime, currentTime);
+    console.log(cen, 'cen-obj-item-new');
     var value = null;
     var percent = null;
     var processedValue = null;
@@ -434,7 +437,7 @@ const Home = function (props) {
     } else if (cen == 'center') {
       var tranDatas = GetNumberOfDays(startTime, endTime);
       for (var index = 0; index <= tranDatas; index++) {
-        if (moment(currentTime).format('YYYY-MM-DD') == addDate(startTime, index)) {
+        if (currentTime == addDate(startTime, index)) {
           value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
           processedValue = ((obj.productNum / GetNumberOfDays(startTime, endTime)) * index).toFixed(
             0,
@@ -449,9 +452,9 @@ const Home = function (props) {
     }
     return [value, percent, processedValue];
   };
-  const tranOrderCardDetail = (data) => {
+  const tranOrderCardDetail = (data, currentTime) => {
     const totalObj = data.map((item, index) => {
-      console.log(tranData(item)[0], 'tranData(item)[0]----tranData(item)[0]');
+      //   console.log(tranData(item)[0], 'tranData(item)[0]----tranData(item)[0]');
       return {
         leftEchartsPieInfoOne: item,
         leftEchartsPieOne: {
@@ -516,7 +519,7 @@ const Home = function (props) {
               hoverAnimation: false,
               data: [
                 {
-                  value: tranData(item)[0],
+                  value: tranData(item, currentTime)[0],
                   name: '01',
                   itemStyle: {
                     normal: {
@@ -548,7 +551,7 @@ const Home = function (props) {
                         },
                       },
                       formatter: function (params) {
-                        const [value, percent, processedValue] = tranData(item);
+                        const [value, percent, processedValue] = tranData(item, currentTime);
                         return (
                           '{b|100%}\n\n' +
                           '{b|计划产量' +
@@ -573,7 +576,7 @@ const Home = function (props) {
                   },
                 },
                 {
-                  value: 100 - tranData(item)[0],
+                  value: 100 - tranData(item, currentTime)[0],
                   name: '',
                   itemStyle: {
                     normal: {
@@ -625,7 +628,7 @@ const Home = function (props) {
             },
           ],
         },
-        yijiagongCount: tranData(item)[1],
+        yijiagongCount: tranData(item, currentTime)[1],
         leftEchartsPieInfoOneCurrent: null,
         leftEchartsPieInfoOneSteps: [],
       };
@@ -1252,7 +1255,7 @@ const Home = function (props) {
     });
     setRightEchart(totalObj);
   };
-  const showLeftTime = (moniCount) => {
+  /*   const showLeftTime = (moniCount) => {
     console.log(moniCount, 'moniCount-moniCount');
     if (moniCount < 60) {
       let now = new Date();
@@ -1472,7 +1475,7 @@ const Home = function (props) {
         ];
       }
     }
-  };
+  }; */
   // 补零函数：不足10的情况，前面加0
   const checkTime = (i) => {
     if (i < 10) {

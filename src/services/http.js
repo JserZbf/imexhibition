@@ -104,7 +104,22 @@ export class Http {
     const error = new Error(response.statusText || codeMessage[response.status]);
     error.status = response.status;
     error.data = response;
-    throw error;
+    if (
+      response.status == 500 ||
+      response.status == 502 ||
+      response.status == 503 ||
+      response.status == 504
+    ) {
+      message.warn({
+        content: codeMessage[response.status],
+        style: {
+          fontSize: 22,
+          fontFamily: 'PingFang SC-Regular, PingFang SC',
+        },
+      });
+    } else {
+      throw error;
+    }
   }
 
   checkErrCode(dataObj) {
