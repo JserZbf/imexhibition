@@ -8,43 +8,43 @@ import replacePlaceholder from 'common/replacePlaceholder';
 const navTo = history.push;
 
 const codeMessage = {
-  200: '服务器成功返回请求的数据。',
-  201: '新建或修改数据成功。',
-  202: '一个请求已经进入后台排队（异步任务）。',
-  204: '删除数据成功。',
-  400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
-  401: '用户没有权限（令牌、用户名、密码错误）。',
-  403: '用户得到授权，但是访问是被禁止的。',
-  404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
-  406: '请求的格式不可得。',
-  410: '请求的资源被永久删除，且不会再得到的。',
-  422: '当创建一个对象时，发生一个验证错误。',
-  500: '服务器发生错误，请检查服务器。',
-  502: '网关错误。',
-  503: '服务不可用，服务器暂时过载或维护。',
-  504: '网关超时。',
+    200: '服务器成功返回请求的数据。',
+    201: '新建或修改数据成功。',
+    202: '一个请求已经进入后台排队（异步任务）。',
+    204: '删除数据成功。',
+    400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
+    401: '用户没有权限（令牌、用户名、密码错误）。',
+    403: '用户得到授权，但是访问是被禁止的。',
+    404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
+    406: '请求的格式不可得。',
+    410: '请求的资源被永久删除，且不会再得到的。',
+    422: '当创建一个对象时，发生一个验证错误。',
+    500: '服务器发生错误，请检查服务器。',
+    502: '网关错误。',
+    503: '服务不可用，服务器暂时过载或维护。',
+    504: '网关超时。',
 };
 
 export class Http {
-  constructor() {
-    this.defaultConfig = {
-      prefix: process.env.HTTP_PREFIX || '',
-      errorHook: (error, url) => {
-        console.error(`${error}, from: ${url}`);
-        throw error;
-      },
-      notLoginInErrorCode: /^(1005)$/g,
-      notLoginInUrl: '/login',
-      parseResult: (data) => data,
-      isGetParamJsonStringfy: false,
-      correctErrCode: 200,
-    };
+    constructor() {
+            this.defaultConfig = {
+                prefix: process.env.HTTP_PREFIX || '',
+                errorHook: (error, url) => {
+                    console.error(`${error}, from: ${url}`);
+                    throw error;
+                },
+                notLoginInErrorCode: /^(1005)$/g,
+                notLoginInUrl: '/login',
+                parseResult: (data) => data,
+                isGetParamJsonStringfy: false,
+                correctErrCode: 200,
+            };
 
-    this.notLogin = () => {
-      const redirectUrl =
-        window.location.origin +
-        encodeURIComponent(
-          `${history.location.pathname}${
+            this.notLogin = () => {
+                    const redirectUrl =
+                        window.location.origin +
+                        encodeURIComponent(
+                            `${history.location.pathname}${
             history.location.search.substr(1) ? `&${history.location.search.substr(1)}` : ''
           }`,
         );
@@ -104,16 +104,16 @@ export class Http {
     const error = new Error(response.statusText || codeMessage[response.status]);
     error.status = response.status;
     error.data = response;
-    if (response.status != 504) {
-      throw error;
-    } else {
+    if (response.status == 500||response.status == 502||response.status == 503||response.status == 504) {
       message.warn({
-        content: '网关超时',
+        content: codeMessage[response.status],
         style: {
           fontSize: 22,
           fontFamily: 'PingFang SC-Regular, PingFang SC',
         },
       });
+    } else {
+      throw error;
     }
   }
 
