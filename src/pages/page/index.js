@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'dva';
-import { Table, DatePicker, InputNumber, message, Spin, Alert } from 'antd';
+import { Table, DatePicker, InputNumber, message, Spin, Tooltip } from 'antd';
 import moment from 'moment';
 import './index.less';
 import { getOrderData, getEditStart, getRescheduling } from 'services/home/home';
@@ -64,7 +64,7 @@ const Home = function ({ scale }) {
       render: (text, record, index) => {
         return index + 1;
       },
-      width: 50,
+      width: '50',
     },
     {
       title: '计划编号',
@@ -72,7 +72,7 @@ const Home = function ({ scale }) {
       key: 'planNO',
     },
     {
-      title: '计划等级（可选0,1,2,3）',
+      title: <Tooltip title="可选0,1,2,3">计划等级</Tooltip>,
       dataIndex: 'planLevel',
       key: 'planLevel',
       render: (text, record, index) => {
@@ -80,8 +80,10 @@ const Home = function ({ scale }) {
           <InputNumber
             min={0}
             max={3}
+            controls={false}
             disabled={overallFlag}
             value={record['planLevel']}
+            style={{ width: '35px' }}
             onChange={(e) => {
               const newData = [...dataSource];
               record['planLevel'] = e;
@@ -101,6 +103,7 @@ const Home = function ({ scale }) {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
+      width: 50,
     },
     {
       title: '计划开始时间（可选）',
@@ -112,6 +115,7 @@ const Home = function ({ scale }) {
             defaultValue={moment(record.planStart, dateFormat)}
             disabled={overallFlag}
             format={dateFormat}
+            style={{ width: '120px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planStart'] = dateString;
@@ -135,6 +139,7 @@ const Home = function ({ scale }) {
             defaultValue={moment(record.planEnd, dateFormat)}
             disabled={overallFlag}
             format={dateFormat}
+            style={{ width: '120px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planEnd'] = dateString;
@@ -713,125 +718,110 @@ const Home = function ({ scale }) {
   };
   return (
     <div className="wrap">
-      {/* <div className='wrap' style={{transform: `scale(${scale})`}}> */}
-      <div className="spin-div" style={{ display: spinFlag ? 'block' : 'none' }}>
-        <Spin tip="排产中,请稍后..." size="large" spinning={spinFlag} />
-      </div>
-      <p className="total-title"></p>
-      <div className="one-top">
-        <ul className="left-info">
-          {leftInfoList.map((item, index) => {
-            return (
-              <li
-                key={index}
-                className={
-                  index == 0
-                    ? item.flag
-                      ? 'fastest-active'
-                      : 'fastest-normal'
-                    : item.flag
-                    ? 'facility-active'
-                    : 'facility-normal'
+      <Spin tip="排产中,请稍后..." size="large" spinning={spinFlag} wrapperClassName="spin">
+        <div className="main">
+          <p className="total-title"></p>
+          <div className="one-top">
+            <div className="left-info">
+              {leftInfoList.map((item) => {
+                const isActive = item.flag;
+                return (
+                  <div
+                    key={item.name}
+                    className={isActive ? 'item active' : 'item'}
+                    onClick={() => clickLeftInfo(item.value)}
+                  />
+                );
+              })}
+            </div>
+            <div className="mid-info">
+              {moniList.map((item) => {
+                const isActive = item.flag;
+                return (
+                  <div
+                    key={item.name}
+                    className={isActive ? 'item active' : 'item'}
+                    onClick={() => {
+                      clickMoni(item.name);
+                    }}
+                  >
+                    <div className="scene">{item.name}</div>
+                    <div className="desc">{item.value}</div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="right-info">
+              {rightInfoList.map((item) => {
+                return (
+                  <div key={item.name} className="params">
+                    <span className="label">{item.name}</span>
+                    <span className="value">{item.value}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div
+              className="start-btn"
+              onClick={() => {
+                productionStart();
+              }}
+            >
+              排产开始
+            </div>
+          </div>
+          <div className="two-center">
+            <div className="table-data">
+              <Table
+                size="small"
+                id="cyclicScroll"
+                className="table-material"
+                columns={columns}
+                scroll={{ x: 'max-content', y: 181 }}
+                dataSource={dataSource}
+                pagination={false}
+              />
+            </div>
+            <div className="workshop-mess">
+              <div>车间俯视图</div>
+              <div>点击模拟设备故障</div>
+            </div>
+            <div
+              className="workshop-pic"
+              onClick={(e) => {
+                e.stopPropagation();
+                const {
+                  target: { className },
+                } = e;
+                if (className === 'workshop-pic') {
+                  clickMoal();
                 }
-                onClick={() => {
-                  clickLeftInfo(item.value);
-                }}
-              ></li>
-            );
-          })}
-        </ul>
-        <ul className="moni-list">
-          {moniList.map((item, index) => {
-            return (
-              <li
-                key={index}
-                className={item.flag ? 'li-active' : 'li'}
-                onClick={() => {
-                  clickMoni(item.name);
-                }}
-              >
-                <span>{item.name}</span>
-                <span>{item.value}</span>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="right-info">
-          <ul>
-            {rightInfoList.map((item, index) => {
-              return (
-                <li key={index}>
-                  <span>{item.name}</span>
-                  <span>{item.value}</span>
-                </li>
-              );
-            })}
-          </ul>
-          <div
-            onClick={() => {
-              productionStart();
-            }}
-          >
-            排产开始
+              }}
+            >
+              <LeftModal
+                fixList={fixList}
+                modalFlagLeft={modalFlagLeft}
+                clickFix={clickFix}
+                ref={modalFlagLeftRef}
+                closeModalLeft={closeModalLeft}
+              />
+              <RightModal
+                ref={modalFlagRightRef}
+                modalFlagRight={modalFlagRight}
+                closeModalRight={closeModalRight}
+              />
+            </div>
+          </div>
+          <div className="three-bottom">
+            <div
+              onClick={() => {
+                startRest();
+              }}
+            ></div>
+            <p>开始重排</p>
           </div>
         </div>
-      </div>
-      <div className="two-center">
-        <div className="table-data">
-          {/* <Table
-          className='table-material'
-          rowClassName={tableClassName}
-          columns={columns}
-          scroll={{ x: 'max-content', y: 680 }}
-          pagination={false}
-          dataSource={dataSource} /> */}
-          <Table
-            id="cyclicScroll"
-            className="table-material"
-            columns={columns}
-            scroll={{ x: 'max-content', y: 181 }}
-            dataSource={dataSource}
-            pagination={false}
-          />
-        </div>
-        <div className="workshop-mess">
-          <p>车间俯视图</p>
-          <p>点击模拟设备故障</p>
-        </div>
-        <div
-          className="workshop-pic"
-          onClick={(e) => {
-            e.stopPropagation();
-            const {
-              target: { className },
-            } = e;
-            if (className === 'workshop-pic') {
-              clickMoal();
-            }
-          }}
-        >
-          <LeftModal
-            fixList={fixList}
-            modalFlagLeft={modalFlagLeft}
-            clickFix={clickFix}
-            ref={modalFlagLeftRef}
-            closeModalLeft={closeModalLeft}
-          />
-          <RightModal
-            ref={modalFlagRightRef}
-            modalFlagRight={modalFlagRight}
-            closeModalRight={closeModalRight}
-          />
-        </div>
-      </div>
-      <div className="three-bottom">
-        <div
-          onClick={() => {
-            startRest();
-          }}
-        ></div>
-        <p>开始重排</p>
-      </div>
+      </Spin>
     </div>
   );
 };

@@ -5,7 +5,7 @@ const LeftModal = function (props) {
   const { fixList, clickFix, modalFlagLeft, closeModalLeft } = props;
   return (
     <div className={modalFlagLeft ? 'left-modal' : 'left-modal-none'}>
-      <p
+      <span
         className="close"
         onClick={(e) => {
           e.stopPropagation();
@@ -13,7 +13,7 @@ const LeftModal = function (props) {
         }}
       >
         ×
-      </p>
+      </span>
       <div>
         <p>
           <span>[设备报警]</span>
@@ -27,11 +27,12 @@ const LeftModal = function (props) {
       <div>
         <div>
           <p>故障详情:</p>
-          <p>订单1008647828/13D配油盘OP010中断</p>
+          <p>订单1008647828/13D</p>
+          <p>配油盘OP010中断</p>
         </div>
         <div>
           <p>故障时间:</p>
-          <p>2020-01-04 2:00 p.m.v</p>
+          <p>2020-01-04 2:00 p.m</p>
         </div>
       </div>
       <div>
@@ -58,7 +59,6 @@ const LeftModal = function (props) {
           <p>123123</p>
         </div>
       </div>
-      <div></div>
     </div>
   );
 };
