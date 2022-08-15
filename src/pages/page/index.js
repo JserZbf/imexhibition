@@ -10,8 +10,6 @@ import RightModal from './Modal/RightModal';
 const Home = function ({ scale }) {
   const dateFormat = 'YYYY-MM-DD';
   // const [value, setValue] = useState(1);
-  const modalFlagLeftRef = useRef(null);
-  const modalFlagRightRef = useRef(null);
   const [modalFlagLeft, setModalFlagLeft] = useState(false);
   const [modalFlagRight, setModalFlagRight] = useState(false);
   const [moniList, setMoniList] = useState([
@@ -727,7 +725,7 @@ const Home = function ({ scale }) {
                 const isActive = item.flag;
                 return (
                   <div
-                    key={item.name}
+                    key={item.value}
                     className={isActive ? 'item active' : 'item'}
                     onClick={() => clickLeftInfo(item.value)}
                   />
@@ -780,6 +778,7 @@ const Home = function ({ scale }) {
                 scroll={{ x: 'max-content', y: 181 }}
                 dataSource={dataSource}
                 pagination={false}
+                rowKey="planNO"
               />
             </div>
             <div className="workshop-mess">
@@ -802,14 +801,9 @@ const Home = function ({ scale }) {
                 fixList={fixList}
                 modalFlagLeft={modalFlagLeft}
                 clickFix={clickFix}
-                ref={modalFlagLeftRef}
                 closeModalLeft={closeModalLeft}
               />
-              <RightModal
-                ref={modalFlagRightRef}
-                modalFlagRight={modalFlagRight}
-                closeModalRight={closeModalRight}
-              />
+              <RightModal modalFlagRight={modalFlagRight} closeModalRight={closeModalRight} />
             </div>
           </div>
           <div className="three-bottom">
