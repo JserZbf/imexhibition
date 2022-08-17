@@ -3,7 +3,7 @@
   height: 640px;
 
   .spin {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.5);
 
     .ant-spin {
       .ant-spin-text {
@@ -31,6 +31,7 @@
       align-items: center;
       height: 160px;
       position: relative;
+      margin-top: -2.2%;
       .left-info {
         width: 335px;
         height: 157%;
@@ -157,7 +158,7 @@
 
       .start-btn {
         position: absolute;
-        bottom: 0px;
+        bottom: 3px;
         right: 70px;
         color: #fff;
         width: 170px;
@@ -195,6 +196,10 @@
 
     .ant-spin.ant-spin-show-text .ant-spin-text {
       font-size: 60px;
+      padding-top: 78px!important;
+    }
+    .ant-spin-nested-loading > div > .ant-spin-lg.ant-spin-show-text .ant-spin-dot{
+      margin-top: 44px!important;
     }
   }
 
@@ -204,7 +209,7 @@
 
     .table-data {
       width: 82.5%;
-      height: 100px;
+      height: 123px;
       background: url('./img/table-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
@@ -378,7 +383,7 @@
       align-items: center;
       margin: 0 auto;
       padding-left: 24px;
-      padding-top: 16px;
+      padding-top: 15px;
       margin-bottom: 1%;
       >div:nth-child(1) {
         font-size: 14px;
@@ -412,8 +417,8 @@
         background-size: 100% 100%;
         position: absolute;
         overflow: hidden;
-        left: -30%;
-        top: -170%;
+        left: -31%;
+        top: -192%;
         padding: 78px 60px;
 
         .close {
@@ -511,8 +516,8 @@
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: absolute;
-        right: -30%;
-        top: -172%;
+        right: -31%;
+        top: -192%;
         overflow: hidden;
 
         .close {
@@ -532,7 +537,7 @@
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
             color: #ffffff;
-            padding: 18px 16px;
+            padding: 16px 16px;
             margin-bottom: 0px;
             display: flex;
             justify-content: space-between;

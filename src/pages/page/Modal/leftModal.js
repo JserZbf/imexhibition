@@ -56,7 +56,7 @@ const LeftModal = function (props) {
         </div>
         <div>
           <p>备注</p>
-          <p>123123</p>
+          <p>暂无</p>
         </div>
       </div>
     </div>

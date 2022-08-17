@@ -29,7 +29,7 @@ const RightModal = function (props) {
         </p>
         <p>
           <span>备件型号与库存</span>
-          <span>无</span>
+          <span>单向阀16</span>
         </p>
         <p>
           <span>设备电气图纸</span>
