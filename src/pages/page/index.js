@@ -242,122 +242,122 @@ const Home = function (props) {
       //console.log(orderCardDetail,'orderCardDetail-currentTime')
      // tranOrderCardDetail(orderCardDetail);
     }, [currentTime]); */
-  //   useEffect(() => {
-  //     //  getAllData(obj).then((res) => {
-  //     // console.log(res, 'res-last-dead');
-  //     const res = mockData;
-  //     setAllData(res);
-  //     setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
-  //     setOutSideScheduleCycle(res.scheduleCycle);
-  //     setOutSideSchedulePattern(res.schedulePattern);
-  //     setOutSideScheduleTarget(res.scheduleTarget);
-  //     // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-  //     const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
-  //     const arrCen = oneCen.map((item, index) => {
-  //       if (
-  //         item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
-  //         item.supplyTime == moment(new Date()).format('YYYY/M/D')
-  //       ) {
-  //         return {
-  //           ...item,
-  //           flagBool: true,
-  //         };
-  //       } else {
-  //         return {
-  //           ...item,
-  //           flagBool: false,
-  //         };
-  //       }
-  //     });
-  //     setMaterialTypeSixList(arrCen); //物料类型六个卡片
-  //     setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
-  //     setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-  //     const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-  //       return Number(-10000 * item);
-  //     });
-  //     var bigValueLineCen = [];
-  //     for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
-  //       bigValueLineCen.push(
-  //         Number(
-  //           -10000 *
-  //           res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
-  //             return a - b;
-  //           })[0],
-  //         ),
-  //       );
+  // useEffect(() => {
+  //   //  getAllData(obj).then((res) => {
+  //   // console.log(res, 'res-last-dead');
+  //   const res = mockData;
+  //   setAllData(res);
+  //   setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+  //   setOutSideScheduleCycle(res.scheduleCycle);
+  //   setOutSideSchedulePattern(res.schedulePattern);
+  //   setOutSideScheduleTarget(res.scheduleTarget);
+  //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
+  //   const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
+  //   const arrCen = oneCen.map((item, index) => {
+  //     if (
+  //       item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
+  //       item.supplyTime == moment(new Date()).format('YYYY/M/D')
+  //     ) {
+  //       return {
+  //         ...item,
+  //         flagBool: true,
+  //       };
+  //     } else {
+  //       return {
+  //         ...item,
+  //         flagBool: false,
+  //       };
   //     }
-  //     //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
-  //     setBigValueLine(bigValueLineCen);
-  //     setDiffAlgorithmY(cenY); //不同算法对比信息图
-  //     setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
-  //     setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
-  //     setFourWeekFinishRateY(
-  //       res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
-  //         return Number(100 * item);
-  //       }),
+  //   });
+  //   setMaterialTypeSixList(arrCen); //物料类型六个卡片
+  //   setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+  //   setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+  //   const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+  //     return Number(-10000 * item);
+  //   });
+  //   var bigValueLineCen = [];
+  //   for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
+  //     bigValueLineCen.push(
+  //       Number(
+  //         -10000 *
+  //         res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
+  //           return a - b;
+  //         })[0],
+  //       ),
   //     );
-  //     setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
-  //     setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
-  //     setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
-  //     setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
-  //     setOrderCardDetail(res.orderCardDetail);
-  //     setDeviceCardDetail(res.deviceCardDetail);
-  //     tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
-  //     tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
-  //     setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
-  //     // var chartDom = document.getElementById('main');
-  //     // myChart = echarts.init(chartDom);
+  //   }
+  //   //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
+  //   setBigValueLine(bigValueLineCen);
+  //   setDiffAlgorithmY(cenY); //不同算法对比信息图
+  //   setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+  //   setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
+  //   setFourWeekFinishRateY(
+  //     res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
+  //       return Number(100 * item);
+  //     }),
+  //   );
+  //   setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+  //   setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+  //   setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+  //   setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+  //   setOrderCardDetail(res.orderCardDetail);
+  //   setDeviceCardDetail(res.deviceCardDetail);
+  //   tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+  //   tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+  //   setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+  //   // var chartDom = document.getElementById('main');
+  //   // myChart = echarts.init(chartDom);
   //   //  axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-  //       // console.log(rawData, 'rawData______________', ROOT_PATH);
-  //     //  _rawData = rawData.data;
-  //      // setGanTeData(res.orderScheduleDetail);
-  //       const cen0 = res.orderScheduleDetail.map((item, index) => {
-  //         return {
-  //           ...item,
-  //           yValue: index,
-  //         };
-  //       });
-  //     /*   var colorList = removeDuplicateColor(cen0).map((item, index) => {
-  //         return {
-  //           productName: item.productName,
-  //           color: color16(),
-  //         };
-  //       });
-  //       var cen1T = []
-  //       res.orderScheduleDetail.forEach((item, index) => {
-  //         colorList.forEach((item1, index1) => {
-  //           if (item.productName == item1.productName) {
-  //             cen1T.push({ ...item, currentColor: item1.color, yValue: index })
-  //           }
-  //         })
-  //       });
-  //       var cen2 = []
-  //       res.orderScheduleDetail.forEach((item, index) => {
-  //         colorList.forEach((item1, index1) => {
-  //           if (item.productName == item1.productName) {
-  //             cen2.push({ ...item, currentColor: item1.color, yValue: index })
-  //           }
-  //         })
-  //       });
-  //       var cen3 = []
-  //       res.orderScheduleDetail.forEach((item, index) => {
-  //         colorList.forEach((item1, index1) => {
-  //           if (item.productName == item1.productName) {
-  //             cen3.push({ ...item, currentColor: item1.color, yValue: index })
-  //           }
-  //         })
-  //       });
-  //       var cen4 = []
-  //       res.orderScheduleDetail.forEach((item, index) => {
-  //         colorList.forEach((item1, index1) => {
-  //           if (item.productName == item1.productName) {
-  //             cen4.push({ ...item, currentColor: item1.color, yValue: index })
-  //           }
-  //         })
-  //       }); */
-  //       // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
-  // //    });
-  //   }, []);
+  //   // console.log(rawData, 'rawData______________', ROOT_PATH);
+  //   //  _rawData = rawData.data;
+  //   // setGanTeData(res.orderScheduleDetail);
+  //   const cen0 = res.orderScheduleDetail.map((item, index) => {
+  //     return {
+  //       ...item,
+  //       yValue: index,
+  //     };
+  //   });
+  //   /*   var colorList = removeDuplicateColor(cen0).map((item, index) => {
+  //       return {
+  //         productName: item.productName,
+  //         color: color16(),
+  //       };
+  //     });
+  //     var cen1T = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen1T.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen2 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen2.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen3 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen3.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen4 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen4.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     }); */
+  //   // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
+  //   //    });
+  // }, []);
   const tick = (number) => {
     setCount((n) => n + 1);
   };
@@ -371,16 +371,16 @@ const Home = function (props) {
   };
   const compareTime = (stime, etime, currentTime) => {
     // 转换时间格式，并转换为时间戳
-    function tranDate(time) {
-      if (time) {
-        return new Date(time.replace(/-/g, '/')).getTime();
-      }
-    }
+    // function tranDate(time) {
+    //   if (time) {
+    //     return new Date(time.replace(/-/g, '/')).getTime();
+    //   }
+    // }
     // 开始时间
-    let startTime = tranDate(stime);
+    // let startTime = tranDate(stime);
     // 结束时间
-    let endTime = tranDate(etime);
-    let thisDate = currentTime;
+    // let endTime = tranDate(etime);
+    // let thisDate = currentTime;
     // 根据选中日期传值，格式为 2018-9-10 20:08
     // let currentTimeCen =
     //   thisDate.getFullYear() +
@@ -392,13 +392,17 @@ const Home = function (props) {
     //   thisDate.getHours() +
     //   ':' +
     //   thisDate.getMinutes();
-    let nowTime = tranDate(currentTime);
+    //let nowTime = tranDate(currentTime);
+    // console.log(nowTime,'nowTime--nowTime')
     // 如果当前时间处于时间段内，返回true，否则返回false
-    if (nowTime > startTime && nowTime < endTime) {
+    //  console.log(currentTime, 'currentTime-fun')
+    if (currentTime >= stime && currentTime <= etime) {
       return 'center';
-    } else if (nowTime < startTime) {
+    }
+    if (currentTime < stime) {
       return 'left';
-    } else if (nowTime > endTime) {
+    }
+    if (currentTime > etime) {
       return 'right';
     }
   };
@@ -408,7 +412,7 @@ const Home = function (props) {
     var a1 = Date.parse(new Date(date1));
     var a2 = Date.parse(new Date(date2));
     var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
-    //  console.log(day, 'day-day-1111111111111111');
+    console.log(day, 'day-day-1111111111111111');
     return day;
   };
 
@@ -425,36 +429,364 @@ const Home = function (props) {
     var startTime = moment(obj.schedualStart).format('YYYY-MM-DD');
     var endTime = moment(obj.schedualEnd).format('YYYY-MM-DD');
     const cen = compareTime(startTime, endTime, currentTime);
-    console.log(cen, 'cen-obj-item-new');
     var value = null;
     var percent = null;
     var processedValue = null;
-    var cenValue = obj.productNum / GetNumberOfDays(startTime, endTime);
+    var direction = null;
+    var cenValue = null;
+    if (GetNumberOfDays(startTime, endTime) == 0) {
+      cenValue = obj.productNum;
+    }
+    cenValue = obj.productNum / (GetNumberOfDays(startTime, endTime) + 1);
     if (cen == 'left') {
       value = 0;
       percent = 0 + '%';
       processedValue = 0;
-    } else if (cen == 'center') {
+      direction = 'left';
+    }
+    if (cen == 'center') {
       var tranDatas = GetNumberOfDays(startTime, endTime);
       for (var index = 0; index <= tranDatas; index++) {
         if (currentTime == addDate(startTime, index)) {
-          value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
-          processedValue = ((obj.productNum / GetNumberOfDays(startTime, endTime)) * index).toFixed(
-            0,
-          );
-          percent = ((cenValue / obj.productNum) * 100 * index).toFixed(0) + '%';
+          if (index == 0) {
+            value = ((cenValue / obj.productNum) * 100 * 1).toFixed(1);
+            processedValue = cenValue.toFixed(1);
+            percent = value + '%';
+            direction = 'center';
+          } else {
+            // value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
+            value = ((cenValue / obj.productNum) * 100 * (index + 1)).toFixed(1);
+            processedValue = (
+              (obj.productNum / GetNumberOfDays(startTime, endTime)) *
+              index
+            ).toFixed(1);
+            percent = value + '%';
+            direction = 'center';
+          }
         }
       }
-    } else if (cen == 'right') {
-      value = 100;
-      processedValue = obj.productNum.toFixed(0);
-      percent = 100 + '%';
     }
-    return [value, percent, processedValue];
+    if (cen == 'right') {
+      value = 100;
+      processedValue = obj.productNum;
+      percent = 100 + '%';
+      direction = 'right';
+    }
+    return [value, percent, processedValue, direction];
   };
+
   const tranOrderCardDetail = (data, currentTime) => {
+    // const data1 = [{
+    //   aheadMinutes: 408719,
+    //   delayMinutes: 0,
+    //   finishNum: 1,
+    //   planEnd: "2022-08-23",
+    //   planLevel: 1,
+    //   planNO: "2022081218251711800600002",
+    //   planStart: "2022-08-17",
+    //   productName: "6M35机体总成",
+    //   productNum: 4,
+    //   schedualEnd: "2022-08-20 06:28:00",
+    //   schedualStart: "2022-08-18 23:28:00",
+    //   state: "加工中",
+    // }]
     const totalObj = data.map((item, index) => {
-      //   console.log(tranData(item)[0], 'tranData(item)[0]----tranData(item)[0]');
+      const baseicList = [
+        {
+          fakeValue: FakeGetDateStr(1),
+          realValue: RealGetDateStr(1),
+          content: 1,
+        },
+        {
+          fakeValue: '',
+          content: 2,
+        },
+        {
+          fakeValue: FakeGetDateStr(2),
+          realValue: RealGetDateStr(2),
+          content: 3,
+        },
+        {
+          fakeValue: '',
+          content: 4,
+        },
+        {
+          fakeValue: FakeGetDateStr(3),
+          realValue: RealGetDateStr(3),
+          content: 5,
+        },
+        {
+          fakeValue: '',
+          content: 6,
+        },
+        {
+          fakeValue: FakeGetDateStr(4),
+          realValue: RealGetDateStr(4),
+          content: 7,
+        },
+        {
+          fakeValue: '',
+          content: 8,
+        },
+        {
+          fakeValue: FakeGetDateStr(5),
+          realValue: RealGetDateStr(5),
+          content: 9,
+        },
+        {
+          fakeValue: '',
+          content: 10,
+        },
+        {
+          fakeValue: FakeGetDateStr(6),
+          realValue: RealGetDateStr(6),
+          content: 11,
+        },
+        {
+          fakeValue: '',
+          content: 12,
+        },
+        {
+          fakeValue: FakeGetDateStr(7),
+          realValue: RealGetDateStr(7),
+          content: 13,
+        },
+        {
+          fakeValue: '',
+          content: 14,
+        },
+        {
+          fakeValue: FakeGetDateStr(8),
+          realValue: RealGetDateStr(8),
+          content: 15,
+        },
+      ];
+      var planStartIndex = null;
+      var planEndIndex = null;
+      var schedualStartIndex = null;
+      var schedualEndIndex = null;
+      baseicList.forEach((itemx) => {
+        if (itemx.realValue == moment(item.planStart).format('YYYY-MM-DD')) {
+          planStartIndex = itemx.content;
+        }
+        if (itemx.realValue == moment(item.planEnd).format('YYYY-MM-DD')) {
+          planEndIndex = itemx.content;
+        }
+        if (itemx.realValue == moment(item.schedualStart).format('YYYY-MM-DD')) {
+          schedualStartIndex = itemx.content;
+        }
+        if (itemx.realValue == moment(item.schedualEnd).format('YYYY-MM-DD')) {
+          schedualEndIndex = itemx.content;
+        }
+      });
+      const baseicLists = baseicList.map((items) => {
+        if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
+          if (items.content == planEndIndex && items.content == schedualEndIndex) {
+            return {
+              ...items,
+              color: 'green',
+              title: '',
+            };
+          }
+          if (item.planStart == item.schedualStart && item.planEnd == item.schedualEnd) {
+            return {
+              ...items,
+              color: 'green',
+              title: '',
+            };
+          }
+          if (items.content == schedualEndIndex) {
+            return {
+              ...items,
+              color: 'red',
+              title: '实际超期时间',
+            };
+          }
+          return {
+            ...items,
+            color: 'red',
+            title: '',
+          };
+        }
+        if (items.content == schedualStartIndex) {
+          return {
+            ...items,
+            color: 'green',
+            title: '排产开始时间',
+          };
+        }
+        if (items.content == schedualEndIndex) {
+          return {
+            ...items,
+            color: 'green',
+            title: '排产结束时间',
+          };
+        }
+        if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
+          return {
+            ...items,
+            color: 'green',
+            title: '',
+          };
+        }
+        if (items.content == planStartIndex) {
+          return {
+            ...items,
+            color: 'skyblue',
+            title: '计划开始时间',
+          };
+        }
+        if (items.content == planEndIndex) {
+          return {
+            ...items,
+            color: 'skyblue',
+            title: '计划结束时间',
+          };
+        }
+        if (items.content > planStartIndex && items.content < planEndIndex) {
+          return {
+            ...items,
+            color: 'skyblue',
+            title: '',
+          };
+        }
+        return {
+          ...items,
+          color: '#f0f0f0',
+          title: '',
+        };
+      });
+      const schedualList = baseicList.map((items) => {
+        if (items.content == schedualStartIndex) {
+          if (schedualEndIndex == schedualStartIndex) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '排产开始与结束时间',
+            };
+          } else if (schedualEndIndex - schedualStartIndex == 2) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '排产开始和结束时间',
+            };
+          } else {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '排产开始时间',
+            };
+          }
+        }
+        if (items.content == schedualEndIndex) {
+          if (
+            schedualEndIndex == schedualStartIndex ||
+            schedualEndIndex - schedualStartIndex == 2
+          ) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '',
+            };
+          } else {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '排产结束时间',
+            };
+          }
+        }
+        if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
+          return {
+            ...items,
+            color: 'transparent',
+            title: '',
+          };
+        }
+        return {
+          ...items,
+          color: 'transparent',
+          title: '',
+        };
+      });
+      const planList = baseicList.map((items) => {
+        if (items.content == planStartIndex) {
+          if (planStartIndex == planEndIndex) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '计划开始与结束时间',
+            };
+          } else if (planEndIndex - planStartIndex == 2) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '计划开始和结束时间',
+            };
+          } else {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '计划开始时间',
+            };
+          }
+        }
+        if (items.content == planEndIndex) {
+          if (planEndIndex == planStartIndex || planEndIndex - planStartIndex == 2) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '',
+            };
+          } else {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '计划结束时间',
+            };
+          }
+        }
+        if (items.content > planStartIndex && items.content < planEndIndex) {
+          return {
+            ...items,
+            color: 'transparent',
+            title: '',
+          };
+        }
+        return {
+          ...items,
+          color: 'transparent',
+          title: '',
+        };
+      });
+      const exceedList = baseicList.map((items) => {
+        if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
+          if (items.content == planEndIndex && items.content == schedualEndIndex) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '',
+            };
+          }
+          if (items.content == schedualEndIndex) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '实际超期时间',
+            };
+          }
+          return {
+            ...items,
+            color: 'transparent',
+            title: '',
+          };
+        }
+        return {
+          ...items,
+          color: 'transparent',
+          title: '',
+        };
+      });
       return {
         leftEchartsPieInfoOne: item,
         leftEchartsPieOne: {
@@ -539,30 +871,41 @@ const Home = function (props) {
                     normal: {
                       rich: {
                         a: {
-                          color: '#3a7ad5',
+                          color: '#fff',
                           align: 'center',
-                          fontSize: 20,
-                          fontWeight: 'bold',
+                          fontSize: 11,
                         },
                         b: {
                           color: '#fff',
                           align: 'center',
                           fontSize: 16,
+                          padding: 5,
+                        },
+                        c: {
+                          color: '#fff',
+                          align: 'center',
+                          fontSize: 22,
+                          padding: 5,
                         },
                       },
                       formatter: function (params) {
                         const [value, percent, processedValue] = tranData(item, currentTime);
                         return (
-                          '{b|100%}\n\n' +
-                          '{b|计划产量' +
+                          // '{a|计划编号:' +
+                          // item.planNO.slice(0, 6) +
+                          // '}' +
+                          // '\n\n{a|产品名称:' +
+                          // item.productName +
+                          // '件}' +
+                          '\n\n{b|计划产量' +
                           item.productNum +
                           '件}' +
-                          '\n\n{b|' +
-                          percent +
-                          '}' +
                           '\n\n{b|已加工' +
                           processedValue +
-                          '件}'
+                          '件}' +
+                          '\n\n{c|' +
+                          percent +
+                          '}'
                         );
                       },
                       position: 'center',
@@ -630,7 +973,10 @@ const Home = function (props) {
         },
         yijiagongCount: tranData(item, currentTime)[1],
         leftEchartsPieInfoOneCurrent: null,
-        leftEchartsPieInfoOneSteps: [],
+        baseicList: baseicLists,
+        planList: planList,
+        schedualList: schedualList,
+        exceedList: exceedList,
       };
     });
     setLeftEchart(totalObj);
@@ -1255,227 +1601,6 @@ const Home = function (props) {
     });
     setRightEchart(totalObj);
   };
-  /*   const showLeftTime = (moniCount) => {
-    console.log(moniCount, 'moniCount-moniCount');
-    if (moniCount < 60) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 1);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    } else if (moniCount >= 60 && moniCount < 120) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 2);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    } else if (moniCount >= 120 && moniCount < 180) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 3);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    } else if (moniCount >= 180 && moniCount < 240) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 4);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    } else if (moniCount >= 240 && moniCount < 300) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 5);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    } else if (moniCount >= 300 && moniCount < 360) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 6);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    } else if (moniCount >= 360 && moniCount <= 421) {
-      let now = new Date();
-      // let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()];
-      let currentTimeCen = [now.getFullYear(), now.getMonth() + 1, now.getDate()];
-      // console.log(currentTimeCen, 'currentTimeCen');
-      //  console.log(GetDateStr(7), 'GetDateStr(7)');
-      if (currentTimeCen.toString() === GetDateStr(7).toString()) {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * -7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      } else {
-        now.setTime(now.getTime() + 24 * 60 * 60 * 1000 * 7);
-        let year = now.getFullYear(); // 年
-        let month = checkTime(now.getMonth() + 1); // 月 记得要 +1
-        let dates = checkTime(now.getDate()); // 日
-        let h = checkTime(now.getHours()); // 时
-        let m = checkTime(now.getMinutes()); // 分
-        let s = checkTime(now.getSeconds()); // 秒
-        return [
-          year + '-' + month + '-' + dates + ' ' + h + ':' + m,
-          year + '/' + month + '/' + dates,
-        ];
-      }
-    }
-  }; */
   // 补零函数：不足10的情况，前面加0
   const checkTime = (i) => {
     if (i < 10) {
@@ -1483,13 +1608,21 @@ const Home = function (props) {
     }
     return i;
   };
-  const GetDateStr = (AddDayCount) => {
+  const FakeGetDateStr = (AddDayCount) => {
     var dd = new Date();
     dd.setDate(dd.getDate() + AddDayCount); //获取AddDayCount天后的日期
     var y = dd.getFullYear();
     var m = dd.getMonth() + 1; //获取当前月份的日期
     var d = dd.getDate();
-    return [y, m, d];
+    return m + '-' + d;
+  };
+  const RealGetDateStr = (AddDayCount) => {
+    var dd = new Date();
+    dd.setDate(dd.getDate() + AddDayCount); //获取AddDayCount天后的日期
+    var y = dd.getFullYear();
+    var m = checkTime(dd.getMonth() + 1); //获取当前月份的日期
+    var d = checkTime(dd.getDate());
+    return y + '-' + m + '-' + d;
   };
   return (
     <div className="wrap">

@@ -31,8 +31,6 @@ const leftCenter = function (props) {
   } = props;
   const [timer, setTimer] = useState(null);
   const [timers, setTimers] = useState(null);
-  const mainPlan = useRef(null);
-  const [inSideOrderDetailTimeList, setInSideOrderDetailTimeList] = useState([]);
   useEffect(() => {
     if (leftEchart.length) {
       roll(100);
@@ -41,13 +39,6 @@ const leftCenter = function (props) {
       clearInterval(timers);
     };
   }, [leftEchart]);
-  useEffect(() => {
-    var cenData = [];
-    for (var i = 1; i <= 7; i++) {
-      cenData.push(GetDateStr(i));
-    }
-    setInSideOrderDetailTimeList(cenData);
-  }, []);
   const checkTime = (i) => {
     if (i < 10) {
       i = '0' + i;
@@ -60,179 +51,6 @@ const leftCenter = function (props) {
       return clearInterval(timer);
     };
   }, [materialDemandList]);
-  const GetDateStr = (AddDayCount) => {
-    var dd = new Date();
-    dd.setDate(dd.getDate() + AddDayCount); //获取AddDayCount天后的日期
-    var y = dd.getFullYear();
-    var m = dd.getMonth() + 1; //获取当前月份的日期
-    var d = dd.getDate();
-    return checkTime(m) + '-' + checkTime(d);
-  };
-  useEffect(() => {
-    leftEchart.forEach((item) => {
-      if (
-        item.leftEchartsPieInfoOne.planStart &&
-        item.leftEchartsPieInfoOne.planEnd &&
-        item.leftEchartsPieInfoOne.schedualStart &&
-        item.leftEchartsPieInfoOne.schedualEnd
-      ) {
-        // const initArr = [
-        //   {
-        //     name: '计划开始时间',
-        //     value: moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
-        //   },
-        //   {
-        //     name: '最晚结束时间',
-        //     value: moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD'),
-        //   },
-        //   {
-        //     name: '排产起始时间',
-        //     value: moment(item.leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
-        //   },
-        //   {
-        //     name: '排产结束时间',
-        //     value: moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
-        //   },
-        // ];
-        // const cenArr = compareFN(initArr, 'value');
-        // if (compareTime1(cenArr[0].value, cenArr[1].value)) {
-        //   item.leftEchartsPieInfoOneCurrent = 0;
-        // } else if (compareTime1(cenArr[1].value, cenArr[2].value)) {
-        //   item.leftEchartsPieInfoOneCurrent = 1;
-        // } else if (compareTime1(cenArr[2].value, cenArr[3].value)) {
-        //   item.leftEchartsPieInfoOneCurrent = 2;
-        // } else {
-        //   item.leftEchartsPieInfoOneCurrent = 3;
-        // }
-        // item.leftEchartsPieInfoOneSteps = cenArr;
-        // const initArr = [
-        //   {
-        //     name: '计划开始时间',
-        //     value: moment(item.leftEchartsPieInfoOne.planStart).format('YYYY-MM-DD'),
-        //   },
-        //   {
-        //     name: '最晚结束时间',
-        //     value: moment(item.leftEchartsPieInfoOne.planEnd).format('YYYY-MM-DD'),
-        //   },
-        //   {
-        //     name: '排产起始时间',
-        //     value: moment(item.leftEchartsPieInfoOne.schedualStart).format('YYYY-MM-DD'),
-        //   },
-        //   {
-        //     name: '排产结束时间',
-        //     value: moment(item.leftEchartsPieInfoOne.schedualEnd).format('YYYY-MM-DD'),
-        //   },
-        // ];
-        var planStartValue = moment(item.leftEchartsPieInfoOne.planStart).format('MM-DD');
-        var planEndValue = moment(item.leftEchartsPieInfoOne.planEnd).format('MM-DD');
-        var schedualStartValue = moment(item.leftEchartsPieInfoOne.schedualStart).format('MM-DD');
-        var schedualEndValue = moment(item.leftEchartsPieInfoOne.schedualEnd).format('MM-DD');
-
-        var initArr = [
-          //map if判断status
-          {
-            value: GetDateStr(1),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-          {
-            value: GetDateStr(2),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-
-          {
-            value: GetDateStr(3),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-          {
-            value: GetDateStr(4),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-          {
-            value: GetDateStr(5),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-          {
-            value: GetDateStr(6),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-          {
-            value: GetDateStr(7),
-            color: '',
-            status: '',
-            index: null,
-            content: '',
-          },
-          {
-            value: GetDateStr(8),
-            color: '',
-            status: [],
-            index: null,
-            content: '',
-          },
-        ];
-        initArr.forEach((item, index) => {
-          if (item.value >= planStartValue && item.value <= planEndValue) {
-            item.color = 'skyblue';
-            item.status = 'end';
-            item.index = index;
-          }
-          if (item.value >= schedualStartValue && item.value <= schedualEndValue) {
-            item.color = 'green';
-            item.status = 'end';
-            item.index = index;
-          }
-          if (
-            item.value >= schedualStartValue &&
-            item.value > planEndValue &&
-            item.value <= schedualEndValue
-          ) {
-            item.color = 'red';
-            item.status = 'end';
-            item.index = index;
-          }
-          if (item.value == planStartValue) {
-            item.content = '计划开始时间';
-          }
-          if (item.value == planEndValue) {
-            item.content = '计划结束时间';
-          }
-          if (item.value == schedualStartValue) {
-            item.content = '排产开始时间';
-          }
-          if (item.value == schedualEndValue) {
-            item.content = '排产结束时间';
-          }
-        });
-        // console.log(
-        //   planStartValue,
-        //   planEndValue,
-        //   schedualStartValue,
-        //   schedualEndValue,
-        //   'planStartValue-schedualEndValue',
-        // );
-        // console.log(initArr, 'initArrCen----initArrCen');
-        item.leftEchartsPieInfoOneSteps = initArr;
-      }
-    });
-  }, [leftEchart /* , currentTime */]);
   const columns = [
     {
       title: '序号',
@@ -440,7 +258,7 @@ const leftCenter = function (props) {
                   <li key={index}>
                     <ReactEchartsCom option={item.leftEchartsPieOne} />
                     <div>
-                      <ul>
+                      <ul className="steps-mess">
                         <li className="title">
                           <span>计划编号</span>
                           <Tooltip title={item.leftEchartsPieInfoOne.planNO}>
@@ -457,17 +275,27 @@ const leftCenter = function (props) {
                         </li>
                         <li className="title"></li>
                         <li className="title-button">
-                          <span className={item.yijiagongCount != '100%' ? 'active' : ''}>
+                          <span
+                            className={
+                              item.yijiagongCount != '0%' &&
+                              item.yijiagongCount != '100%' &&
+                              item.yijiagongCount != '100.0%'
+                                ? 'active'
+                                : ''
+                            }
+                          >
                             加工中
+                          </span>
+                          <span className={item.yijiagongCount == '0%' ? 'active' : ''}>
+                            未加工
                           </span>
                           <span
                             className={
-                              item.leftEchartsPieInfoOneCurrent == '未加工' ? 'active' : ''
+                              item.yijiagongCount == '100%' || item.yijiagongCount == '100.0%'
+                                ? 'active'
+                                : ''
                             }
                           >
-                            未加工
-                          </span>
-                          <span className={item.yijiagongCount == '100%' ? 'active' : ''}>
                             已加工
                           </span>
                         </li>
@@ -477,33 +305,67 @@ const leftCenter = function (props) {
                         // current={item.leftEchartsPieInfoOneCurrent}
                         progressDot={customDotOne}
                       >
-                        {item.leftEchartsPieInfoOneSteps.map((item) => {
+                        {item.baseicList.map((item) => {
                           return <Step title={item.name} description={item.value} status={item.status} />;
                         })}
                       </Steps> */}
-                      <ul className="steps-div">
-                        {item.leftEchartsPieInfoOneSteps.map((item, index) => {
+                      {/* <ul className="steps-exceedList">
+                        {item.exceedList.map((item, index) => {
                           return (
-                            <li key={index}>
+                            <li key={index} style={{ background: item.color }}>
+                              <span>{item.title}</span>
+                            </li>
+                          );
+                        })}
+                      </ul> */}
+                      <ul className="steps-schedualList">
+                        {item.schedualList.map((item, index) => {
+                          return (
+                            <li key={index} style={{ background: item.color }}>
                               <span
                                 style={{
-                                  background: item.color ? item.color : '#f0f0f0',
+                                  left:
+                                    item.title == '排产开始和结束时间'
+                                      ? '-71%'
+                                      : item.title == '排产开始与结束时间'
+                                      ? '-233%'
+                                      : '-152%',
                                 }}
-                              ></span>
-                              <span
-                                style={{
-                                  background: item.color ? item.color : '#f0f0f0',
-                                  display: index === 7 ? 'none' : 'block',
-                                }}
-                              ></span>
-                              {/* <span>{item.content}</span> */}
+                              >
+                                {item.title}
+                              </span>
                             </li>
                           );
                         })}
                       </ul>
-                      <ul className="steps-div-date">
-                        {item.leftEchartsPieInfoOneSteps.map((item, index) => {
-                          return <li key={index}>{item.value}</li>;
+                      <ul className="steps-planList">
+                        {item.planList.map((item, index) => {
+                          return (
+                            <li key={index} style={{ background: item.color }}>
+                              <span
+                                style={{
+                                  left:
+                                    item.title == '计划开始和结束时间'
+                                      ? '-71%'
+                                      : item.title == '计划开始与结束时间'
+                                      ? '-233%'
+                                      : '-152%',
+                                }}
+                              >
+                                {item.title}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <ul className="steps-baseicList">
+                        {item.baseicList.map((item, index) => {
+                          return <li key={index} style={{ background: item.color }}></li>;
+                        })}
+                      </ul>
+                      <ul className="steps-baseicList-date">
+                        {item.baseicList.map((item, index) => {
+                          return <li key={index}>{item.fakeValue}</li>;
                         })}
                       </ul>
                     </div>
