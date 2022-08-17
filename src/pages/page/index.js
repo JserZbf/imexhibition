@@ -15,17 +15,17 @@ const Home = function ({ scale }) {
   const [moniList, setMoniList] = useState([
     {
       name: '模拟场景1',
-      value: '物料未到位',
+      value: '机加',
       flag: false,
     },
     {
       name: '模拟场景2',
-      value: '机床保养任务',
+      value: '机加带保养',
       flag: false,
     },
     {
       name: '模拟场景3',
-      value: '使用智能算法优化',
+      value: '智能优化',
       flag: true,
     },
   ]);
@@ -68,6 +68,10 @@ const Home = function ({ scale }) {
       title: '计划编号',
       dataIndex: 'planNO',
       key: 'planNO',
+      width:80,
+      render: (text, record, index) => {
+        return text.slice(0,6)+'...'
+      },
     },
     {
       title: <Tooltip title="可选0,1,2,3">计划等级</Tooltip>,
@@ -79,7 +83,7 @@ const Home = function ({ scale }) {
             min={0}
             max={3}
             controls={false}
-            disabled={overallFlag}
+            disabled={true}
             value={record['planLevel']}
             style={{ width: '35px' }}
             onChange={(e) => {
@@ -101,17 +105,18 @@ const Home = function ({ scale }) {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
-      width: 50,
+      width: 100,
     },
     {
       title: '计划开始时间（可选）',
       dataIndex: 'planStart',
       key: 'planStart',
+      width: 160,
       render: (text, record, index) => {
         return (
           <DatePicker
             defaultValue={moment(record.planStart, dateFormat)}
-            disabled={overallFlag}
+            disabled={true}
             format={dateFormat}
             style={{ width: '120px' }}
             onChange={(date, dateString) => {
@@ -131,11 +136,12 @@ const Home = function ({ scale }) {
       title: '计划结束时间（可选）',
       dataIndex: 'planEnd',
       key: 'planEnd',
+      width:160,
       render: (text, record, index) => {
         return (
           <DatePicker
             defaultValue={moment(record.planEnd, dateFormat)}
-            disabled={overallFlag}
+            disabled={true}
             format={dateFormat}
             style={{ width: '120px' }}
             onChange={(date, dateString) => {
@@ -775,7 +781,7 @@ const Home = function ({ scale }) {
                 id="cyclicScroll"
                 className="table-material"
                 columns={columns}
-                scroll={{ x: 'max-content', y: 181 }}
+                scroll={{ x: 'max-content', y: 50 }}
                 dataSource={dataSource}
                 pagination={false}
                 rowKey="planNO"

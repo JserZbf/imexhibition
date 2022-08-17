@@ -1,10 +1,10 @@
 .wrap {
   width: 1024px;
-  height: 541px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: 640px;
+
   .spin {
     background-color: rgba(0, 0, 0, 0.9);
+
     .ant-spin {
       .ant-spin-text {
         text-shadow: none;
@@ -13,28 +13,29 @@
   }
 
   .main {
+    width: 1024px;
+    height: 640px;
     background: url('./img/total-background.png') no-repeat;
     background-size: 100% 100%;
     position: relative;
     .total-title {
       width: 350px;
-      height: 115px;
-      background: url('./img/main-title-background.png') no-repeat;
-      background-size: 100% 100%;
+      height: 52px;
       text-align: center;
       margin: 0 auto;
     }
+
     .one-top {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 255px;
+      height: 160px;
       position: relative;
-      margin-top: 40px;
       .left-info {
         width: 335px;
-        height: 100%;
+        height: 157%;
         position: relative;
+        transform: rotate(-4deg);
         .item {
           width: 85px;
           height: 40px;
@@ -43,33 +44,39 @@
           background-repeat: no-repeat;
           transform: rotate(3deg);
         }
-        & > div:nth-of-type(1).item {
+
+        &>div:nth-of-type(1).item {
           top: 105px;
           left: 111px;
           background-image: url('./img/fastest-background.png');
         }
-        & > div:nth-of-type(2).item {
-          top: 110px;
+
+        &>div:nth-of-type(2).item {
+          top: 109px;
           left: 194px;
-          height: 48px;
+          height: 50px;
           background-image: url('./img/facility-background.png');
         }
-        & > div:nth-of-type(1).active {
+
+        &>div:nth-of-type(1).active {
           background-image: url('./img/fastest-background-active.png');
         }
-        & > div:nth-of-type(2).active {
+
+        &>div:nth-of-type(2).active {
           background-image: url('./img/facility-background-active.png');
         }
       }
+
       .mid-info {
         height: 100%;
         flex: 1;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         .item {
           width: 32%;
-          height: 60%;
+          height: 81%;
           background-image: url('./img/moni-normal-background.png');
           background-repeat: no-repeat;
           background-size: 100% 100%;
@@ -79,29 +86,35 @@
           flex-direction: column;
           font-family: PingFang SC-Regular, PingFang SC;
           font-weight: 400;
+
           .scene {
             font-size: 14px;
             color: #7ef6ff;
           }
+
           .desc {
             font-size: 12px;
             color: #ec8d1f;
           }
         }
-        & > div:nth-of-type(3).item {
+
+        &>div:nth-of-type(3).item {
           .desc {
             max-width: 50px;
             line-height: 14px;
           }
         }
+
         .active {
           background-image: url('./img/moni-active-background.png');
         }
       }
+
       .right-info {
         width: 335px;
-        height: 100%;
+        height: 155%;
         position: relative;
+        transform: rotate(4deg);
         .params {
           position: absolute;
           display: flex;
@@ -114,29 +127,34 @@
           font-size: 12px;
           font-family: TRENDS-, TRENDS;
           transform: rotate(-3deg);
+
           .label {
             color: #aaaaaa;
             margin-right: 3px;
             transform: rotate(-3deg);
           }
+
           .value {
             color: #7ef6ff;
             transform: rotate(-3deg);
             margin-top: -4px;
           }
         }
-        & > div:nth-of-type(1).params {
+
+        &>div:nth-of-type(1).params {
           top: 110px;
           left: 25px;
           height: 49px;
           background-image: url('./img/right-production-background.png');
         }
-        & > div:nth-of-type(2).params {
+
+        &>div:nth-of-type(2).params {
           top: 105px;
           left: 120px;
           background-image: url('./img/right-classes-background.png');
         }
       }
+
       .start-btn {
         position: absolute;
         bottom: 0px;
@@ -186,17 +204,19 @@
 
     .table-data {
       width: 82.5%;
-      height: 250px;
+      height: 100px;
       background: url('./img/table-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
       position: relative;
-      margin-top: -1%;
+      margin-top: -2.5%;
+
       .table-material {
         width: 92%;
         position: absolute;
-        left: 4.2%;
+        left: 1.2%;
         top: 0%;
+
         .ant-table-wrapper {
           width: 98%;
           height: 100%;
@@ -211,7 +231,7 @@
         }
 
         // 表头样式
-        .ant-table-thead > tr > th {
+        .ant-table-thead>tr>th {
           background-color: transparent;
           font-size: 14px;
           font-family: Segoe UI-Regular, Segoe UI;
@@ -225,47 +245,48 @@
 
         // 修改选中行样式
         .ant-table-tbody {
+
           // .ant-table-measure-row{
           //  // background-color: pink;
           // }
-          > tr:hover:not(.ant-table-expanded-row) > td,
+          >tr:hover:not(.ant-table-expanded-row)>td,
           .ant-table-row-hover,
-          .ant-table-row-hover > td {
+          .ant-table-row-hover>td {
             background-color: #132a56 !important;
             color: #15e0ff !important;
           }
         }
 
         // 去除边框，留右边框 && 表格内容居中 && 行高
-        .ant-table-tbody > tr > td,
-        .ant-table-thead > tr > th {
+        .ant-table-tbody>tr>td,
+        .ant-table-thead>tr>th {
           border-bottom: none;
           text-align: center !important;
-          padding: 10px 10px !important;
+          padding: 5px 0px !important;
         }
 
-        .ant-table-tbody > tr {
+        .ant-table-tbody>tr {
           height: 20px;
 
-          > td {
+          >td {
             font-size: 14px;
             font-family: Segoe UI-Regular, Segoe UI;
             font-weight: 400;
             color: #ffffff;
           }
 
-          > td:nth-child(3) {
+          >td:nth-child(3) {
             color: black;
           }
         }
 
         // 去除表头最右边边框
-        .ant-table-container table > thead > tr:first-child th:last-child {
+        .ant-table-container table>thead>tr:first-child th:last-child {
           border-right: none;
         }
 
         // 去除tbody最右边边框
-        .ant-table-container table > tbody > tr td:last-child {
+        .ant-table-container table>tbody>tr td:last-child {
           border-right: none;
         }
 
@@ -351,22 +372,22 @@
 
     .workshop-mess {
       width: 100%;
-      height: 55px;
+      height: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 0 auto;
       padding-left: 24px;
       padding-top: 16px;
-
-      > div:nth-child(1) {
-        font-size: 20px;
+      margin-bottom: 1%;
+      >div:nth-child(1) {
+        font-size: 14px;
         font-family: REEJI-PinboGB-Flash-Regular, REEJI-PinboGB-Flash;
         font-weight: 400;
         color: #ffffff;
       }
 
-      > div:nth-child(2) {
+      >div:nth-child(2) {
         font-size: 12px;
         font-family: REEJI-PinboGB-Flash-Regular, REEJI-PinboGB-Flash;
         font-weight: 400;
@@ -377,7 +398,7 @@
 
     .workshop-pic {
       width: 62%;
-      height: 355px;
+      height: 150px;
       background: url('./img/workshop-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
@@ -392,8 +413,9 @@
         position: absolute;
         overflow: hidden;
         left: -30%;
-        top: -30%;
+        top: -170%;
         padding: 78px 60px;
+
         .close {
           position: absolute;
           right: 6%;
@@ -401,52 +423,61 @@
           font-size: 64px;
           color: #15e8ff;
         }
-        > div {
+
+        >div {
           font-size: 16px;
           font-family: PingFang SC-Bold, PingFang SC;
           display: flex;
           justify-content: space-between;
           align-items: center;
           padding: 0px 16px;
+
           p {
             margin-bottom: 0px;
           }
         }
-        > div:nth-child(2) {
+
+        >div:nth-child(2) {
           height: 59px;
           font-weight: bold;
           color: #15e8ff;
-          > p {
+
+          >p {
             flex: 1;
           }
         }
 
-        > div:nth-child(3) {
+        >div:nth-child(3) {
           height: 102px;
           font-weight: 400;
           color: #ffffff;
-          > div {
+
+          >div {
             flex: 1;
           }
         }
 
-        > div:nth-child(4) {
-          > div {
+        >div:nth-child(4) {
+          >div {
             flex: 1;
           }
-          > div:nth-child(1) {
+
+          >div:nth-child(1) {
             .span-active {
               background: linear-gradient(180deg, #05e6f6 0%, #064caa 100%);
             }
+
             .span {
               background: grey;
             }
-            > p:nth-child(1) {
+
+            >p:nth-child(1) {
               font-weight: 400;
               color: #ffffff;
             }
           }
-          > div:nth-child(1) > p:nth-child(2) > span {
+
+          >div:nth-child(1)>p:nth-child(2)>span {
             display: inline-block;
             font-size: 16px;
             font-family: PingFang SC-Regular, PingFang SC;
@@ -462,25 +493,28 @@
             height: 32px;
           }
 
-          > div:nth-child(2) > p {
+          >div:nth-child(2)>p {
             font-weight: 400;
             color: #ffffff;
           }
         }
       }
+
       .left-modal-none {
         display: none;
       }
+
       .right-modal {
         width: 500px;
-        height: 500px;
+        height: 481px;
         background-image: url('./img/modal-background-mess.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: absolute;
         right: -30%;
-        top: -30%;
+        top: -172%;
         overflow: hidden;
+
         .close {
           position: absolute;
           right: 6%;
@@ -488,10 +522,12 @@
           font-size: 64px;
           color: #15e8ff;
         }
+
         .content {
           height: 100%;
           padding: 80px 60px;
-          > p {
+
+          >p {
             font-size: 16px;
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
@@ -500,16 +536,19 @@
             margin-bottom: 0px;
             display: flex;
             justify-content: space-between;
-            > span:nth-child(1) {
+
+            >span:nth-child(1) {
               width: 115px;
             }
           }
-          > p:nth-child(1) {
+
+          >p:nth-child(1) {
             font-weight: bold;
             color: #15e8ff;
           }
         }
       }
+
       .right-modal-none {
         display: none;
       }
@@ -522,17 +561,17 @@
     margin-top: 1.5%;
     text-align: center;
 
-    > div {
-      width: 202px;
-      height: 202px;
+    >div {
+      width: 101px;
+      height: 101px;
       background: url('./img/reset-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
       cursor: pointer;
     }
 
-    > p {
-      font-size: 47px;
+    >p {
+      font-size: 20px;
       font-family: PingFang SC-Bold, PingFang SC;
       font-weight: bold;
       color: #1be0ff;
