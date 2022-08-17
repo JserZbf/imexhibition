@@ -54,8 +54,8 @@ const Home = function ({ scale }) {
   const [overallFlag, setOverallFlag] = useState(false);
   const [rescheduleDetail, setRescheduleDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
-  const [reset,setReset]=useState(false);
-  const [spinMess,setSpinMess]=useState('排产中,请稍后...')
+  const [reset, setReset] = useState(false);
+  const [spinMess, setSpinMess] = useState('排产中,请稍后...')
   const columns = [
     {
       title: '序号',
@@ -411,6 +411,7 @@ const Home = function ({ scale }) {
           message.success({
             content: '排产完成,请在大屏观看排产结果!',
             style: {
+              marginTop:'20vh',
               fontSize: 22,
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
@@ -420,6 +421,7 @@ const Home = function ({ scale }) {
             content: '排产失败',
             style: {
               fontSize: 22,
+              marginTop:'20vh',
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
           });
@@ -438,15 +440,17 @@ const Home = function ({ scale }) {
         content: '请先点击排产开始',
         style: {
           fontSize: 22,
+          marginTop:'20vh',
           fontFamily: 'PingFang SC-Regular, PingFang SC',
         },
       });
     }
-    if (fixValue.length==0) {
+    if (fixValue.length == 0) {
       return message.warn({
         content: '请先选择预计维修时间',
         style: {
           fontSize: 22,
+          marginTop:'20vh',
           fontFamily: 'PingFang SC-Regular, PingFang SC',
         },
       });
@@ -488,6 +492,7 @@ const Home = function ({ scale }) {
           message.success({
             content: '重排完成,请在大屏观看排产结果',
             style: {
+              marginTop:'20vh',
               fontSize: 22,
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
@@ -497,6 +502,7 @@ const Home = function ({ scale }) {
             content: '重排失败',
             style: {
               fontSize: 22,
+              marginTop:'20vh',
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
           });
@@ -632,7 +638,7 @@ const Home = function ({ scale }) {
                 startRest();
               }}
             ></div>
-            <p style={{display:reset?'block':'none'}}>开始重排</p>
+            <p style={{ display: reset ? 'block' : 'none' }}>开始重排</p>
           </div>
         </div>
       </Spin>
