@@ -447,7 +447,7 @@ const Home = function ({ scale }) {
     }
     if (fixValue.length == 0) {
       return message.warn({
-        content: '请先选择预计维修时间',
+        content: '请先选择故障设备',
         style: {
           fontSize: 22,
           marginTop: '20vh',
@@ -564,18 +564,18 @@ const Home = function ({ scale }) {
         <div className="main">
           <p className="total-title"></p>
           <div className="one-top">
-            <div className="left-info">
+            <ul className="left-info">
               {leftInfoList.map((item) => {
-                const isActive = item.flag;
                 return (
-                  <div
+                  <li
                     key={item.value}
-                    className={isActive ? 'item active' : 'item'}
                     onClick={() => clickLeftInfo(item.value)}
-                  />
+                  >
+                    <span style={{color:item.flag?'#ACDEFF':'#AAAAAA'}}>{item.value}</span>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
             <div className="mid-info">
               {moniList.map((item) => {
                 const isActive = item.flag;
@@ -656,7 +656,7 @@ const Home = function ({ scale }) {
                 startRest();
               }}
             ></div>
-            <p style={{ display: reset ? 'block' : 'none' }}>开始重排</p>
+            <p style={{ display: reset ? 'block' : 'none' }}>点击开始重排</p>
           </div>
         </div>
       </Spin>

@@ -5,7 +5,7 @@
 
   .spin {
     background-color: rgba(0, 0, 0, 0.5);
-  
+
     .ant-spin {
       .ant-spin-text {
         text-shadow: none;
@@ -42,6 +42,53 @@
         height: 157%;
         position: relative;
         transform: rotate(-4deg);
+
+        >li {
+          font-family: TRENDS-, TRENDS;
+          font-weight: 400;
+          color: #AAAAAA;
+
+          >span {
+            position: absolute;
+          }
+        }
+
+        >li:nth-child(1) {
+          position: absolute;
+          width: 98px;
+          height: 45.7px;
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          font-size: 12px;
+          font-family: TRENDS-, TRENDS;
+          transform: rotate(10deg);
+          background-image: url('./img/right-production-background.png');
+          left: 32.8%;
+          top: 42.1%;
+          >span {
+            left: 30%;
+            top: 26%;
+            transform: rotate(-2deg);
+          }
+        }
+        >li:nth-child(2) {
+          position: absolute;
+          width: 98px;
+          height: 37.3px;
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          font-size: 12px;
+          font-family: TRENDS-, TRENDS;
+          transform: rotate(9deg);
+          background-image: url('./img/right-classes-background.png');
+          left: 61%;
+          top: 48.5%;
+          >span {
+            left: 22%;
+            top: 23%;
+            transform: rotate(-1deg);
+          }
+        }
 
         .item {
           width: 85px;
@@ -123,6 +170,7 @@
         position: relative;
         transform: rotate(4deg);
         margin-right: -1%;
+
         .params:nth-child(1) {
           position: absolute;
           display: flex;
@@ -142,7 +190,7 @@
             color: #AAAAAA;
             margin-right: 3px;
             transform: rotate(-3deg);
-            margin-left:5px;
+            margin-left: 5px;
             margin-top: 0px;
           }
 
@@ -152,6 +200,7 @@
             margin-top: -4px;
           }
         }
+
         .params:nth-child(2) {
           position: absolute;
           display: flex;
@@ -171,7 +220,7 @@
             color: #AAAAAA;
             margin-right: 3px;
             transform: rotate(-3deg);
-            margin-left:-8px ;
+            margin-left: -8px;
           }
 
           .value {
