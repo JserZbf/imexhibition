@@ -238,7 +238,7 @@ const Home = function (props) {
       }
     });
   }, [count]);
-  /*   useEffect(() => {
+  /*  /*   useEffect(() => {
       //console.log(orderCardDetail,'orderCardDetail-currentTime')
      // tranOrderCardDetail(orderCardDetail);
     }, [currentTime]); */
@@ -1347,6 +1347,7 @@ const Home = function (props) {
                 fontSize: 12,
                 fontWeight: 400,
                 fontFamily: 'zcool-gdh',
+                position: 'top',
               },
               data: item.dayOutput.Y.slice(0, 7),
             },

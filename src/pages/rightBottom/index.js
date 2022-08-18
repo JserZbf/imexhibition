@@ -14,7 +14,7 @@ const RightBottom = function (props) {
     },
     {
       title: '排产机床使用率',
-      value: (rightBottomInfor.useRate * 100).toFixed(2) + '%',
+      value: rightBottomInfor.useRate * 100 + '%',
     },
   ];
   return (

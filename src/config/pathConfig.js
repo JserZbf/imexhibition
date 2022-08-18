@@ -5,6 +5,6 @@ export default {
     icon: 'shijianguanli',
   },
   default: {
-    path: '',
+    path: '/page',
   },
 };

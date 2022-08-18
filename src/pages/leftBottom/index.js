@@ -681,8 +681,8 @@ const leftBottom = function (props) {
             option={averageOption}
             width={'600px'}
             height={'400px'}
-            left={'90px'}
-            top={'0px'}
+            left={'30px'}
+            top={'-66px'}
           />
         </Col>
         <Col span={5}>

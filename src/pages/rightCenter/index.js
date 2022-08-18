@@ -300,8 +300,7 @@ const rightCenter = function (props) {
           show: true,
           position: 'inside',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontSize: 14,
         },
         data: fourWeekEnergyConsumption.Y1,
       },
@@ -329,8 +328,7 @@ const rightCenter = function (props) {
           show: true,
           position: 'inside',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontSize: 14,
         },
         itemStyle: {
           borderRadius: [0, 10, 10, 0],
@@ -446,10 +444,9 @@ const rightCenter = function (props) {
         },
         label: {
           show: true,
-          position: 'insideRight',
+          position: 'inside',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontSize: 14,
         },
         data: fourWeekOutputStatistics.Y1,
       },
@@ -489,10 +486,9 @@ const rightCenter = function (props) {
         },
         label: {
           show: true,
-          position: 'insideRight',
+          position: 'inside',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontSize: 14,
         },
         data: fourWeekOutputStatistics.Y2,
       },
@@ -874,7 +870,9 @@ const rightCenter = function (props) {
             normal: {
               label: {
                 show: true,
-                color: 'white', //气泡中字体颜色
+                position: 'inside',
+                color: 'white',
+                fontSize: 14,
               },
             },
           },
@@ -893,10 +891,9 @@ const rightCenter = function (props) {
         },
         label: {
           show: true,
-          position: 'insideRight',
+          position: 'inside',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontSize: 14,
         },
         data: fourWeekUseTrend.Y2,
         itemStyle: {
@@ -922,10 +919,9 @@ const rightCenter = function (props) {
         },
         label: {
           show: true,
-          position: 'insideRight',
+          position: 'inside',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
+          fontSize: 14,
         },
         data: fourWeekUseTrend.Y3,
         itemStyle: {
@@ -1084,12 +1080,10 @@ const rightCenter = function (props) {
           },
         },
         label: {
-          show: true,
+          show: false,
           position: 'insideRight',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
-          formatter: fourWeekFinishRateY[0] + '%',
+          fontSize: 14,
         },
       },
       {
@@ -1104,12 +1098,10 @@ const rightCenter = function (props) {
           },
         },
         label: {
-          show: true,
+          show: false,
           position: 'insideRight',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
-          formatter: fourWeekFinishRateY[1] + '%',
+          fontSize: 14,
         },
       },
       {
@@ -1140,12 +1132,10 @@ const rightCenter = function (props) {
           },
         },
         label: {
-          show: true,
+          show: false,
           position: 'insideRight',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
-          formatter: fourWeekFinishRateY[2] + '%',
+          fontSize: 14,
         },
       },
       {
@@ -1169,12 +1159,10 @@ const rightCenter = function (props) {
           },
         },
         label: {
-          show: true,
+          show: false,
           position: 'insideRight',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
-          formatter: fourWeekFinishRateY[3] + '%',
+          fontSize: 14,
         },
       },
       {
@@ -1198,12 +1186,10 @@ const rightCenter = function (props) {
           },
         },
         label: {
-          show: true,
+          show: false,
           position: 'insideRight',
           color: 'white',
-          fontWeight: 'bold',
-          fontSize: 18,
-          formatter: fourWeekFinishRateY[4] + '%',
+          fontSize: 14,
         },
       },
     ],
@@ -1327,7 +1313,7 @@ const rightCenter = function (props) {
           <ReactEchartsCom
             option={fourWeekPption}
             width={'700px'}
-            height={'327px'}
+            height={'403px'}
             left={'0px'}
             top={'66px'}
           />
