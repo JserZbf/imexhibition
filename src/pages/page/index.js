@@ -411,7 +411,7 @@ const Home = function ({ scale }) {
           message.success({
             content: '排产完成,请在大屏观看排产结果!',
             style: {
-              marginTop:'20vh',
+              marginTop: '20vh',
               fontSize: 22,
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
@@ -421,7 +421,7 @@ const Home = function ({ scale }) {
             content: '排产失败',
             style: {
               fontSize: 22,
-              marginTop:'20vh',
+              marginTop: '20vh',
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
           });
@@ -440,7 +440,7 @@ const Home = function ({ scale }) {
         content: '请先点击排产开始',
         style: {
           fontSize: 22,
-          marginTop:'20vh',
+          marginTop: '20vh',
           fontFamily: 'PingFang SC-Regular, PingFang SC',
         },
       });
@@ -450,7 +450,7 @@ const Home = function ({ scale }) {
         content: '请先选择预计维修时间',
         style: {
           fontSize: 22,
-          marginTop:'20vh',
+          marginTop: '20vh',
           fontFamily: 'PingFang SC-Regular, PingFang SC',
         },
       });
@@ -488,11 +488,20 @@ const Home = function ({ scale }) {
       .then((res) => {
         setSpinFlag(false);
         setOverallFlag(false);
+        setReset(false);
+        const cenFixList = fixList;
+        const cen = cenFixList.map((item) => {
+          return {
+            ...item,
+            flag: false
+          }
+        });
+        setFixList(cen);
         if (res.code == 200) {
           message.success({
             content: '重排完成,请在大屏观看排产结果',
             style: {
-              marginTop:'20vh',
+              marginTop: '20vh',
               fontSize: 22,
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
@@ -502,7 +511,7 @@ const Home = function ({ scale }) {
             content: '重排失败',
             style: {
               fontSize: 22,
-              marginTop:'20vh',
+              marginTop: '20vh',
               fontFamily: 'PingFang SC-Regular, PingFang SC',
             },
           });
@@ -511,6 +520,15 @@ const Home = function ({ scale }) {
       .catch((err) => {
         setOverallFlag(false);
         setSpinFlag(false);
+        setReset(false);
+        const cenFixList = fixList;
+        const cen = cenFixList.map((item) => {
+          return {
+            ...item,
+            flag: false
+          }
+        });
+        setFixList(cen);
       });
   };
   // useMemo(() => {
