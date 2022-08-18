@@ -110,7 +110,7 @@ const Home = function ({ scale }) {
       width: 100,
     },
     {
-      title: '计划开始时间（可选）',
+      title: '计划开始时间',
       dataIndex: 'planStart',
       key: 'planStart',
       width: 160,
@@ -135,7 +135,7 @@ const Home = function ({ scale }) {
       },
     },
     {
-      title: '计划结束时间（可选）',
+      title: '计划结束时间',
       dataIndex: 'planEnd',
       key: 'planEnd',
       width: 160,

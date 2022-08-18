@@ -1,13 +1,16 @@
 .wrap {
   width: 1024px;
   height: 640px;
+  overflow-x: hidden;
 
   .spin {
     background-color: rgba(0, 0, 0, 0.5);
-
+  
     .ant-spin {
       .ant-spin-text {
         text-shadow: none;
+        font-size: 22px;
+        font-family: 'PingFang SC-Regular, PingFang SC';
       }
     }
   }
@@ -119,8 +122,8 @@
         height: 155%;
         position: relative;
         transform: rotate(4deg);
-
-        .params {
+        margin-right: -1%;
+        .params:nth-child(1) {
           position: absolute;
           display: flex;
           justify-content: center;
@@ -134,9 +137,41 @@
           transform: rotate(-3deg);
 
           .label {
-            color: #aaaaaa;
+            font-family: TRENDS-, TRENDS;
+            font-weight: 400;
+            color: #AAAAAA;
             margin-right: 3px;
             transform: rotate(-3deg);
+            margin-left:5px;
+            margin-top: 0px;
+          }
+
+          .value {
+            color: #7ef6ff;
+            transform: rotate(-3deg);
+            margin-top: -4px;
+          }
+        }
+        .params:nth-child(2) {
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 98px;
+          height: 40px;
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          font-size: 12px;
+          font-family: TRENDS-, TRENDS;
+          transform: rotate(-3deg);
+
+          .label {
+            font-family: TRENDS-, TRENDS;
+            font-weight: 400;
+            color: #AAAAAA;
+            margin-right: 3px;
+            transform: rotate(-3deg);
+            margin-left:-8px ;
           }
 
           .value {
@@ -416,16 +451,16 @@
       position: relative;
 
       .left-modal {
-        width: 500px;
-        height: 400px;
+        width: 400px;
+        height: 350px;
         background-image: url('./img/modal-background.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: absolute;
         overflow: hidden;
-        left: -31%;
-        top: -160%;
-        padding: 78px 60px;
+        left: -24%;
+        top: -98%;
+        padding: 78px 50px;
 
         .close {
           position: absolute;
@@ -449,17 +484,19 @@
         }
 
         >div:nth-child(2) {
-          height: 15px;
+          height: 50px;
           font-weight: bold;
           color: #15e8ff;
+          margin-top: -15%;
 
           >p {
             flex: 1;
+            margin-top: 12%;
           }
         }
 
         >div:nth-child(3) {
-          height: 102px;
+          height: 95px;
           font-weight: 400;
           color: #ffffff;
 
@@ -469,6 +506,8 @@
         }
 
         >div:nth-child(4) {
+          height: 48px;
+
           >div {
             flex: 1;
           }
@@ -516,14 +555,14 @@
       }
 
       .right-modal {
-        width: 500px;
-        height: 385px;
+        width: 400px;
+        height: 336px;
         background-image: url('./img/modal-background-mess.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: absolute;
-        right: -31%;
-        top: -160%;
+        right: -23%;
+        top: -100%;
         overflow: hidden;
 
         .close {
@@ -543,7 +582,7 @@
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
             color: #ffffff;
-            padding: 14px 16px;
+            padding: 11px 16px;
             margin-bottom: 0px;
             display: flex;
             justify-content: space-between;
@@ -556,7 +595,7 @@
           >p:nth-child(1) {
             font-weight: bold;
             color: #15e8ff;
-            margin-top: -17px;
+            margin-top: -23px;
           }
         }
       }
