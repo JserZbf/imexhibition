@@ -690,8 +690,12 @@ const leftBottom = function (props) {
             <p>不同算法对比信息</p>
             <p></p>
           </div>
-          <div className="diff-infor-mess">{`六类算法同步测算比较,${selectAlgorithm}算法得出方案机床使用更${
-            allData.scheduleTarget == 1 ? '均衡' : allData.scheduleTarget == 2 ? '更快' : ''
+          <div className="diff-infor-mess">{`六类算法同步测算对比,${selectAlgorithm}算法得出方案${
+            allData.scheduleTarget == 1
+              ? '机床使用更均衡'
+              : allData.scheduleTarget == 2
+              ? '订单交付最快'
+              : ''
           }`}</div>
           <ReactEchartsCom
             option={diffOption}

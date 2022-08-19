@@ -10,6 +10,10 @@ body {}
     overflow: hidden;
 }
 
+#root>div {
+    height: 100%;
+}
+
 body {
     margin: 0;
 }

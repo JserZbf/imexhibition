@@ -449,17 +449,17 @@ const Home = function (props) {
       for (var index = 0; index <= tranDatas; index++) {
         if (currentTime == addDate(startTime, index)) {
           if (index == 0) {
-            value = ((cenValue / obj.productNum) * 100 * 1).toFixed(1);
-            processedValue = cenValue.toFixed(1);
+            processedValue = cenValue.toFixed(0);
+            value = ((processedValue / obj.productNum) * 100).toFixed(0);
             percent = value + '%';
             direction = 'center';
           } else {
             // value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
-            value = ((cenValue / obj.productNum) * 100 * (index + 1)).toFixed(1);
             processedValue = (
               (obj.productNum / GetNumberOfDays(startTime, endTime)) *
               index
-            ).toFixed(1);
+            ).toFixed(0);
+            value = ((processedValue / obj.productNum) * 100).toFixed(0);
             percent = value + '%';
             direction = 'center';
           }
