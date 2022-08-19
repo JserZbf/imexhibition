@@ -418,7 +418,7 @@ const Home = function ({ scale }) {
           });
         } else {
           message.warn({
-            content: '排产失败',
+            content: '排产失败!',
             style: {
               fontSize: 22,
               marginTop: '20vh',
@@ -437,7 +437,7 @@ const Home = function ({ scale }) {
     var fixValue = fixList.filter((item) => item.flag);
     if (rescheduleDetail.length == 0 || orderDetail.length == 0) {
       return message.warn({
-        content: '请先点击排产开始',
+        content: '请先点击排产开始!',
         style: {
           fontSize: 22,
           marginTop: '20vh',
@@ -445,9 +445,19 @@ const Home = function ({ scale }) {
         },
       });
     }
-    if (fixValue.length == 0) {
+    if (!modalFlagLeft) {
       return message.warn({
-        content: '请先选择故障设备',
+        content: '请先选择故障设备!',
+        style: {
+          fontSize: 22,
+          marginTop: '20vh',
+          fontFamily: 'PingFang SC-Regular, PingFang SC',
+        },
+      });
+    }
+    if(modalFlagLeft&&fixValue.length == 0){
+      return message.warn({
+        content: '请先选择预计维修时间!',
         style: {
           fontSize: 22,
           marginTop: '20vh',
@@ -499,7 +509,7 @@ const Home = function ({ scale }) {
         setFixList(cen);
         if (res.code == 200) {
           message.success({
-            content: '重排完成,请在大屏观看排产结果',
+            content: '重排完成,请在大屏观看排产结果!',
             style: {
               marginTop: '20vh',
               fontSize: 22,
@@ -508,7 +518,7 @@ const Home = function ({ scale }) {
           });
         } else {
           message.warn({
-            content: '重排失败',
+            content: '重排失败!',
             style: {
               fontSize: 22,
               marginTop: '20vh',
