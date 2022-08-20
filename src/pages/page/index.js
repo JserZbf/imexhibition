@@ -168,8 +168,7 @@ const Home = function (props) {
         setOutSideSchedulePattern(res.schedulePattern);
         setOutSideScheduleTarget(res.scheduleTarget);
         setAllData(res);
-        const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
-        const arrCen = oneCen;
+        const arrCen = res.materialDemandList;
         setMaterialTypeSixList(arrCen); //物料类型六个卡片
         setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
         setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
@@ -252,7 +251,7 @@ const Home = function (props) {
   //   setOutSideSchedulePattern(res.schedulePattern);
   //   setOutSideScheduleTarget(res.scheduleTarget);
   //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-  //   const oneCen = res.materialDemandList.filter((item) => item.shortNum).slice(0, 6);
+  //   const oneCen = res.materialDemandList.filter((item) => item.shortNum);
   //   const arrCen = oneCen.map((item, index) => {
   //     if (
   //       item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { connect } from 'dva';
 import { Row, Col } from 'antd';
 import './index.less';
@@ -31,6 +31,11 @@ const leftBottom = function (props) {
   ];
   const [order, setOrder] = useState([]);
   const [selectAlgorithm, setSelectAlgorithm] = useState(null);
+  const [materialTypeSixListCen, setMaterialTypeSixListCen] = useState([]);
+  const timer = useRef(null);
+  const init = () => {
+    timer?.current && clearTimeout(timer?.current);
+  };
   useEffect(() => {
     //console.log(allData.selectAlgorithm,'allData.selectAlgorithm');
     var selectAlgorithmCen = '';
@@ -70,6 +75,51 @@ const leftBottom = function (props) {
       },
     ]);
   }, [allData]);
+  useEffect(() => {
+    if (materialTypeSixList?.length) {
+      init();
+      materialTypeSixListScroll(0);
+    }
+    return init;
+  }, [materialTypeSixList]);
+
+  const spArray = function (arrCount, arr) {
+    var cenArr = [],
+      index;
+    var arrTotal = arr.concat(arr);
+    for (index = 0; index < arrTotal.length; ) {
+      console.log(index, index + arrCount, 'index---index');
+      cenArr.push(arrTotal.slice(index, (index += arrCount)));
+    }
+    return cenArr;
+  };
+  let currentPage = 0;
+  const loopData = (arr, newLen) => {
+    let len = arr.length;
+    let result = len - currentPage;
+    let newArr = [];
+    if (result > 0 && result < newLen) {
+      newArr = [...arr.slice(currentPage, len), ...arr.slice(0, newLen - result)];
+      currentPage = newLen - result;
+    } else if (result >= newLen) {
+      console.log('2');
+      newArr = arr.slice(currentPage, currentPage + newLen);
+      currentPage += newLen;
+    } else {
+      console.log('3');
+      currentPage = 0;
+      newArr = arr.slice(currentPage, currentPage + newLen);
+    }
+    return newArr;
+  };
+  const materialTypeSixListScroll = (time) => {
+    timer.current = setTimeout(() => {
+      // console.log(materialTypeSixList,'materialTypeSixList')
+      // console.log( loopData(materialTypeSixList,6),'newValue------------------1')
+      setMaterialTypeSixListCen(loopData(materialTypeSixList, 6));
+      materialTypeSixListScroll(5000);
+    }, time);
+  };
   const diffOption = useMemo(() => {
     return {
       title: {
@@ -604,12 +654,13 @@ const leftBottom = function (props) {
       ],
     };
   }, [finishPlanObj]);
+
   return (
     <div className="left-bottom">
       <Row>
         <Col span={14}>
           <ul className="material-type-list">
-            {materialTypeSixList.map((item, index) => {
+            {materialTypeSixListCen.map((item, index) => {
               return (
                 <li
                   key={index}

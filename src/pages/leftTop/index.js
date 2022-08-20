@@ -34,13 +34,7 @@ const LeftTop = (props) => {
     <div className="left-top">
       <div className="left-top-top">
         <div className="jian-tou"></div>
-        <span
-          onClick={() => {
-            start();
-          }}
-        >
-          模拟时间
-        </span>
+        <span>模拟时间</span>
       </div>
       <div className="left-top-bottom">
         {/*   {moment(GetDateStr(1)).format('YYYY/M/DD HH:mm:ssA')} */}
