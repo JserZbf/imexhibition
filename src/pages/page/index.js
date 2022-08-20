@@ -93,7 +93,7 @@ const Home = function (props) {
   // 参数为Moment类型
   const filterData = (start, end, orderCardDetail) => {
     // TODO
-    console.log(1, start.format(MOMENT_FORMAT), '', end.format(MOMENT_FORMAT));
+    //  console.log(1, start.format(MOMENT_FORMAT), '', end.format(MOMENT_FORMAT));
     const cuurrentTimeCen = start.format('YYYY-MM-DD');
     setCurrentTime(cuurrentTimeCen);
     tranOrderCardDetail(orderCardDetail, cuurrentTimeCen);
@@ -411,7 +411,7 @@ const Home = function (props) {
     var a1 = Date.parse(new Date(date1));
     var a2 = Date.parse(new Date(date2));
     var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
-    console.log(day, 'day-day-1111111111111111');
+    // console.log(day, 'day-day-1111111111111111');
     return day;
   };
 

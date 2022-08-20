@@ -102,11 +102,9 @@ const leftBottom = function (props) {
       newArr = [...arr.slice(currentPage, len), ...arr.slice(0, newLen - result)];
       currentPage = newLen - result;
     } else if (result >= newLen) {
-      console.log('2');
       newArr = arr.slice(currentPage, currentPage + newLen);
       currentPage += newLen;
     } else {
-      console.log('3');
       currentPage = 0;
       newArr = arr.slice(currentPage, currentPage + newLen);
     }
