@@ -167,6 +167,8 @@ const Gantt = ({ orderDetail }) => {
         axisLabel: {
           show: true,
           color: '#fff',
+          showMinLabel: true,
+          showMaxLabel: true,
           formatter: '{yyyy}-{M}-{d}',
         },
         splitLine: {
