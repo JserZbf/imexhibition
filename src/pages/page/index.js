@@ -70,10 +70,6 @@ const Home = function ({ scale }) {
       title: '计划编号',
       dataIndex: 'planNO',
       key: 'planNO',
-      width: 80,
-      render: (text, record, index) => {
-        return text.slice(0, 6) + '...'
-      },
     },
     {
       title: <Tooltip title="可选0,1,2,3">计划等级</Tooltip>,
@@ -87,7 +83,7 @@ const Home = function ({ scale }) {
             controls={false}
             disabled={true}
             value={record['planLevel']}
-            style={{ width: '35px' }}
+            style={{ width: '50px' }}
             onChange={(e) => {
               const newData = [...dataSource];
               record['planLevel'] = e;
@@ -107,20 +103,18 @@ const Home = function ({ scale }) {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
-      width: 100,
     },
     {
       title: '计划开始时间',
       dataIndex: 'planStart',
       key: 'planStart',
-      width: 160,
       render: (text, record, index) => {
         return (
           <DatePicker
             defaultValue={moment(record.planStart, dateFormat)}
             disabled={true}
             format={dateFormat}
-            style={{ width: '120px' }}
+            style={{ width: '200px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planStart'] = dateString;
@@ -138,14 +132,13 @@ const Home = function ({ scale }) {
       title: '计划结束时间',
       dataIndex: 'planEnd',
       key: 'planEnd',
-      width: 160,
       render: (text, record, index) => {
         return (
           <DatePicker
             defaultValue={moment(record.planEnd, dateFormat)}
             disabled={true}
             format={dateFormat}
-            style={{ width: '120px' }}
+            style={{ width: '200px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planEnd'] = dateString;
@@ -629,7 +622,7 @@ const Home = function ({ scale }) {
                 id="cyclicScroll"
                 className="table-material"
                 columns={columns}
-                scroll={{ x: 'max-content', y: 90 }}
+                scroll={{ x: 'max-content', y: 240 }}
                 dataSource={dataSource}
                 pagination={false}
                 rowKey="planNO"

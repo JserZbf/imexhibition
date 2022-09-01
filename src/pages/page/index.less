@@ -1,12 +1,13 @@
 .wrap {
-  width: 1024px;
-  height: 640px;
-  overflow-x: hidden;
+  width: 2560px;
+  height: 1600px;
 
+  //  overflow-x: hidden;
   .spin {
     background-color: rgba(0, 0, 0, 0.5);
 
     .ant-spin {
+      top: 600px!important;
       .ant-spin-text {
         text-shadow: none;
         font-size: 22px;
@@ -16,15 +17,15 @@
   }
 
   .main {
-    width: 1024px;
-    height: 640px;
+    width: 2560px;
+    height: 1600px;
     background: url('./img/total-background.png') no-repeat;
     background-size: 100% 100%;
     position: relative;
 
     .total-title {
       width: 350px;
-      height: 52px;
+      height: 130px;
       text-align: center;
       margin: 0 auto;
     }
@@ -33,7 +34,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 160px;
+      height: 400px;
       position: relative;
       margin-top: -2.2%;
 
@@ -55,34 +56,37 @@
 
         >li:nth-child(1) {
           position: absolute;
-          width: 98px;
-          height: 45.7px;
+          width: 216px;
+          height: 87px;
           background-size: 100% 100%;
           background-repeat: no-repeat;
-          font-size: 12px;
+          font-size: 23px;
           font-family: TRENDS-, TRENDS;
-          transform: rotate(10deg);
+          transform: rotate(9deg);
           background-image: url('./img/right-production-background.png');
-          left: 32.8%;
-          top: 42.1%;
+          left: 78.8%;
+          top: 44.3%;
+
           >span {
             left: 30%;
             top: 26%;
             transform: rotate(-2deg);
           }
         }
+
         >li:nth-child(2) {
           position: absolute;
-          width: 98px;
-          height: 37.3px;
+          width: 216px;
+          height: 71px;
           background-size: 100% 100%;
           background-repeat: no-repeat;
-          font-size: 12px;
+          font-size: 23px;
           font-family: TRENDS-, TRENDS;
           transform: rotate(9deg);
           background-image: url('./img/right-classes-background.png');
-          left: 61%;
-          top: 48.5%;
+          left: 141%;
+          top: 49.5%;
+
           >span {
             left: 22%;
             top: 23%;
@@ -122,14 +126,14 @@
       }
 
       .mid-info {
+        width: 1800px;
         height: 100%;
-        flex: 1;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-
+        margin-top: -1.5%;
         .item {
-          width: 32%;
+          width: 15%;
           height: 81%;
           background-image: url('./img/moni-normal-background.png');
           background-repeat: no-repeat;
@@ -142,22 +146,30 @@
           font-weight: 400;
 
           .scene {
-            font-size: 14px;
+            font-size: 28px;
             color: #7ef6ff;
           }
 
           .desc {
-            font-size: 12px;
+            font-size: 20px;
             color: #ec8d1f;
           }
         }
 
-        &>div:nth-of-type(3).item {
+        .item:nth-child(1) {
+          margin-left: 5%;
+        }
+
+        .item:nth-child(2) {
+          margin: 0px 2.5%;
+        }
+
+        /*  &>div:nth-of-type(3).item {
           .desc {
             max-width: 50px;
             line-height: 14px;
           }
-        }
+        } */
 
         .active {
           background-image: url('./img/moni-active-background.png');
@@ -176,11 +188,11 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 98px;
-          height: 40px;
+          width: 216px;
+          height: 85px;
           background-size: 100% 100%;
           background-repeat: no-repeat;
-          font-size: 12px;
+          font-size: 23px;
           font-family: TRENDS-, TRENDS;
           transform: rotate(-3deg);
 
@@ -197,7 +209,7 @@
           .value {
             color: #7ef6ff;
             transform: rotate(-3deg);
-            margin-top: -4px;
+            margin-top: -7px;
           }
         }
 
@@ -206,11 +218,11 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 98px;
-          height: 40px;
+          width: 216px;
+          height: 69px;
           background-size: 100% 100%;
           background-repeat: no-repeat;
-          font-size: 12px;
+          font-size: 23px;
           font-family: TRENDS-, TRENDS;
           transform: rotate(-3deg);
 
@@ -226,39 +238,38 @@
           .value {
             color: #7ef6ff;
             transform: rotate(-3deg);
-            margin-top: -4px;
+            margin-top: -8px;
           }
         }
 
         &>div:nth-of-type(1).params {
-          top: 110px;
-          left: 25px;
-          height: 49px;
+          top: 47%;
+          left: -101%;
           background-image: url('./img/right-production-background.png');
         }
 
         &>div:nth-of-type(2).params {
-          top: 105px;
-          left: 120px;
+          top: 45.3%;
+          left: -39%;
           background-image: url('./img/right-classes-background.png');
         }
       }
 
       .start-btn {
         position: absolute;
-        bottom: 3px;
-        right: 70px;
+        bottom: 46px;
+        right: 199px;
         color: #fff;
-        width: 170px;
-        height: 56px;
+        width: 266px;
+        height: 92px;
         background-image: url('./img/production-start-background.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
-        font-size: 20px;
+        font-size:33px;
         font-family: PingFang SC-Bold, PingFang SC;
         font-weight: bold;
         text-align: center;
-        line-height: 51px;
+        line-height: 92px;
       }
     }
   }
@@ -294,11 +305,9 @@
 
   .two-center {
     width: 100%;
-    margin-top: 15px;
-
     .table-data {
       width: 82.5%;
-      height: 123px;
+      height: 350px;
       background: url('./img/table-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
@@ -308,8 +317,8 @@
       .table-material {
         width: 92%;
         position: absolute;
-        left: 4%;
-        top: 0%;
+        left: 3%;
+        top: 4%;
 
         .ant-table-wrapper {
           width: 98%;
@@ -327,7 +336,7 @@
         // 表头样式
         .ant-table-thead>tr>th {
           background-color: transparent;
-          font-size: 14px;
+          font-size: 18px;
           font-family: Segoe UI-Regular, Segoe UI;
           font-weight: 400;
           color: #ffffff;
@@ -363,7 +372,7 @@
           height: 20px;
 
           >td {
-            font-size: 14px;
+            font-size: 18px;
             font-family: Segoe UI-Regular, Segoe UI;
             font-weight: 400;
             color: #ffffff;
@@ -472,18 +481,18 @@
       align-items: center;
       margin: 0 auto;
       padding-left: 24px;
-      padding-top: 15px;
+      padding-top: 35px;
       margin-bottom: 1%;
 
       >div:nth-child(1) {
-        font-size: 14px;
+        font-size: 39px;
         font-family: REEJI-PinboGB-Flash-Regular, REEJI-PinboGB-Flash;
         font-weight: 400;
         color: #ffffff;
       }
 
       >div:nth-child(2) {
-        font-size: 12px;
+        font-size: 18px;
         font-family: REEJI-PinboGB-Flash-Regular, REEJI-PinboGB-Flash;
         font-weight: 400;
         color: #ffffff;
@@ -493,15 +502,15 @@
 
     .workshop-pic {
       width: 62%;
-      height: 150px;
+      height: 375px;
       background: url('./img/workshop-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
       position: relative;
 
       .left-modal {
-        width: 400px;
-        height: 350px;
+        width: 1000px;
+        height: 875px;
         background-image: url('./img/modal-background.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
@@ -510,22 +519,22 @@
         left: -24%;
         top: -98%;
         padding: 78px 50px;
-
+        padding-left: 160px;
         .close {
           position: absolute;
           right: 6%;
           top: -1%;
-          font-size: 48px;
+          font-size: 120px;
           color: #15e8ff;
         }
 
         >div {
-          font-size: 12px;
+          font-size: 25px;
           font-family: PingFang SC-Bold, PingFang SC;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0px 16px;
+          padding: 0px 40px;
 
           p {
             margin-bottom: 0px;
@@ -533,10 +542,10 @@
         }
 
         >div:nth-child(2) {
-          height: 50px;
+          height: 125px;
           font-weight: bold;
           color: #15e8ff;
-          margin-top: -15%;
+          margin-top: 0.5%;
 
           >p {
             flex: 1;
@@ -545,7 +554,7 @@
         }
 
         >div:nth-child(3) {
-          height: 95px;
+          height: 237.5px;
           font-weight: 400;
           color: #ffffff;
 
@@ -555,7 +564,7 @@
         }
 
         >div:nth-child(4) {
-          height: 48px;
+          height: 110px;
 
           >div {
             flex: 1;
@@ -578,7 +587,7 @@
 
           >div:nth-child(1)>p:nth-child(2)>span {
             display: inline-block;
-            font-size: 12px;
+            font-size: 20px;
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
             color: #ffffff;
@@ -587,11 +596,13 @@
             opacity: 1;
             text-align: center;
             margin-top: 3%;
-            line-height: 20px;
-            width: 100px;
-            height: 20px;
+            line-height: 32px;
+            width: 131px;
+            height: 32px;
           }
-
+          >div:nth-child(1)>p:nth-child(2)>span:nth-child(2){
+            margin-left: 5%;
+          }
           >div:nth-child(2)>p {
             font-weight: 400;
             color: #ffffff;
@@ -604,8 +615,8 @@
       }
 
       .right-modal {
-        width: 400px;
-        height: 336px;
+        width: 1000px;
+        height: 840px;
         background-image: url('./img/modal-background-mess.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
@@ -618,33 +629,33 @@
           position: absolute;
           right: 6%;
           top: 0%;
-          font-size: 48px;
+          font-size: 120px;
           color: #15e8ff;
         }
 
         .content {
           height: 100%;
-          padding: 80px 60px;
+          padding: 80px 150px;
 
           >p {
-            font-size: 12px;
+            font-size: 25px;
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
             color: #ffffff;
-            padding: 11px 16px;
+            padding: 31.5px 16px;
             margin-bottom: 0px;
             display: flex;
             justify-content: space-between;
 
             >span:nth-child(1) {
-              width: 115px;
+              width: 287.5px;
             }
           }
 
           >p:nth-child(1) {
             font-weight: bold;
             color: #15e8ff;
-            margin-top: -23px;
+            margin-top: 57.5px;
           }
         }
       }
@@ -661,8 +672,8 @@
     text-align: center;
 
     >div {
-      width: 101px;
-      height: 101px;
+      width: 252.5px;
+      height: 252.5px;
       background: url('./img/reset-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
@@ -670,7 +681,7 @@
     }
 
     >p {
-      font-size: 20px;
+      font-size: 47px;
       font-family: PingFang SC-Bold, PingFang SC;
       font-weight: bold;
       color: #1be0ff;
