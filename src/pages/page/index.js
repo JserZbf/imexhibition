@@ -455,7 +455,7 @@ const Home = function ({ scale }) {
         },
       });
     }
-    if(modalFlagLeft&&fixValue.length == 0){
+    if (modalFlagLeft && fixValue.length == 0) {
       return message.warn({
         content: '请先选择预计维修时间!',
         style: {
@@ -581,7 +581,7 @@ const Home = function ({ scale }) {
                     key={item.value}
                     onClick={() => clickLeftInfo(item.value)}
                   >
-                    <span style={{color:item.flag?'#ACDEFF':'#AAAAAA'}}>{item.value}</span>
+                    <span style={{ color: item.flag ? '#ACDEFF' : '#AAAAAA' }}>{item.value}</span>
                   </li>
                 );
               })}
