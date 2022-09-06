@@ -7,7 +7,8 @@
     background-color: rgba(0, 0, 0, 0.5);
 
     .ant-spin {
-      top: 600px!important;
+      top: 600px !important;
+
       .ant-spin-text {
         text-shadow: none;
         font-size: 22px;
@@ -19,7 +20,7 @@
   .main {
     width: 2560px;
     height: 1600px;
-    background: url('./img/total-background.png') no-repeat;
+    background: url('./img/total-background-2.png') no-repeat;
     background-size: 100% 100%;
     position: relative;
 
@@ -28,6 +29,8 @@
       height: 130px;
       text-align: center;
       margin: 0 auto;
+      background: url('./img/main-title-background.png') no-repeat;
+      background-size: 100% 100%;
     }
 
     .one-top {
@@ -36,7 +39,7 @@
       align-items: center;
       height: 400px;
       position: relative;
-      margin-top: -2.2%;
+      margin-top: 0.2%;
 
       .left-info {
         width: 335px;
@@ -64,8 +67,8 @@
           font-family: TRENDS-, TRENDS;
           transform: rotate(9deg);
           background-image: url('./img/right-production-background.png');
-          left: 78.8%;
-          top: 44.3%;
+          left: 54.8%;
+          top: 43.3%;
 
           >span {
             left: 30%;
@@ -84,8 +87,8 @@
           font-family: TRENDS-, TRENDS;
           transform: rotate(9deg);
           background-image: url('./img/right-classes-background.png');
-          left: 141%;
-          top: 49.5%;
+          left: 117%;
+          top: 48.5%;
 
           >span {
             left: 22%;
@@ -132,6 +135,8 @@
         justify-content: center;
         align-items: center;
         margin-top: -1.5%;
+        margin-left: -5%;
+
         .item {
           width: 15%;
           height: 81%;
@@ -244,28 +249,28 @@
 
         &>div:nth-of-type(1).params {
           top: 47%;
-          left: -101%;
+          left: -91%;
           background-image: url('./img/right-production-background.png');
         }
 
         &>div:nth-of-type(2).params {
-          top: 45.3%;
-          left: -39%;
+          top: 45.26%;
+          left: -29%;
           background-image: url('./img/right-classes-background.png');
         }
       }
 
       .start-btn {
         position: absolute;
-        bottom: 46px;
-        right: 199px;
+        bottom: 23px;
+        right: 162px;
         color: #fff;
         width: 266px;
         height: 92px;
         background-image: url('./img/production-start-background.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
-        font-size:33px;
+        font-size: 33px;
         font-family: PingFang SC-Bold, PingFang SC;
         font-weight: bold;
         text-align: center;
@@ -305,14 +310,15 @@
 
   .two-center {
     width: 100%;
+
     .table-data {
-      width: 82.5%;
-      height: 350px;
+      width: 83.8%;
+      height: 250px;
       background: url('./img/table-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;
       position: relative;
-      margin-top: -2.5%;
+      margin-top: -1.2%;
 
       .table-material {
         width: 92%;
@@ -381,6 +387,10 @@
           >td:nth-child(3) {
             color: black;
           }
+        }
+
+        .ant-table-container {
+          margin-left: 5%;
         }
 
         // 去除表头最右边边框
@@ -483,6 +493,7 @@
       padding-left: 24px;
       padding-top: 35px;
       margin-bottom: 1%;
+      margin-top: 0.4%;
 
       >div:nth-child(1) {
         font-size: 39px;
@@ -509,21 +520,22 @@
       position: relative;
 
       .left-modal {
-        width: 1000px;
-        height: 875px;
+        width: 1083px;
+        height: 564px;
         background-image: url('./img/modal-background.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: absolute;
         overflow: hidden;
-        left: -24%;
-        top: -98%;
+        left: -17%;
+        top: -50%;
         padding: 78px 50px;
         padding-left: 160px;
+
         .close {
           position: absolute;
           right: 6%;
-          top: -1%;
+          top: -8%;
           font-size: 120px;
           color: #15e8ff;
         }
@@ -535,7 +547,7 @@
           justify-content: space-between;
           align-items: center;
           padding: 0px 40px;
-
+          margin-top:-5%;
           p {
             margin-bottom: 0px;
           }
@@ -549,7 +561,7 @@
 
           >p {
             flex: 1;
-            margin-top: 12%;
+            margin-top: -6%;
           }
         }
 
@@ -557,7 +569,7 @@
           height: 237.5px;
           font-weight: 400;
           color: #ffffff;
-
+          margin-top: -13%;
           >div {
             flex: 1;
           }
@@ -600,9 +612,11 @@
             width: 131px;
             height: 32px;
           }
-          >div:nth-child(1)>p:nth-child(2)>span:nth-child(2){
+
+          >div:nth-child(1)>p:nth-child(2)>span:nth-child(2) {
             margin-left: 5%;
           }
+
           >div:nth-child(2)>p {
             font-weight: 400;
             color: #ffffff;
@@ -615,20 +629,20 @@
       }
 
       .right-modal {
-        width: 1000px;
-        height: 840px;
+        width: 1083px;
+        height: 540px;
         background-image: url('./img/modal-background-mess.png');
         background-repeat: no-repeat;
         background-size: 100% 100%;
         position: absolute;
-        right: -23%;
-        top: -100%;
+        right: -20.5%;
+        top: -50%;
         overflow: hidden;
 
         .close {
           position: absolute;
           right: 6%;
-          top: 0%;
+          top: -8%;
           font-size: 120px;
           color: #15e8ff;
         }
@@ -642,7 +656,7 @@
             font-family: PingFang SC-Regular, PingFang SC;
             font-weight: 400;
             color: #ffffff;
-            padding: 31.5px 16px;
+            padding: 14px 16px;
             margin-bottom: 0px;
             display: flex;
             justify-content: space-between;
@@ -655,7 +669,7 @@
           >p:nth-child(1) {
             font-weight: bold;
             color: #15e8ff;
-            margin-top: 57.5px;
+            margin-top: 13.5px;
           }
         }
       }
@@ -672,8 +686,8 @@
     text-align: center;
 
     >div {
-      width: 252.5px;
-      height: 252.5px;
+      width: 202px;
+      height: 202px;
       background: url('./img/reset-background.png') no-repeat;
       background-size: 100% 100%;
       margin: 0 auto;

@@ -64,7 +64,7 @@ const Home = function ({ scale }) {
       render: (text, record, index) => {
         return index + 1;
       },
-      width: '50',
+      width: '100',
     },
     {
       title: '计划编号',
@@ -81,7 +81,7 @@ const Home = function ({ scale }) {
             min={0}
             max={3}
             controls={false}
-            disabled={true}
+            disabled={overallFlag}
             value={record['planLevel']}
             style={{ width: '50px' }}
             onChange={(e) => {
@@ -103,6 +103,7 @@ const Home = function ({ scale }) {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
+      width:100,
     },
     {
       title: '计划开始时间',
@@ -112,9 +113,9 @@ const Home = function ({ scale }) {
         return (
           <DatePicker
             defaultValue={moment(record.planStart, dateFormat)}
-            disabled={true}
+            disabled={overallFlag}
             format={dateFormat}
-            style={{ width: '200px' }}
+            style={{ width: '150px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planStart'] = dateString;
@@ -136,9 +137,9 @@ const Home = function ({ scale }) {
         return (
           <DatePicker
             defaultValue={moment(record.planEnd, dateFormat)}
-            disabled={true}
+            disabled={overallFlag}
             format={dateFormat}
-            style={{ width: '200px' }}
+            style={{ width: '150px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planEnd'] = dateString;
@@ -150,7 +151,7 @@ const Home = function ({ scale }) {
             }}
           />
         );
-      },
+      }
     },
   ];
   const talbeData = [
@@ -622,7 +623,7 @@ const Home = function ({ scale }) {
                 id="cyclicScroll"
                 className="table-material"
                 columns={columns}
-                scroll={{ x: 'max-content', y: 240 }}
+                scroll={{ x: 'max-content', y: 180 }}
                 dataSource={dataSource}
                 pagination={false}
                 rowKey="planNO"
