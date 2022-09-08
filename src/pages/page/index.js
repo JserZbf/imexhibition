@@ -32,7 +32,7 @@ axios.interceptors.request.use((config) => {
 
 const Home = function (props) {
   const [allData, setAllData] = useState({});
-  const [materialTypeSixList, setMaterialTypeSixList] = useState([]);
+  const [materialTypeLaterList, setMaterialTypeLaterList] = useState([]);
   const [rightBottomInfor, setRightBottomInfor] = useState({});
   const [finishPlanObj, setFinishPlanObj] = useState({});
   const [diffAlgorithmX, setDiffAlgorithmX] = useState([]);
@@ -60,11 +60,8 @@ const Home = function (props) {
   const [deviceCardDetail, setDeviceCardDetail] = useState([]);
   const [orderScheduleDetail, setOrderScheduleDetail] = useState([]);
   const [currentTime, setCurrentTime] = useState(null);
-  const [moniTime, setMoniTime] = useState(null);
-
   const timerRef = useRef(null);
   const [simTime, setTime] = useState('');
-
   const addTime = (startTime, endTime, orderCardDetail) => {
     timerRef.current = setTimeout(() => {
       setTime((prev) => {
@@ -168,8 +165,8 @@ const Home = function (props) {
         setOutSideSchedulePattern(res.schedulePattern);
         setOutSideScheduleTarget(res.scheduleTarget);
         setAllData(res);
-        const arrCen = res.materialDemandList;
-        setMaterialTypeSixList(arrCen); //物料类型六个卡片
+        const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
+        setMaterialTypeLaterList(oneCen);
         setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
         setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
         // const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
@@ -246,29 +243,25 @@ const Home = function (props) {
   //   // console.log(res, 'res-last-dead');
   //   const res = mockData;
   //   setAllData(res);
+  //   initClearTimeout(); // 返回新的排产结果清空之前的定时器
+  //   const { orderDetail } = res;
+  //   const sortOrderByStartTime = sortBy(orderDetail, (o) => moment(o.planStart)?.valueOf());
+  //   const startTime = moment(head(sortOrderByStartTime)?.planStart).startOf('day');
+  //   const endDay = moment(startTime).endOf('day');
+  //   // 目前暂定结束时间为开始时间 + 7天
+  //   const endTime = moment(endDay).add(7, 'days');
+  //   // 灵活范围-根据订单获取结束时间
+  //   // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
+  //   filterData(moment(startTime), moment(endDay), res.orderCardDetail); // 过滤出排产结果第一天的数据
+  //   addTime(startTime, endTime, res.orderCardDetail);
   //   setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
   //   setOutSideScheduleCycle(res.scheduleCycle);
   //   setOutSideSchedulePattern(res.schedulePattern);
   //   setOutSideScheduleTarget(res.scheduleTarget);
   //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-  //   const oneCen = res.materialDemandList.filter((item) => item.shortNum);
-  //   const arrCen = oneCen.map((item, index) => {
-  //     if (
-  //       item.supplyTime == moment(new Date()).format('YYYY/M/DD') ||
-  //       item.supplyTime == moment(new Date()).format('YYYY/M/D')
-  //     ) {
-  //       return {
-  //         ...item,
-  //         flagBool: true,
-  //       };
-  //     } else {
-  //       return {
-  //         ...item,
-  //         flagBool: false,
-  //       };
-  //     }
-  //   });
-  //   setMaterialTypeSixList(arrCen); //物料类型六个卡片
+  //   const oneCen = res.materialDemandList.filter((item) => item.isAdequate=='否');
+  //   console.log(oneCen,'onononononon')
+  //   setMaterialTypeLaterList(oneCen)
   //   setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
   //   setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
   //   const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
@@ -437,6 +430,13 @@ const Home = function (props) {
       cenValue = obj.productNum;
     }
     cenValue = obj.productNum / (GetNumberOfDays(startTime, endTime) + 1);
+    //console.log(cen, 'cen-center');
+    if (!cen) {
+      value = 0;
+      percent = 0 + '%';
+      processedValue = 0;
+      direction = 'left';
+    }
     if (cen == 'left') {
       value = 0;
       percent = 0 + '%';
@@ -1645,7 +1645,7 @@ const Home = function (props) {
             diffAlgorithmX={diffAlgorithmX}
             bigValueLine={bigValueLine}
             diffAlgorithmY={diffAlgorithmY}
-            materialTypeSixList={materialTypeSixList}
+            materialTypeLaterList={materialTypeLaterList}
             currentTime={currentTime}
           />
         </Col>
@@ -1666,7 +1666,7 @@ const Home = function (props) {
             </div>
           </div>
           <div id="xuanzhun"></div>
-          <div className="left-mess">
+          {/*       <div className="left-mess">
             <div>
               •APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。
             </div>
@@ -1684,7 +1684,7 @@ const Home = function (props) {
             <div>
               •APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。
             </div>
-          </div>
+          </div> */}
           <Gantt orderScheduleDetail={orderScheduleDetail ?? []} simTime={simTime} />
           {/* <Gantt orderScheduleDetail={orderScheduleDetail ?? []} /> */}
           {/* <div id="main"></div> */}

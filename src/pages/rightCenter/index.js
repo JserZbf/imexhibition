@@ -1094,7 +1094,7 @@ const rightCenter = function (props) {
         stack: 'a',
         itemStyle: {
           normal: {
-            color: '#FFB96F',
+            color: '#00B9FF',
           },
         },
         label: {

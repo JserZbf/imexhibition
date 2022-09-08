@@ -7,7 +7,7 @@ import * as echarts from 'echarts';
 import moment from 'moment';
 const leftBottom = function (props) {
   const {
-    materialTypeSixList,
+    materialTypeLaterList,
     allData,
     finishPlanObj,
     diffAlgorithmX,
@@ -31,7 +31,7 @@ const leftBottom = function (props) {
   ];
   const [order, setOrder] = useState([]);
   const [selectAlgorithm, setSelectAlgorithm] = useState(null);
-  const [materialTypeSixListCen, setMaterialTypeSixListCen] = useState([]);
+  const [materialTypeListCen, setMaterialTypeListCen] = useState([]);
   const timer = useRef(null);
   const init = () => {
     timer?.current && clearTimeout(timer?.current);
@@ -76,13 +76,20 @@ const leftBottom = function (props) {
     ]);
   }, [allData]);
   useEffect(() => {
-    if (materialTypeSixList?.length) {
+    if (materialTypeLaterList?.length) {
       init();
-      materialTypeSixListScroll(0);
+      const cenData = materialTypeLaterList.slice(0, 6).map((item, index) => {
+        return {
+          ...item,
+          index: 1,
+          delay: 2 * (index + 1),
+        };
+      });
+      setMaterialTypeListCen(cenData);
+      materialTypeSixListScroll();
     }
     return init;
-  }, [materialTypeSixList]);
-
+  }, [materialTypeLaterList]);
   const spArray = function (arrCount, arr) {
     var cenArr = [],
       index;
@@ -110,13 +117,29 @@ const leftBottom = function (props) {
     }
     return newArr;
   };
-  const materialTypeSixListScroll = (time) => {
+  const materialTypeSixListScroll = () => {
     timer.current = setTimeout(() => {
-      // console.log(materialTypeSixList,'materialTypeSixList')
-      // console.log( loopData(materialTypeSixList,6),'newValue------------------1')
-      setMaterialTypeSixListCen(loopData(materialTypeSixList, 6));
-      materialTypeSixListScroll(5000);
-    }, time);
+      const cenData = loopData(materialTypeLaterList, 6).map((item, index) => {
+        return {
+          ...item,
+          index: 1,
+          delay: 2 * (index + 1),
+        };
+      });
+      setMaterialTypeListCen(cenData);
+      // const cenData = materialTypeLaterList.map((item, index) => {
+      //   return {
+      //     ...item,
+      //     index: 1,
+      //     delay: lastDelayValue + (2 * (index + 1))
+      //   }
+      // })
+      // const cenData2 = oneData.concat(cenData);
+      // lastDelayValue = cenData2[cenData2.length - 1].delay;
+      // setMaterialTypeListCen(cenData2);
+      // // }s
+      materialTypeSixListScroll();
+    }, 12000);
   };
   const diffOption = useMemo(() => {
     return {
@@ -656,41 +679,49 @@ const leftBottom = function (props) {
   return (
     <div className="left-bottom">
       <Row>
-        <Col span={14}>
-          <ul className="material-type-list">
-            {materialTypeSixListCen.map((item, index) => {
-              return (
-                <li
-                  key={index}
-                  className={
-                    item.supplyTime == moment(currentTime).format('YYYY-MM-DD') ? 'active-li' : 'li'
-                  }
-                >
-                  <p className="title">
-                    {item.materialType == 'blank'
-                      ? '毛坯'
-                      : item.materialType == 'fixture'
-                      ? '夹具'
-                      : item.materialType == 'tray'
-                      ? '托盘'
-                      : item.materialType == 'tool'
-                      ? '刀具'
-                      : ''}
-                  </p>
-                  <p className="number">
-                    <span>缺口数量:</span>
-                    <span>{item.shortNum}</span>
-                  </p>
-                  <p className="start-time">
-                    <span>最晚到达时间:</span>
-                    <span>{item.supplyTime}</span>
-                  </p>
-                  <p className="time">{item.supplyTime}</p>
-                  <div></div>
-                </li>
-              );
-            })}
-          </ul>
+        <Col span={22}>
+          {/* 14 */}
+          <div className="material-type">
+            <ul className="material-type-list">
+              {materialTypeListCen.map((item, index) => {
+                return (
+                  <li
+                    key={index}
+                    className={
+                      item.supplyTime == moment(currentTime).format('YYYY-MM-DD')
+                        ? `run-li${item.index} active-li`
+                        : `li run-li${item.index}`
+                    }
+                    style={{ animationDelay: item.delay + 's' }}
+                  >
+                    <p className="title">
+                      {item.materialType == 'blank'
+                        ? '毛坯'
+                        : item.materialType == 'fixture'
+                        ? '夹具'
+                        : item.materialType == 'tray'
+                        ? '托盘'
+                        : item.materialType == 'tool'
+                        ? '刀具'
+                        : ''}
+                    </p>
+                    <p className="number">
+                      <span>缺口数量:</span>
+                      <span>{item.shortNum}</span>
+                      {/* <span>物料类型:</span>
+                      <span>{item.Specs}</span> */}
+                    </p>
+                    <p className="start-time">
+                      <span>最晚到达时间:</span>
+                      <span>{item.supplyTime}</span>
+                    </p>
+                    <p className="time">{item.supplyTime}</p>
+                    <div></div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
           <div className="left-bottom-order">
             <div className="left-bottom-order-infor">
               <div className="jian-tou"></div>
@@ -711,7 +742,7 @@ const leftBottom = function (props) {
             </div>
           </div>
         </Col>
-        <Col span={5}>
+        <Col span={5} className="plan-finish-mobile">
           <div className="plan-finish-title">计划完成率相关信息</div>
           <div className="plan-finish-infor">
             {finishPlanList.map((item, index) => {
@@ -730,11 +761,11 @@ const leftBottom = function (props) {
             option={averageOption}
             width={'600px'}
             height={'400px'}
-            left={'30px'}
-            top={'-66px'}
+            left={'6px'}
+            top={'-67px'}
           />
         </Col>
-        <Col span={5}>
+        <Col span={5} className="diff-infor-mobile">
           <div className="diff-infor-title">
             <p>不同算法对比信息</p>
             <p></p>
