@@ -115,7 +115,7 @@ const Home = function ({ scale }) {
             defaultValue={moment(record.planStart, dateFormat)}
             disabled={overallFlag}
             format={dateFormat}
-            style={{ width: '150px' }}
+            style={{ width: '200px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planStart'] = dateString;
@@ -139,7 +139,7 @@ const Home = function ({ scale }) {
             defaultValue={moment(record.planEnd, dateFormat)}
             disabled={overallFlag}
             format={dateFormat}
-            style={{ width: '150px' }}
+            style={{ width: '200px' }}
             onChange={(date, dateString) => {
               const newData = [...dataSource];
               record['planEnd'] = dateString;
