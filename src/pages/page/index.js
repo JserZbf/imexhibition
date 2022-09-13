@@ -72,27 +72,28 @@ const Home = function ({ scale }) {
       key: 'planNO',
     },
     {
-      title: <Tooltip title="可选0,1,2,3">计划等级</Tooltip>,
+      // title: <Tooltip title="可选0,1,2,3">计划等级</Tooltip>,
+      title: '计划等级',
       dataIndex: 'planLevel',
       key: 'planLevel',
-      render: (text, record, index) => {
-        return (
-          <InputNumber
-            min={0}
-            max={3}
-            controls={false}
-            disabled={overallFlag}
-            value={record['planLevel']}
-            style={{ width: '50px' }}
-            onChange={(e) => {
-              const newData = [...dataSource];
-              record['planLevel'] = e;
-              newData[index] = record;
-              setDataSource(newData);
-            }}
-          />
-        );
-      },
+      // render: (text, record, index) => {
+      //   return (
+      //     <InputNumber
+      //       min={0}
+      //       max={3}
+      //       controls={false}
+      //       disabled={overallFlag}
+      //       value={record['planLevel']}
+      //       style={{ width: '50px' }}
+      //       onChange={(e) => {
+      //         const newData = [...dataSource];
+      //         record['planLevel'] = e;
+      //         newData[index] = record;
+      //         setDataSource(newData);
+      //       }}
+      //     />
+      //   );
+      // },
     },
     {
       title: '产品名称',
@@ -103,55 +104,55 @@ const Home = function ({ scale }) {
       title: '加工数量',
       dataIndex: 'productNum',
       key: 'productNum',
-      width:100,
+      width: 100,
     },
     {
       title: '计划开始时间',
       dataIndex: 'planStart',
       key: 'planStart',
-      render: (text, record, index) => {
-        return (
-          <DatePicker
-            defaultValue={moment(record.planStart, dateFormat)}
-            disabled={overallFlag}
-            format={dateFormat}
-            style={{ width: '200px' }}
-            onChange={(date, dateString) => {
-              const newData = [...dataSource];
-              record['planStart'] = dateString;
-              newData[index] = record;
-              setDataSource(newData);
-            }}
-            onFocus={() => {
-              document.activeElement.blur();
-            }}
-          />
-        );
-      },
+      // render: (text, record, index) => {
+      //   return (
+      //     <DatePicker
+      //       defaultValue={moment(record.planStart, dateFormat)}
+      //       disabled={overallFlag}
+      //       format={dateFormat}
+      //       style={{ width: '200px' }}
+      //       onChange={(date, dateString) => {
+      //         const newData = [...dataSource];
+      //         record['planStart'] = dateString;
+      //         newData[index] = record;
+      //         setDataSource(newData);
+      //       }}
+      //       onFocus={() => {
+      //         document.activeElement.blur();
+      //       }}
+      //     />
+      //   );
+      // },
     },
     {
       title: '计划结束时间',
       dataIndex: 'planEnd',
       key: 'planEnd',
-      render: (text, record, index) => {
-        return (
-          <DatePicker
-            defaultValue={moment(record.planEnd, dateFormat)}
-            disabled={overallFlag}
-            format={dateFormat}
-            style={{ width: '200px' }}
-            onChange={(date, dateString) => {
-              const newData = [...dataSource];
-              record['planEnd'] = dateString;
-              newData[index] = record;
-              setDataSource(newData);
-            }}
-            onFocus={() => {
-              document.activeElement.blur();
-            }}
-          />
-        );
-      }
+      // render: (text, record, index) => {
+      //   return (
+      //     <DatePicker
+      //       defaultValue={moment(record.planEnd, dateFormat)}
+      //       disabled={overallFlag}
+      //       format={dateFormat}
+      //       style={{ width: '200px' }}
+      //       onChange={(date, dateString) => {
+      //         const newData = [...dataSource];
+      //         record['planEnd'] = dateString;
+      //         newData[index] = record;
+      //         setDataSource(newData);
+      //       }}
+      //       onFocus={() => {
+      //         document.activeElement.blur();
+      //       }}
+      //     />
+      //   );
+      // }
     },
   ];
   const talbeData = [
