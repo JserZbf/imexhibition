@@ -51,7 +51,7 @@ const Home = function ({ scale }) {
       flag: true,
     },
   ]);
-  const [overallFlag, setOverallFlag] = useState(false);
+  const [overallFlag, setOverallFlag] = useState(true);
   const [rescheduleDetail, setRescheduleDetail] = useState([]);
   const [orderDetail, setOrderDetail] = useState([]);
   const [reset, setReset] = useState(false);

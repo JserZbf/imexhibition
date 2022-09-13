@@ -2,7 +2,9 @@
   width: 2360px;
   height: 1640px;
 
-  //  overflow-x: hidden;
+ // position: relative;
+  transform: scale(0.5) translateX(-50%) translateY(-50%);
+
   .spin {
     background-color: rgba(0, 0, 0, 0.5);
 
@@ -22,8 +24,6 @@
     height: 1640px;
     background: url('./img/total-background-2.png') no-repeat;
     background-size: 100% 100%;
-    position: relative;
-
     .total-title {
       width: 350px;
       height: 130px;
@@ -45,7 +45,7 @@
         width: 335px;
         height: 157%;
         position: relative;
-        transform: rotate(-4deg);
+        transform: rotate(-6.05deg);
 
         >li {
           font-family: TRENDS-, TRENDS;
@@ -68,7 +68,7 @@
           transform: rotate(9deg);
           background-image: url('./img/right-production-background.png');
           left: 72.8%;
-          top: 45%;
+          top: 49%;
 
           >span {
             left: 30%;
@@ -88,7 +88,7 @@
           transform: rotate(9deg);
           background-image: url('./img/right-classes-background.png');
           left: 135%;
-          top: 50.3%;
+          top: 54.3%;
 
           >span {
             left: 22%;
@@ -185,9 +185,8 @@
         width: 335px;
         height: 155%;
         position: relative;
-        transform: rotate(4deg);
+        transform: rotate(4.5deg);
         margin-right: -1%;
-
         .params:nth-child(1) {
           position: absolute;
           display: flex;
@@ -248,13 +247,13 @@
         }
 
         &>div:nth-of-type(1).params {
-          top: 49%;
+          top: 51%;
           left: -109%;
           background-image: url('./img/right-production-background.png');
         }
 
         &>div:nth-of-type(2).params {
-          top: 47.26%;
+          top: 49.26%;
           left: -47%;
           background-image: url('./img/right-classes-background.png');
         }
@@ -493,7 +492,7 @@
       padding-left: 24px;
       padding-top: 35px;
       margin-bottom: 1.5%;
-      margin-top:0.6%;
+      margin-top: 0.6%;
 
       >div:nth-child(1) {
         font-size: 39px;
@@ -547,7 +546,8 @@
           justify-content: space-between;
           align-items: center;
           padding: 0px 40px;
-          margin-top:-5%;
+          margin-top: -5%;
+
           p {
             margin-bottom: 0px;
           }
@@ -570,6 +570,7 @@
           font-weight: 400;
           color: #ffffff;
           margin-top: -13%;
+
           >div {
             flex: 1;
           }
