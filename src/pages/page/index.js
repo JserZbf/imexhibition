@@ -238,7 +238,7 @@ const Home = function (props) {
       //console.log(orderCardDetail,'orderCardDetail-currentTime')
      // tranOrderCardDetail(orderCardDetail);
     }, [currentTime]); */
-  // useEffect(() => {
+  //  useEffect(() => {
   //   //  getAllData(obj).then((res) => {
   //   // console.log(res, 'res-last-dead');
   //   const res = mockData;
