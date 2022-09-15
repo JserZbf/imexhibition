@@ -139,7 +139,6 @@ const leftCenter = function (props) {
       title: '规格类型',
       dataIndex: 'Specs',
       key: 'Specs',
-      width: 5,
     },
     {
       title: '需求数量',
