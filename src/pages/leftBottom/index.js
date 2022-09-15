@@ -71,7 +71,7 @@ const leftBottom = function (props) {
       {
         title: '排产目标',
         value:
-          allData.scheduleTarget == 1 ? '设备均衡' : allData.scheduleTarget == 2 ? '最快交付' : '.',
+          allData.scheduleTarget == 1 ? '设备均衡' : allData.scheduleTarget == 2 ? '最快交付' : '',
       },
     ]);
   }, [allData]);
