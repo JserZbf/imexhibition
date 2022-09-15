@@ -7,13 +7,15 @@
   > .ant-row {
     width: 100%;
     height: 100%;
+
     > div {
       height: 100% !important;
     }
+
     .plan-mark-total {
       width: 98%;
       height: 77.5%;
-      border: 1px solid #09306d;
+      // border: 1px solid #09306d;
       position: relative;
       padding: 72px 0px 0px 0px;
 
@@ -386,311 +388,429 @@
       }
     }
 
-    .review_box {
-      width: 130%;
-      height: 1060px;
-      overflow: hidden;
-      margin-left: -5%;
+    .mobile-card {
+      position: absolute;
+      width: 900px;
+      left: 82%;
+      top: 7%;
 
-      .leftEchart1,
-      .leftEchart2 {
-        width: 100%;
-        height: 100%;
+      .review_box {
+        width: 150%;
+        height: 1200px;
+        overflow: hidden;
+        margin-left: -5%;
+        position: relative;
+        margin-top: 5%;
+        .leftEchart1 {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0%;
+          top: -19%;
 
-        > li {
-          width: 981px;
-          height: 250px;
-          background: url('./img/background/plan-yeild.png') no-repeat;
-          background-size: 100% 100%;
-          display: flex;
-          margin-top: 1.7%;
-
-          .ant-steps-dot .ant-steps-item-content,
-          .ant-steps-dot.ant-steps-small .ant-steps-item-content {
-            width: 99px;
-          }
-
-          .ant-steps-item-description {
-            color: #a5cfe7;
-            margin-left: 56%;
-          }
-
-          > div > .steps-mess {
+          > li {
+            width: 981px;
+            height: 250px;
+            background: url('./img/background/plan-yeild.png') no-repeat;
+            background-size: 100% 100%;
             display: flex;
-            width: 87%;
-            margin-top: 5%;
-            margin-left: 2%;
+            // margin-top: 3.5%;
+            position: absolute;
 
-            > .title {
-              font-size: 13px;
-              font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
-              font-weight: normal;
-              color: #a5cfe7;
-              line-height: 15px;
-              margin: 0% 6%;
-              width: 14%;
-
-              > span {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                text-align: center;
-              }
-
-              > span:nth-child(2) {
-                margin: 10% 0%;
-              }
+            .ant-steps-dot .ant-steps-item-content,
+            .ant-steps-dot.ant-steps-small .ant-steps-item-content {
+              width: 99px;
             }
 
-            .title-button {
+            .ant-steps-item-description {
+              color: #a5cfe7;
+              margin-left: 56%;
+            }
+
+            > div > .steps-mess {
               display: flex;
-              margin-left: -10%;
+              width: 87%;
+              margin-top: 5%;
+              margin-left: 2%;
 
-              .active {
-                background-color: #1afff9;
-                color: black;
-              }
-
-              > span {
-                width: 55px;
-                height: 17px;
-                font-size: 8px;
-                text-align: center;
+              > .title {
+                font-size: 13px;
                 font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
                 font-weight: normal;
-                color: #ffffff;
-                background: #597bf3;
-                border-radius: 10px 10px 10px 10px;
-                margin: 0% 0% 0% 4%;
+                color: #a5cfe7;
+                line-height: 15px;
+                margin: 0% 6%;
+                width: 14%;
+
+                > span {
+                  display: block;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  text-align: center;
+                }
+
+                > span:nth-child(2) {
+                  margin: 10% 0%;
+                }
               }
 
-              > span:nth-child(2) {
-                margin-top: 2.5%;
-              }
+              .title-button {
+                display: flex;
+                margin-left: -10%;
 
-              > span:nth-child(3) {
-                margin-top: 5%;
+                .active {
+                  background-color: #1afff9;
+                  color: black;
+                }
+
+                > span {
+                  width: 55px;
+                  height: 17px;
+                  font-size: 8px;
+                  text-align: center;
+                  font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+                  font-weight: normal;
+                  color: #ffffff;
+                  background: #597bf3;
+                  border-radius: 10px 10px 10px 10px;
+                  margin: 0% 0% 0% 4%;
+                }
+
+                > span:nth-child(2) {
+                  margin-top: 2.5%;
+                }
+
+                > span:nth-child(3) {
+                  margin-top: 5%;
+                }
               }
             }
-          }
 
-          > div > .steps {
-            width: 70%;
-            height: auto;
-            margin-left: -3.5%;
-            margin-top: 1.8%;
+            > div > .steps {
+              width: 70%;
+              height: auto;
+              margin-left: -3.5%;
+              margin-top: 1.8%;
 
-            .ant-steps-item {
-              width: 63px !important;
+              .ant-steps-item {
+                width: 63px !important;
+              }
+
+              .ant-steps-item-title {
+                font-size: 12px;
+                font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
+                font-weight: normal;
+                color: #a5cfe7;
+                line-height: 14px;
+                margin-top: 11%;
+                margin-left: 22%;
+              }
+
+              .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-error .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
+                width: 30px;
+                height: 30px;
+              }
+
+              .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
+              .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
+              .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after,
+              .ant-steps-item-error > .ant-steps-item-container > .ant-steps-item-tail::after {
+                height: 14px;
+              }
+
+              .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+                background: skyblue;
+              }
+
+              .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after {
+                background: green;
+              }
+
+              .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after {
+                background: #f0f0f0;
+              }
+
+              .ant-steps-item-error .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
+              .ant-steps-item-error > .ant-steps-item-container > .ant-steps-item-tail::after {
+                background: red;
+              }
+
+              //////////// background: #f0f0f0;   background: #7ca9ff;
+              .ant-steps-dot .ant-steps-item-icon,
+              .ant-steps-dot.ant-steps-small .ant-steps-item-icon {
+                margin-left: 61px;
+                margin-top: -3px;
+              }
+
+              .ant-steps-item-icon .ant-steps-icon {
+                left: -6px;
+                top: -5.5px;
+              }
             }
 
-            .ant-steps-item-title {
+            > div > ul {
               font-size: 12px;
-              font-family: PingFang-SC-Medium-, PingFang-SC-Medium;
-              font-weight: normal;
-              color: #a5cfe7;
-              line-height: 14px;
-              margin-top: 11%;
-              margin-left: 22%;
             }
 
-            .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-error .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot {
-              width: 30px;
-              height: 30px;
-            }
+            > div > .steps-baseicList-date {
+              width: 92%;
+              height: 40px;
+              display: flex;
+              margin-left: 8.7%;
+              color: white;
 
-            .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after,
-            .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after,
-            .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after,
-            .ant-steps-item-error > .ant-steps-item-container > .ant-steps-item-tail::after {
-              height: 14px;
-            }
-
-            .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
-              background: skyblue;
-            }
-
-            .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-tail::after {
-              background: green;
-            }
-
-            .ant-steps-item-wait .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-tail::after {
-              background: #f0f0f0;
-            }
-
-            .ant-steps-item-error .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot,
-            .ant-steps-item-error > .ant-steps-item-container > .ant-steps-item-tail::after {
-              background: red;
-            }
-
-            //////////// background: #f0f0f0;   background: #7ca9ff;
-            .ant-steps-dot .ant-steps-item-icon,
-            .ant-steps-dot.ant-steps-small .ant-steps-item-icon {
-              margin-left: 61px;
-              margin-top: -3px;
-            }
-
-            .ant-steps-item-icon .ant-steps-icon {
-              left: -6px;
-              top: -5.5px;
-            }
-          }
-          > div > ul {
-            font-size: 12px;
-          }
-          > div > .steps-baseicList-date {
-            width: 92%;
-            height: 40px;
-            display: flex;
-            margin-left: 8.7%;
-            color: white;
-
-            > li {
-              width: 43.5px;
-              margin-left: -2%;
-            }
-          }
-          > div > .steps-exceedList {
-            width: 100%;
-            height: 20px;
-            display: flex;
-            margin-left: 7%;
-
-            > li {
-              position: relative;
-
-              > span {
-                width: 100px;
-                color: white;
-                position: absolute;
-                left: -152%;
-                top: 88%;
+              > li {
+                width: 43.5px;
+                margin-left: -2%;
               }
             }
 
-            > li:nth-child(odd) {
-              width: 19px;
+            > div > .steps-exceedList {
+              width: 100%;
               height: 20px;
-              border-radius: 50%;
-              background: #f0f0f0;
-            }
+              display: flex;
+              margin-left: 7%;
 
-            > li:nth-child(even) {
-              width: 44.5px;
-              height: 4px;
-              margin-top: 1.5%;
-              background: #f0f0f0;
-            }
-          }
-          > div > .steps-schedualList {
-            width: 100%;
-            height: 20px;
-            display: flex;
-            margin-left: 7%;
-            margin-top: -2%;
-            > li {
-              position: relative;
+              > li {
+                position: relative;
 
-              > span {
-                width: 120px;
-                color: white;
-                position: absolute;
-                left: -152%;
-                top: 88%;
+                > span {
+                  width: 100px;
+                  color: white;
+                  position: absolute;
+                  left: -152%;
+                  top: 88%;
+                }
+              }
+
+              > li:nth-child(odd) {
+                width: 19px;
+                height: 20px;
+                border-radius: 50%;
+                background: #f0f0f0;
+              }
+
+              > li:nth-child(even) {
+                width: 44.5px;
+                height: 4px;
+                margin-top: 1.5%;
+                background: #f0f0f0;
               }
             }
 
-            > li:nth-child(odd) {
-              width: 19px;
+            > div > .steps-schedualList {
+              width: 100%;
               height: 20px;
-              border-radius: 50%;
-              background: #f0f0f0;
-            }
+              display: flex;
+              margin-left: 7%;
+              margin-top: -2%;
 
-            > li:nth-child(even) {
-              width: 44.5px;
-              height: 4px;
-              margin-top: 1.5%;
-              background: #f0f0f0;
-            }
-          }
+              > li {
+                position: relative;
 
-          > div > .steps-planList {
-            width: 100%;
-            height: 20px;
-            display: flex;
-            margin-left: 7%;
-            margin-top: 2.5%;
-            > li {
-              position: relative;
+                > span {
+                  width: 120px;
+                  color: white;
+                  position: absolute;
+                  left: -152%;
+                  top: 88%;
+                }
+              }
 
-              > span {
-                width: 120px;
-                color: white;
-                position: absolute;
-                left: -152%;
-                top: 88%;
+              > li:nth-child(odd) {
+                width: 19px;
+                height: 20px;
+                border-radius: 50%;
+                background: #f0f0f0;
+              }
+
+              > li:nth-child(even) {
+                width: 44.5px;
+                height: 4px;
+                margin-top: 1.5%;
+                background: #f0f0f0;
               }
             }
 
-            > li:nth-child(odd) {
-              width: 19px;
+            > div > .steps-planList {
+              width: 100%;
               height: 20px;
-              border-radius: 50%;
-              background: #f0f0f0;
-            }
+              display: flex;
+              margin-left: 7%;
+              margin-top: 2.5%;
 
-            > li:nth-child(even) {
-              width: 44.5px;
-              height: 4px;
-              margin-top: 1.5%;
-              background: #f0f0f0;
-            }
-          }
+              > li {
+                position: relative;
 
-          > div > .steps-baseicList {
-            width: 100%;
-            height: 20px;
-            display: flex;
-            margin-left: 7%;
-            margin-top: 2.5%;
-            > li {
-              position: relative;
+                > span {
+                  width: 120px;
+                  color: white;
+                  position: absolute;
+                  left: -152%;
+                  top: 88%;
+                }
+              }
 
-              > span {
-                width: 100px;
-                color: white;
-                position: absolute;
-                left: -152%;
-                top: 88%;
+              > li:nth-child(odd) {
+                width: 19px;
+                height: 20px;
+                border-radius: 50%;
+                background: #f0f0f0;
+              }
+
+              > li:nth-child(even) {
+                width: 44.5px;
+                height: 4px;
+                margin-top: 1.5%;
+                background: #f0f0f0;
               }
             }
 
-            > li:nth-child(odd) {
-              width: 19px;
+            > div > .steps-baseicList {
+              width: 100%;
               height: 20px;
-              border-radius: 50%;
-              background: #f0f0f0;
+              display: flex;
+              margin-left: 7%;
+              margin-top: 2.5%;
+
+              > li {
+                position: relative;
+
+                > span {
+                  width: 100px;
+                  color: white;
+                  position: absolute;
+                  left: -152%;
+                  top: 88%;
+                }
+              }
+
+              > li:nth-child(odd) {
+                width: 19px;
+                height: 20px;
+                border-radius: 50%;
+                background: #f0f0f0;
+              }
+
+              > li:nth-child(even) {
+                width: 44.5px;
+                height: 4px;
+                margin-top: 1.5%;
+                background: #f0f0f0;
+              }
             }
 
-            > li:nth-child(even) {
-              width: 44.5px;
-              height: 4px;
-              margin-top: 1.5%;
-              background: #f0f0f0;
+            > div > .steps-exceedList,
+            > div > .steps-schedualList,
+            > div > .steps-planList > li {
+              height: 1px;
             }
           }
-          > div > .steps-exceedList,
-          > div > .steps-schedualList,
-          > div > .steps-planList > li {
-            height: 1px;
+
+          // >li:nth-child(1){
+          //   left:376px;
+          //   top: -1px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(2){
+          //   left:226px;
+          //   top:293px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(3){
+          //   left:103px;
+          //   top:577px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(4){
+          //   left:0px;
+          //   top:862px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(5){
+          //   left:0px;
+          //   top:1144px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(6){
+          //   left:51px;
+          //   top:1429px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(7){
+          //   left:139px;
+          //   top:1718px;
+          //   position: absolute;
+          // }
+          // >li:nth-child(8){
+          //   left:275px;
+          //   top:2008px;
+          //   position: absolute;
+          // }
+          //定义动画的流程
+          .run-lis {
+            //   display: block;
+            animation: animation-lis 18s 0.4s 1 linear;
+            animation-fill-mode: backwards;
+            animation-iteration-count: infinite;
+          }
+
+          //向上走的动画初始及结尾值
+          @keyframes animation-lis {
+            0% {
+              left: 240px;
+              top: 2008px;
+              transform: translateY(0);
+            }
+
+            14.29% {
+              left: 140px;
+              top: 1718px;
+              transform: translateY(0);
+            }
+
+            28.58% {
+              left: 50px;
+              top: 1429px;
+              transform: translateY(0);
+            }
+
+            42.87% {
+              left: 5px;
+              top: 1144px;
+              transform: translateY(0);
+            }
+
+            57.16% {
+              left: 20px;
+              top: 862px;
+              transform: translateY(0);
+            }
+
+            71.45% {
+              left: 63px;
+              top: 577px;
+              transform: translateY(0);
+            }
+
+            85.74% {
+              left: 196px;
+              top: 283px;
+              transform: translateY(0);
+            }
+
+            100% {
+              left: 356px;
+              top: -1px;
+              transform: translateY(0);
+            }
           }
         }
       }
@@ -844,7 +964,7 @@
     }
 
     .ant-col-5 {
-      margin-top: -3%;
+      margin-top: 2%;
       margin-left: -6%;
     }
   }

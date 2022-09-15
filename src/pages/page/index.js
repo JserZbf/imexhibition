@@ -61,6 +61,7 @@ const Home = function (props) {
   const [orderScheduleDetail, setOrderScheduleDetail] = useState([]);
   const [currentTime, setCurrentTime] = useState(null);
   const timerRef = useRef(null);
+  const timer = useRef(null);
   const [simTime, setTime] = useState('');
   const addTime = (startTime, endTime, orderCardDetail) => {
     timerRef.current = setTimeout(() => {
@@ -238,7 +239,7 @@ const Home = function (props) {
       //console.log(orderCardDetail,'orderCardDetail-currentTime')
      // tranOrderCardDetail(orderCardDetail);
     }, [currentTime]); */
-  //  useEffect(() => {
+  // useEffect(() => {
   //   //  getAllData(obj).then((res) => {
   //   // console.log(res, 'res-last-dead');
   //   const res = mockData;
@@ -259,9 +260,10 @@ const Home = function (props) {
   //   setOutSideSchedulePattern(res.schedulePattern);
   //   setOutSideScheduleTarget(res.scheduleTarget);
   //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-  //   const oneCen = res.materialDemandList.filter((item) => item.isAdequate=='否');
-  //   console.log(oneCen,'onononononon')
-  //   setMaterialTypeLaterList(oneCen)
+  //   const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
+  // //  console.log(oneCen, 'onononononon')
+  //   //tranMaterialTypeLaterList(oneCen);
+  //   setMaterialTypeLaterList(oneCen);
   //   setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
   //   setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
   //   const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
@@ -350,6 +352,66 @@ const Home = function (props) {
   //   // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
   //   //    });
   // }, []);
+  // const tranMaterialTypeLaterList = (data) => {
+  //   const cenData = data.slice(0, 6).map((item, index) => {
+  //     return {
+  //       ...item,
+  //       index: 1,
+  //       delay: 2 * (index + 1),
+  //     };
+  //   });
+  //   const cenData2 = data.map((item, index) => {
+  //     return {
+  //       ...item,
+  //       index: 1,
+  //       delay: 2 * (index + 1),
+  //     };
+  //   });
+  //   setMaterialTypeLaterList(cenData);
+  //   materialTypeSixListScroll(12000, cenData, cenData2);
+  // }
+  // const materialTypeSixListScroll = (time, data, data2) => {
+  //   timer.current = setTimeout(() => {
+  //     const [newArr, currentIndex2] = loopData2(data2, 1);
+  //     const newData = newArr.map((item, index) => {
+  //       return {
+  //         ...item,
+  //         index: 1,
+  //         delay: 2 * (currentIndex2 + 1),
+  //       }
+  //     })
+  //     data.splice(currentIndex2, 1, newData[0]);
+  //     console.log(data, 'current-data')
+  //     setMaterialTypeLaterList(data);
+  //     return () => {
+  //       timer?.current && clearTimeout(timer?.current);
+  //     }
+  //     //    materialTypeSixListScroll(2000, data,data2);
+  //   }, time);
+  // };
+  let currentPage2 = 6;
+  let currentIndex2 = -1;
+  const loopData2 = (arr, newLen) => {
+    let len = arr.length;
+    let result = len - currentPage2;
+    let newArr = [];
+    if (result > 0 && result < newLen) {
+      newArr = [...arr.slice(currentPage2, len), ...arr.slice(0, newLen - result)];
+      currentPage2 = newLen - result;
+    } else if (result >= newLen) {
+      newArr = arr.slice(currentPage2, currentPage2 + newLen);
+      currentPage2 += newLen;
+    } else {
+      currentPage2 = 0;
+      newArr = arr.slice(currentPage2, currentPage2 + newLen);
+    }
+    if (currentIndex2 == 5) {
+      currentIndex2 = 0;
+    } else {
+      currentIndex2++;
+    }
+    return [newArr, currentIndex2];
+  };
   const tick = (number) => {
     setCount((n) => n + 1);
   };
@@ -1666,7 +1728,7 @@ const Home = function (props) {
             </div>
           </div>
           <div id="xuanzhun"></div>
-          {/*       <div className="left-mess">
+          <div className="left-mess">
             <div>
               •APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。
             </div>
@@ -1684,7 +1746,7 @@ const Home = function (props) {
             <div>
               •APS系统面向小规模多品种生产车间需求开发，在有限资源下，可快速生成符合订单要求及车间复杂环境的排产方案。
             </div>
-          </div> */}
+          </div>
           <Gantt orderScheduleDetail={orderScheduleDetail ?? []} simTime={simTime} />
           {/* <Gantt orderScheduleDetail={orderScheduleDetail ?? []} /> */}
           {/* <div id="main"></div> */}

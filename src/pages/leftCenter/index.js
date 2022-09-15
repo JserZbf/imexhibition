@@ -30,15 +30,74 @@ const leftCenter = function (props) {
     currentTime,
   } = props;
   const [timer, setTimer] = useState(null);
-  const [timers, setTimers] = useState(null);
+  const timers = useRef(null);
+  const [leftEchartCen, setLeftEchartCen] = useState([]);
+  //const [timers, setTimers] = useState(null);
+  // useEffect(() => {
+  //   if (leftEchart.length) {
+  //     // roll(100);
+  //   }
+  //   return () => {
+  //     clearInterval(timers);
+  //   };
+  // }, [leftEchart]);
   useEffect(() => {
-    if (leftEchart.length) {
-      roll(100);
+    if (leftEchart?.length) {
+      init();
+      const cenData = leftEchart.slice(0, 6).map((item, index) => {
+        return {
+          ...item,
+          delay: 3 * (index + 1),
+        };
+      });
+      setLeftEchartCen(cenData);
+      leftEchartScroll(12000, cenData);
     }
-    return () => {
-      clearInterval(timers);
-    };
+    return init;
   }, [leftEchart]);
+  const leftEchartScroll = (time, data) => {
+    timers.current = setTimeout(() => {
+      // const [newArr, currentIndex2] = loopData2(materialTypeLaterList, 1);
+      // const newData = newArr.map((item, index) => {
+      //   return {
+      //     ...item,
+      //     index: 1,
+      //     delay: 2 * (currentIndex2 + 1),
+      //   }
+      // })
+      // data.splice(currentIndex2, 1, newData[0]);
+      setLeftEchartCen(
+        loopData(leftEchart, 6).map((item, index) => {
+          return {
+            ...item,
+            delay: 3 * (index + 1),
+          };
+        }),
+      );
+      // console.log(data, 'current-data')
+      leftEchartScroll(12000, data);
+    }, time);
+  };
+  const init = () => {
+    timers?.current && clearTimeout(timers?.current);
+  };
+  let currentPage = 0;
+  const loopData = (arr, newLen) => {
+    let len = arr.length;
+    let result = len - currentPage;
+    let newArr = [];
+    if (result > 0 && result < newLen) {
+      newArr = [...arr.slice(currentPage, len), ...arr.slice(0, newLen - result)];
+      currentPage = newLen - result;
+    } else if (result >= newLen) {
+      newArr = arr.slice(currentPage, currentPage + newLen);
+      currentPage += newLen;
+    } else {
+      currentPage = 0;
+      newArr = arr.slice(currentPage, currentPage + newLen);
+    }
+    return newArr;
+  };
   const checkTime = (i) => {
     if (i < 10) {
       i = '0' + i;
@@ -250,12 +309,12 @@ const leftCenter = function (props) {
             />
           </div>
         </Col>
-        <Col span={5} push={2}>
+        <Col span={5} push={2} className="mobile-card">
           <div id="review_box" className="review_box">
             <ul id="leftEchart1" className="leftEchart1">
-              {leftEchart.map((item, index) => {
+              {leftEchartCen.map((item, index) => {
                 return (
-                  <li key={index}>
+                  <li key={index} className="run-lis" style={{ animationDelay: item.delay + 's' }}>
                     <ReactEchartsCom option={item.leftEchartsPieOne} />
                     <div>
                       <ul className="steps-mess">
@@ -373,7 +432,6 @@ const leftCenter = function (props) {
                 );
               })}
             </ul>
-            <ul id="leftEchart2" className="leftEchart2"></ul>
           </div>
         </Col>
       </Row>

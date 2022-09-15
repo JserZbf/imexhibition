@@ -82,11 +82,11 @@ const leftBottom = function (props) {
         return {
           ...item,
           index: 1,
-          delay: 2 * (index + 1),
+          delay: 3 * (index + 1),
         };
       });
       setMaterialTypeListCen(cenData);
-      materialTypeSixListScroll();
+      materialTypeSixListScroll(12000, cenData);
     }
     return init;
   }, [materialTypeLaterList]);
@@ -117,29 +117,52 @@ const leftBottom = function (props) {
     }
     return newArr;
   };
-  const materialTypeSixListScroll = () => {
+  let currentPage2 = 6;
+  let currentIndex2 = -1;
+  const loopData2 = (arr, newLen) => {
+    let len = arr.length;
+    let result = len - currentPage2;
+    let newArr = [];
+    if (result > 0 && result < newLen) {
+      newArr = [...arr.slice(currentPage2, len), ...arr.slice(0, newLen - result)];
+      currentPage2 = newLen - result;
+    } else if (result >= newLen) {
+      newArr = arr.slice(currentPage2, currentPage2 + newLen);
+      currentPage2 += newLen;
+    } else {
+      currentPage2 = 0;
+      newArr = arr.slice(currentPage2, currentPage2 + newLen);
+    }
+    if (currentIndex2 == 5) {
+      currentIndex2 = 0;
+    } else {
+      currentIndex2++;
+    }
+    return [newArr, currentIndex2];
+  };
+  const materialTypeSixListScroll = (time, data) => {
     timer.current = setTimeout(() => {
-      const cenData = loopData(materialTypeLaterList, 6).map((item, index) => {
-        return {
-          ...item,
-          index: 1,
-          delay: 2 * (index + 1),
-        };
-      });
-      setMaterialTypeListCen(cenData);
-      // const cenData = materialTypeLaterList.map((item, index) => {
+      // const [newArr, currentIndex2] = loopData2(materialTypeLaterList, 1);
+      // const newData = newArr.map((item, index) => {
       //   return {
       //     ...item,
       //     index: 1,
-      //     delay: lastDelayValue + (2 * (index + 1))
+      //     delay: 2 * (currentIndex2 + 1),
       //   }
       // })
-      // const cenData2 = oneData.concat(cenData);
-      // lastDelayValue = cenData2[cenData2.length - 1].delay;
-      // setMaterialTypeListCen(cenData2);
-      // // }s
-      materialTypeSixListScroll();
-    }, 12000);
+      // data.splice(currentIndex2, 1, newData[0]);
+      setMaterialTypeListCen(
+        loopData(materialTypeLaterList, 6).map((item, index) => {
+          return {
+            ...item,
+            index: 1,
+            delay: 3 * (index + 1),
+          };
+        }),
+      );
+      // console.log(data, 'current-data')
+      materialTypeSixListScroll(12000, data);
+    }, time);
   };
   const diffOption = useMemo(() => {
     return {
@@ -679,7 +702,7 @@ const leftBottom = function (props) {
   return (
     <div className="left-bottom">
       <Row>
-        <Col span={22}>
+        <Col span={16} className="col-position">
           {/* 14 */}
           <div className="material-type">
             <ul className="material-type-list">
@@ -689,7 +712,7 @@ const leftBottom = function (props) {
                     key={index}
                     className={
                       item.supplyTime == moment(currentTime).format('YYYY-MM-DD')
-                        ? `run-li${item.index} active-li`
+                        ? `active-li run-li${item.index}`
                         : `li run-li${item.index}`
                     }
                     style={{ animationDelay: item.delay + 's' }}

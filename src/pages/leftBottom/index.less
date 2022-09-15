@@ -5,543 +5,555 @@
   margin-left: 262px;
   position: relative;
 
-  .material-type {
-    width: 100%;
-    height: 500px;
-    margin-left: 41px;
-    background: url('./img/background/long-jian-tou.png') no-repeat;
-    background-size: 100% 100%;
-    margin-top: -3.3%;
-    top: 10%;
+  .col-position {
     position: relative;
-
-    .material-type-list {
-      width: 91.5%;
-      height: 140%;
+    .material-type {
+      width: 90%;
+      height: 500px;
+      margin-left: 41px;
+      background: url('./img/background/long-jian-tou.png') no-repeat;
+      background-size: 100% 100%;
+      margin-top: 1.7%;
+      top: 20%;
       position: absolute;
-      left: 0%;
-      top: -34%;
-      overflow: hidden;
 
-      .li {
-        background: url('./img/background/material-type.png') no-repeat;
-        background-size: 100% 100%;
-      }
-
-      > li {
-        width: 274px;
-        height: 327px;
+      .material-type-list {
+        width: 97%;
+        height: 140%;
         position: absolute;
-        left: -251px;
-        top: -110px;
+        left: 0%;
+        top: -34%;
+        overflow: hidden;
 
-        .title {
-          color: white;
-          font-size: 21px;
-          position: absolute;
-          left: 9.5%;
-          top: 2%;
-          transform: rotate(6deg);
+        .li {
+          background: url('./img/background/material-type.png') no-repeat;
+          background-size: 100% 100%;
         }
 
-        .number {
-          width: 220px;
-          color: white;
-          font-size: 19px;
+        > li {
+          width: 274px;
+          height: 327px;
           position: absolute;
-          left: 10%;
-          top: 63%;
-          transform: rotate(-11deg);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          span:nth-child(3) {
-            margin-left: 2%;
+          left: -251px;
+          top: -110px;
+
+          .title {
+            color: white;
+            font-size: 21px;
+            position: absolute;
+            left: 9.5%;
+            top: 2%;
+            transform: rotate(6deg);
+          }
+
+          .number {
+            width: 220px;
+            color: white;
+            font-size: 19px;
+            position: absolute;
+            left: 10%;
+            top: 63%;
+            transform: rotate(-11deg);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            span:nth-child(3) {
+              margin-left: 2%;
+            }
+          }
+
+          .start-time {
+            color: white;
+            font-size: 19px;
+            position: absolute;
+            left: 11%;
+            top: 78%;
+            transform: rotate(-13deg);
+          }
+
+          .time {
+            font-size: 24px;
+            font-family: Bahnschrift-Regular, Bahnschrift;
+            font-weight: 400;
+            color: #ffffff;
+            position: absolute;
+            left: 33%;
+            top: 100%;
+            //transform: rotate(-8deg);
+          }
+
+          .title-active {
+            color: red;
+            font-size: 21px;
+            position: absolute;
+            left: 3.5%;
+            top: -4.5%;
+            transform: rotate(6deg);
+          }
+
+          .number-active {
+            color: red;
+            font-size: 19px;
+            position: absolute;
+            left: 4%;
+            top: 32%;
+            transform: rotate(-8deg);
+          }
+
+          .start-time-active {
+            color: red;
+            font-size: 19px;
+            position: absolute;
+            left: 4%;
+            top: 41%;
+            transform: rotate(-8deg);
+          }
+
+          .time-active {
+            font-size: 24px;
+            font-family: Bahnschrift-Regular, Bahnschrift;
+            font-weight: 400;
+            color: red;
+            position: absolute;
+            left: 30%;
+            top: 53%;
+            //transform: rotate(-8deg);
+          }
+
+          > div {
+            width: 24px;
+            height: 18px;
+            background: url('./img/background/short-jian-tou.png') no-repeat;
+            background-size: 100% 100%;
+            position: absolute;
+            top: 94%;
+            left: 47%;
           }
         }
 
-        .start-time {
-          color: white;
-          font-size: 19px;
-          position: absolute;
-          left: 11%;
-          top: 78%;
-          transform: rotate(-13deg);
-        }
-
-        .time {
-          font-size: 24px;
-          font-family: Bahnschrift-Regular, Bahnschrift;
-          font-weight: 400;
-          color: #ffffff;
-          position: absolute;
-          left: 33%;
-          top: 100%;
-          //transform: rotate(-8deg);
-        }
-
-        .title-active {
-          color: red;
-          font-size: 21px;
-          position: absolute;
-          left: 3.5%;
-          top: -4.5%;
-          transform: rotate(6deg);
-        }
-
-        .number-active {
-          color: red;
-          font-size: 19px;
-          position: absolute;
-          left: 4%;
-          top: 32%;
-          transform: rotate(-8deg);
-        }
-
-        .start-time-active {
-          color: red;
-          font-size: 19px;
-          position: absolute;
-          left: 4%;
-          top: 41%;
-          transform: rotate(-8deg);
-        }
-
-        .time-active {
-          font-size: 24px;
-          font-family: Bahnschrift-Regular, Bahnschrift;
-          font-weight: 400;
-          color: red;
-          position: absolute;
-          left: 30%;
-          top: 53%;
-          //transform: rotate(-8deg);
-        }
-
-        > div {
-          width: 24px;
-          height: 18px;
-          background: url('./img/background/short-jian-tou.png') no-repeat;
-          background-size: 100% 100%;
-          position: absolute;
-          top: 94%;
-          left: 47%;
-        }
-      }
-
-      // >li:nth-child(1) {
-      //   left: 261px;
-      //   top: 0px;
-      // }
-
-      // >li:nth-child(2) {
-      //   left: 721px;
-      //   top: 138px;
-      // }
-
-      // >li:nth-child(3) {
-      //   left: 1180px;
-      //   top: 231px;
-      // }
-
-      // >li:nth-child(4) {
-      //   left: 1708px;
-      //   top: 279px;
-      // }
-
-      // >li:nth-child(5) {
-      //   left: 2197px;
-      //   top: 285px;
-      // }
-
-      // >li:nth-child(6) {
-      //   left: 2726px;
-      //   top: 231px;
-      // }
-
-      // >li:nth-child(7) {
-      //   left: 3220px;
-      //   top: 156px;
-      // }
-
-      .active-li {
-        background: url('./img/background/material-type-active.png') no-repeat;
-        background-size: 100% 100%;
-        //animation: example .8s infinite linear;
-      }
-
-      @keyframes example {
-        0% {
-          left: -251px;
-          top: -110px;
-          transform: translateY(0);
-        }
-
-        14.29% {
-          left: 261px;
-          top: 0px;
-          transform: translateY(-10px);
-        }
-
-        28.58% {
-          left: 721px;
-          top: 138px;
-          transform: translateY(0);
-        }
-
-        42.87% {
-          left: 1180px;
-          top: 231px;
-          transform: translateY(10px);
-        }
-
-        57.16% {
-          left: 1708px;
-          top: 279px;
-          transform: translateY(0);
-        }
-
-        71.45% {
-          left: 2197px;
-          top: 285px;
-          transform: translateY(-10px);
-        }
-
-        85.74% {
-          left: 2726px;
-          top: 231px;
-          transform: translateY(0);
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-          transform: translateY(10px);
-        }
-      }
-
-      //定义动画的流程
-      .run-li1 {
-        display: block;
-        animation: animation-li1 12s 0.4s 1 linear;
-        animation-fill-mode: backwards;
-        animation-iteration-count: infinite;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li1 {
-        0% {
-          left: -251px;
-          top: -110px;
-        }
-
-        14.29% {
-          left: 261px;
-          top: 0px;
-        }
-
-        28.58% {
-          left: 721px;
-          top: 138px;
-        }
-
-        42.87% {
-          left: 1180px;
-          top: 231px;
-        }
-
-        57.16% {
-          left: 1708px;
-          top: 279px;
-        }
-
-        71.45% {
-          left: 2197px;
-          top: 285px;
-        }
-
-        85.74% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-
-      //定义动画的流程
-      .run-li2 {
-        display: block;
-        animation: animation-li2 10s 0.4s 1 linear;
-        animation-fill-mode: forwards;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li2 {
-        0% {
-          left: 261px;
-          top: 0px;
-        }
-
-        16.67% {
-          left: 721px;
-          top: 138px;
-        }
-
-        33.34% {
-          left: 1180px;
-          top: 231px;
-        }
-
-        50.01% {
-          left: 1708px;
-          top: 279px;
-        }
-
-        66.68% {
-          left: 2197px;
-          top: 285px;
-        }
-
-        80% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-
-      //定义动画的流程
-      .run-li3 {
-        display: block;
-        animation: animation-li3 8s 0.4s 1 linear;
-        animation-fill-mode: forwards;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li3 {
-        0% {
-          left: 721px;
-          top: 138px;
-        }
-
-        20% {
-          left: 1180px;
-          top: 231px;
-        }
-
-        40% {
-          left: 1708px;
-          top: 279px;
-        }
-
-        60% {
-          left: 2197px;
-          top: 285px;
-        }
-
-        80% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-
-      //定义动画的流程
-      .run-li4 {
-        display: block;
-        animation: animation-li4 6s 0.4s 1 linear;
-        animation-fill-mode: forwards;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li4 {
-        0% {
-          left: 1180px;
-          top: 231px;
-        }
-
-        25% {
-          left: 1708px;
-          top: 279px;
-        }
-
-        50% {
-          left: 2197px;
-          top: 285px;
-        }
-
-        75% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-
-      //定义动画的流程
-      .run-li5 {
-        display: block;
-        animation: animation-li5 4s 0.4s 1 linear;
-        animation-fill-mode: forwards;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li5 {
-        0% {
-          left: 1708px;
-          top: 279px;
-        }
-
-        33.33% {
-          left: 2197px;
-          top: 285px;
-        }
-
-        66.66% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-
-      //定义动画的流程
-      .run-li6 {
-        display: block;
-        animation: animation-li6 2s 0.4s 1 linear;
-        animation-fill-mode: forwards;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li6 {
-        0% {
-          left: 2197px;
-          top: 285px;
-        }
-
-        50% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-
-      //定义动画的流程
-      .run-li7 {
-        display: block;
-        animation: animation-li6 2s 0.4s 1 linear;
-        animation-fill-mode: forwards;
-      }
-
-      //向上走的动画初始及结尾值
-      @keyframes animation-li7 {
-        0% {
-          left: 2726px;
-          top: 231px;
-        }
-
-        100% {
-          left: 3220px;
-          top: 156px;
-        }
-      }
-    }
-  }
-
-  .left-bottom-order {
-    width: 2198px;
-    height: 623px;
-    display: flex;
-    margin-left: -8.5%;
-    margin-top: 0%;
-
-    .left-bottom-order-infor {
-      display: flex;
-      margin-top: 2%;
-
-      .jian-tou {
-        width: 34px;
-        height: 25px;
-        background: url('./img/background/two-triangle.png') no-repeat;
-        background-size: 100% 100%;
-        margin-left: 122px;
-        margin-top: 88px;
-      }
-
-      > span {
-        margin-top: 77px;
-        margin-left: 10px;
-        font-size: 30px;
-        font-family: PingFang SC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #367ae3;
-      }
-    }
-
-    .left-bottom-order-split {
-      width: 8px;
-      height: 228px;
-      background: url('../rightTop/img/background/split-logo.png') no-repeat;
-      background-size: 100% 100%;
-      margin-top: 7%;
-      margin: 2% 1% 0% 3%;
-    }
-
-    .left-bottom-order-list {
-      margin-top: 1.5%;
-      width: 28%;
-
-      > ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-
-        > li {
-          width: 50%;
-        }
-
-        // >li:nth-child(4) {
-        //   margin-right: -7%;
+        // >li:nth-child(1) {
+        //   left: -2px;
+        //   top: -8px;
         // }
 
-        > li > span {
-          display: block;
+        // >li:nth-child(2) {
+        //   left: 394px;
+        //   top: 125px;
+        // }
+
+        // >li:nth-child(3) {
+        //   left: 840px;
+        //   top: 251px;
+        // }
+
+        // >li:nth-child(4) {
+        //   left: 1302px;
+        //   top: 325px;
+        // }
+
+        // >li:nth-child(5) {
+        //   left: 1734px;
+        //   top: 308px;
+        // }
+
+        // >li:nth-child(6) {
+        //   left: 2153px;
+        //   top: 205px;
+        // }
+
+        // >li:nth-child(7) {
+        //   left: 2546px;
+        //   top: -13px;
+        // }
+
+        .active-li {
+          background: url('./img/background/material-type-active.png') no-repeat;
+          background-size: 100% 100%;
+          //animation: example .8s infinite linear;
         }
 
-        > li > span:nth-child(1) {
+        @keyframes example {
+          0% {
+            left: -348px;
+            top: -137px;
+            transform: translateY(0);
+          }
+
+          14.29% {
+            left: -2px;
+            top: -8px;
+            transform: translateY(0);
+          }
+
+          28.58% {
+            left: 394px;
+            top: 125px;
+            transform: translateY(0);
+          }
+
+          42.87% {
+            left: 840px;
+            top: 251px;
+            transform: translateY(10px);
+          }
+
+          57.16% {
+            left: 1302px;
+            top: 325px;
+            transform: translateY(0);
+          }
+
+          71.45% {
+            left: 1734px;
+            top: 328px;
+            transform: translateY(0);
+          }
+
+          85.74% {
+            left: 2153px;
+            top: 140px;
+            transform: translateY(0);
+          }
+
+          100% {
+            left: 2546px;
+            top: 60px;
+            transform: translateY(10px);
+          }
+        }
+
+        //定义动画的流程
+        .run-li1 {
+          display: block;
+          animation: animation-li1 18s 0.4s 1 linear;
+          animation-fill-mode: backwards;
+          animation-iteration-count: infinite;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li1 {
+          0% {
+            left: -348px;
+            top: -137px;
+            transform: translateY(0);
+          }
+
+          14.29% {
+            left: -2px;
+            top: -8px;
+            transform: translateY(0);
+          }
+
+          28.58% {
+            left: 394px;
+            top: 125px;
+            transform: translateY(0);
+          }
+
+          42.87% {
+            left: 840px;
+            top: 251px;
+            transform: translateY(10px);
+          }
+
+          57.16% {
+            left: 1302px;
+            top: 325px;
+            transform: translateY(0);
+          }
+
+          71.45% {
+            left: 1734px;
+            top: 328px;
+            transform: translateY(0);
+          }
+
+          85.74% {
+            left: 2153px;
+            top: 140px;
+            transform: translateY(0);
+          }
+
+          100% {
+            left: 2546px;
+            top: 60px;
+            transform: translateY(10px);
+          }
+        }
+
+        //定义动画的流程
+        .run-li2 {
+          display: block;
+          animation: animation-li2 10s 0.4s 1 linear;
+          animation-fill-mode: forwards;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li2 {
+          0% {
+            left: 261px;
+            top: 0px;
+          }
+
+          16.67% {
+            left: 721px;
+            top: 138px;
+          }
+
+          33.34% {
+            left: 1180px;
+            top: 231px;
+          }
+
+          50.01% {
+            left: 1708px;
+            top: 279px;
+          }
+
+          66.68% {
+            left: 2197px;
+            top: 285px;
+          }
+
+          80% {
+            left: 2726px;
+            top: 231px;
+          }
+
+          100% {
+            left: 3220px;
+            top: 156px;
+          }
+        }
+
+        //定义动画的流程
+        .run-li3 {
+          display: block;
+          animation: animation-li3 8s 0.4s 1 linear;
+          animation-fill-mode: forwards;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li3 {
+          0% {
+            left: 721px;
+            top: 138px;
+          }
+
+          20% {
+            left: 1180px;
+            top: 231px;
+          }
+
+          40% {
+            left: 1708px;
+            top: 279px;
+          }
+
+          60% {
+            left: 2197px;
+            top: 285px;
+          }
+
+          80% {
+            left: 2726px;
+            top: 231px;
+          }
+
+          100% {
+            left: 3220px;
+            top: 156px;
+          }
+        }
+
+        //定义动画的流程
+        .run-li4 {
+          display: block;
+          animation: animation-li4 6s 0.4s 1 linear;
+          animation-fill-mode: forwards;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li4 {
+          0% {
+            left: 1180px;
+            top: 231px;
+          }
+
+          25% {
+            left: 1708px;
+            top: 279px;
+          }
+
+          50% {
+            left: 2197px;
+            top: 285px;
+          }
+
+          75% {
+            left: 2726px;
+            top: 231px;
+          }
+
+          100% {
+            left: 3220px;
+            top: 156px;
+          }
+        }
+
+        //定义动画的流程
+        .run-li5 {
+          display: block;
+          animation: animation-li5 4s 0.4s 1 linear;
+          animation-fill-mode: forwards;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li5 {
+          0% {
+            left: 1708px;
+            top: 279px;
+          }
+
+          33.33% {
+            left: 2197px;
+            top: 285px;
+          }
+
+          66.66% {
+            left: 2726px;
+            top: 231px;
+          }
+
+          100% {
+            left: 3220px;
+            top: 156px;
+          }
+        }
+
+        //定义动画的流程
+        .run-li6 {
+          display: block;
+          animation: animation-li6 2s 0.4s 1 linear;
+          animation-fill-mode: forwards;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li6 {
+          0% {
+            left: 2197px;
+            top: 285px;
+          }
+
+          50% {
+            left: 2726px;
+            top: 231px;
+          }
+
+          100% {
+            left: 3220px;
+            top: 156px;
+          }
+        }
+
+        //定义动画的流程
+        .run-li7 {
+          display: block;
+          animation: animation-li6 2s 0.4s 1 linear;
+          animation-fill-mode: forwards;
+        }
+
+        //向上走的动画初始及结尾值
+        @keyframes animation-li7 {
+          0% {
+            left: 2726px;
+            top: 231px;
+          }
+
+          100% {
+            left: 3220px;
+            top: 156px;
+          }
+        }
+      }
+    }
+
+    .left-bottom-order {
+      width: 2198px;
+      height: 623px;
+      display: flex;
+      position: fixed;
+      left: 1%;
+      top: 84%;
+      .left-bottom-order-infor {
+        display: flex;
+        margin-top: 2%;
+
+        .jian-tou {
+          width: 34px;
+          height: 25px;
+          background: url('./img/background/two-triangle.png') no-repeat;
+          background-size: 100% 100%;
+          margin-left: 122px;
+          margin-top: 88px;
+        }
+
+        > span {
+          margin-top: 77px;
+          margin-left: 10px;
           font-size: 30px;
           font-family: PingFang SC-Regular, PingFang SC;
           font-weight: 400;
-          color: #3272d7;
+          color: #367ae3;
         }
+      }
 
-        > li > span:nth-child(2) {
-          width: 100%;
-          height: 80px;
-          font-size: 50px;
-          font-family: PingFang SC-Regular, PingFang SC;
-          font-weight: 400;
-          color: #ffffff;
+      .left-bottom-order-split {
+        width: 8px;
+        height: 228px;
+        background: url('../rightTop/img/background/split-logo.png') no-repeat;
+        background-size: 100% 100%;
+        margin-top: 7%;
+        margin: 2% 1% 0% 3%;
+      }
+
+      .left-bottom-order-list {
+        margin-top: 1.5%;
+        width: 28%;
+
+        > ul {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          > li {
+            width: 50%;
+          }
+
+          // >li:nth-child(4) {
+          //   margin-right: -7%;
+          // }
+
+          > li > span {
+            display: block;
+          }
+
+          > li > span:nth-child(1) {
+            font-size: 30px;
+            font-family: PingFang SC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #3272d7;
+          }
+
+          > li > span:nth-child(2) {
+            width: 100%;
+            height: 80px;
+            font-size: 50px;
+            font-family: PingFang SC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #ffffff;
+          }
         }
       }
     }
@@ -667,13 +679,13 @@
 
   .plan-finish-mobile {
     position: absolute;
-    left: 170%;
-    top: -65%;
+    left: 61%;
+    top: 15%;
   }
 
   .diff-infor-mobile {
     position: absolute;
-    left: 172.6%;
-    top: -139%;
+    left: 78%;
+    top: 15%;
   }
 }

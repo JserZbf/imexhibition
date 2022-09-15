@@ -11,91 +11,201 @@
       margin-right: 4%;
 
       #review_box_right {
-        width: 100%;
-        height: 1554px;
-        /* 必须 */
+        width: 120%;
+        height: 1600px;
+        position: absolute;
+        left: -20%;
+        top: -15.5%;
         overflow: hidden;
-        margin-top: -7%;
-        /* 必须 */
-      }
+        margin-top: 2%;
 
-      #rightEchart1,
-      #rightEchart2 {
-        width: 100%;
-        height: 100%;
-      }
-
-      .maintain-list {
-        width: 1125px;
-        height: 311px;
-        background: url('./img/background/maintain-back.png') no-repeat;
-        background-size: 100% 100%;
-        position: relative;
-
-        .maintain-back-list {
-          width: 411px;
-          height: 130px;
-          // background: url('./img/background/maintain-line-back.png') no-repeat;
-          background-size: 100% 100%;
+        > ul {
+          width: 100%;
+          height: 100%;
           position: absolute;
-          left: 8.5%;
-          top: 53%;
-          color: #ffffff;
-          font-size: 16px;
+          left: 17%;
+          top: -1%;
 
-          > p {
-            transform: rotate(-4deg);
-            position: absolute;
-            left: 0%;
-            top: 0%;
+          > li {
+            width: 1125px;
+            height: 311px;
+            background: url('./img/background/maintain-back.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+            margin: 1.1% 0%;
+
+            .maintain-back-list {
+              width: 411px;
+              height: 130px;
+              // background: url('./img/background/maintain-line-back.png') no-repeat;
+              background-size: 100% 100%;
+              position: absolute;
+              left: 8.5%;
+              top: 53%;
+              color: #ffffff;
+              font-size: 16px;
+
+              > p {
+                transform: rotate(-4deg);
+                position: absolute;
+                left: 0%;
+                top: 0%;
+              }
+
+              > p:nth-child(1) {
+                left: 0%;
+                top: 21%;
+              }
+
+              > p:nth-child(2) {
+                left: 0%;
+                top: 45%;
+              }
+
+              > p:nth-child(3) {
+                left: 0%;
+                top: 54%;
+              }
+            }
+
+            .finish-bao-yang {
+              width: 130px;
+              height: 80px;
+              background: url('./img/background//baoyang-title.png') no-repeat;
+              background-size: 100% 100%;
+              position: absolute;
+              left: 3%;
+              top: 8.3%;
+            }
+
+            .unfinish-bao-yang {
+              width: 130px;
+              height: 80px;
+              background: url('./img/background/un-baoyang-title.png') no-repeat;
+              background-size: 100% 100%;
+              position: absolute;
+              left: 3%;
+              top: 8.3%;
+            }
+
+            > div:nth-child(3) {
+              position: absolute;
+              right: 50%;
+              top: 8%;
+            }
+
+            > div:nth-child(4) {
+              position: absolute;
+              right: 0%;
+              top: 8%;
+            }
           }
 
-          > p:nth-child(1) {
-            left: 0%;
-            top: 21%;
+          // >li:nth-child(1) {
+          //   position: absolute;
+          //   left: -30%;
+          //   top: -40%;
+          // }
+
+          // >li:nth-child(2) {
+          //   position: absolute;
+          //   left: -23%;
+          //   top: -20%;
+          // }
+
+          // >li:nth-child(3) {
+          //   position: absolute;
+          //   left: -11%;
+          //   top: 0%;
+          // }
+
+          // >li:nth-child(4) {
+          //   position: absolute;
+          //   left: -5%;
+          //   top: 20%;
+          // }
+
+          // >li:nth-child(5) {
+          //   position: absolute;
+          //   left: -2%;
+          //   top: 40%;
+          // }
+
+          // >li:nth-child(6) {
+          //   position: absolute;
+          //   left: -3%;
+          //   top: 60%;
+          // }
+
+          // >li:nth-child(7) {
+          //   position: absolute;
+          //   left: -9%;
+          //   top: 80%;
+          // }
+
+          // >li:nth-child(8) {
+          //   position: absolute;
+          //   left: -18%;
+          //   top: 100%;
+          // }
+
+          .run-list {
+            display: block;
+            animation: animation-list 18s 0.4s 1 linear;
+            animation-fill-mode: backwards;
+            animation-iteration-count: infinite;
           }
 
-          > p:nth-child(2) {
-            left: 0%;
-            top: 45%;
+          //向上走的动画初始及结尾值
+          @keyframes animation-list {
+            0% {
+              position: absolute;
+              left: -16%;
+              top: 100%;
+            }
+
+            14.29% {
+              position: absolute;
+              left: -9%;
+              top: 80%;
+            }
+
+            28.58% {
+              position: absolute;
+              left: -3%;
+              top: 60%;
+            }
+
+            42.87% {
+              position: absolute;
+              left: -2%;
+              top: 40%;
+            }
+
+            57.16% {
+              position: absolute;
+              left: -5%;
+              top: 20%;
+            }
+
+            71.45% {
+              position: absolute;
+              left: -11%;
+              top: 0%;
+            }
+
+            85.74% {
+              position: absolute;
+              left: -20%;
+              top: -20%;
+            }
+
+            100% {
+              position: absolute;
+              left: -30%;
+              top: -40%;
+            }
           }
-
-          > p:nth-child(3) {
-            left: 0%;
-            top: 54%;
-          }
-        }
-
-        .finish-bao-yang {
-          width: 130px;
-          height: 80px;
-          background: url('./img/background//baoyang-title.png') no-repeat;
-          background-size: 100% 100%;
-          position: absolute;
-          left: 3%;
-          top: 8.3%;
-        }
-
-        .unfinish-bao-yang {
-          width: 130px;
-          height: 80px;
-          background: url('./img/background/un-baoyang-title.png') no-repeat;
-          background-size: 100% 100%;
-          position: absolute;
-          left: 3%;
-          top: 8.3%;
-        }
-
-        > div:nth-child(3) {
-          position: absolute;
-          right: 50%;
-          top: 8%;
-        }
-
-        > div:nth-child(4) {
-          position: absolute;
-          right: 0%;
-          top: 8%;
         }
       }
 
