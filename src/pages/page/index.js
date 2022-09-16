@@ -64,18 +64,20 @@ const Home = function ({ scale }) {
       render: (text, record, index) => {
         return index + 1;
       },
-      width: '100',
+      width: 100,
     },
     {
       title: '计划编号',
       dataIndex: 'planNO',
       key: 'planNO',
+      width: 400,
     },
     {
       // title: <Tooltip title="可选0,1,2,3">计划等级</Tooltip>,
       title: '计划等级',
       dataIndex: 'planLevel',
       key: 'planLevel',
+      width: 100,
       // render: (text, record, index) => {
       //   return (
       //     <InputNumber
