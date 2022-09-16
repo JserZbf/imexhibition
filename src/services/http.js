@@ -80,7 +80,17 @@ export class Http {
         const { timeout = 300000 } = options; // 默认300秒
         console.log('timeout: ', timeout);
         const controller = new AbortController();
-        const timerId = setTimeout(() => controller.abort(), timeout);
+        const timerId = setTimeout(() =>{
+          controller.abort();
+          message.warn({
+            content:'请检查网络设置。',
+            style: {
+              fontSize: 22,
+              marginTop:'20vh',
+              fontFamily: 'PingFang SC-Regular, PingFang SC',
+            },
+          });
+        } , timeout);
         // signal属性讲中止器与fetch关联
         let response = await fetch(url, { ...options, signal: controller.signal });
         clearTimeout(timerId);
