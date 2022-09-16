@@ -1273,7 +1273,7 @@ const rightCenter = function (props) {
       ],
     };
     setNan1(nan1);
-  }, [fourWeekFinishRateX, fourWeekFinishRateX]);
+  }, [fourWeekFinishRateX, fourWeekFinishRateY]);
 
   // useEffect(() => {
   //   if (rightEchart.length) {
