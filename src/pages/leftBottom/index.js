@@ -383,7 +383,7 @@ const leftBottom = function (props) {
     };
   }, [bigValueLine, diffAlgorithmY, diffAlgorithmX]);
   const averageOption = useMemo(() => {
-    var dataArr = finishPlanObj.finishRate * 10;
+    var dataArr = finishPlanObj.finishRate ? finishPlanObj.finishRate * 10 : '0';
     var colorSet = {
       color: '#0063E7',
     };
