@@ -1108,6 +1108,7 @@ const Home = function (props) {
         yijiagongCount: tranData(item, currentTime)[1],
         leftEchartsPieInfoOneCurrent: null,
         uiList: uiLists,
+        uiListLength: uiLists.length,
         planList: planList,
         schedualList: schedualList,
         exceedList: exceedList,

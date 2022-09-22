@@ -31,6 +31,7 @@ const leftCenter = function (props) {
   } = props;
   const [timer, setTimer] = useState(null);
   const timers = useRef(null);
+  const tableRef = useRef(null);
   const [leftEchartCen, setLeftEchartCen] = useState([]);
   //const [timers, setTimers] = useState(null);
   // useEffect(() => {
@@ -106,10 +107,14 @@ const leftCenter = function (props) {
   };
   useEffect(() => {
     InitialScroll(materialDemandList);
+    activeStyleFun();
     return () => {
       return clearInterval(timer);
     };
   }, [materialDemandList]);
+  const activeStyleFun = () => {
+    console.log(tableRef, 'tableRef');
+  };
   const columns = [
     {
       title: '序号',
@@ -254,15 +259,17 @@ const leftCenter = function (props) {
       return '';
     }
   };
+  var countIndex = 0;
   const InitialScroll = (data) => {
     let v = document.getElementsByClassName('ant-table-body')[0];
     // if (data && data.length > 3)  // 只有当大于三条数据的时候 才会看起滚动
     // {
     let time = setInterval(() => {
-      v.scrollTop += 3.5;
+      v.scrollTop += 4.5;
       if (Math.ceil(v.scrollTop) >= parseFloat(v.scrollHeight - v.clientHeight)) {
         v.scrollTop = 0;
         // setTimeout(() => { v.scrollTop = 0 }, 1000)
+        console.log(tableRef, 'tableRef');
       }
     }, 200);
     setTimer(time); // 定时器保存变量 利于停止
@@ -295,6 +302,18 @@ const leftCenter = function (props) {
             <div className="plan-mark-title">
               <div className="jian-tou"></div>
               <span>资源需求清单</span>
+              <div
+                style={{
+                  width: '1111px',
+                  height: '60px',
+                  backgroundColor: '#0E65F0',
+                  position: 'absolute',
+                  left: '-14%',
+                  top: '800%',
+                  opacity: 0.33,
+                  display: materialDemandList ? 'block' : 'none',
+                }}
+              ></div>
             </div>
             <Table
               id="cyclicScroll"
@@ -303,9 +322,10 @@ const leftCenter = function (props) {
               columns={columns}
               rowClassName={setRowClass}
               scroll={{ x: 'max-content', y: 680 }}
-              rowKey={'Specs'}
+              rowKey={'index' + 1}
               dataSource={materialDemandList}
               pagination={false}
+              ref={tableRef}
             />
           </div>
         </Col>
@@ -426,11 +446,16 @@ const leftCenter = function (props) {
                         })}
                       </ul>
                       <ul className="steps-baseicList-date">
-                        {item.uiList.map((item, index) => {
+                        {item.uiList.map((items, index) => {
                           return (
-                            <li key={index} style={{ display: item.flag ? 'block' : 'none' }}>
-                              {' '}
-                              {item.fakeValue}
+                            <li
+                              key={index}
+                              style={{
+                                display: items.flag ? 'block' : 'none',
+                                marginLeft: item.uiListLength == 13 ? '-3%' : '-3.5%',
+                              }}
+                            >
+                              {items.fakeValue}
                             </li>
                           );
                         })}
