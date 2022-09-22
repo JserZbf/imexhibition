@@ -314,6 +314,7 @@ const leftCenter = function (props) {
             <ul id="leftEchart1" className="leftEchart1">
               {leftEchartCen.map((item, index) => {
                 return (
+                  /*   className="run-lis" */
                   <li key={index} className="run-lis" style={{ animationDelay: item.delay + 's' }}>
                     <ReactEchartsCom option={item.leftEchartsPieOne} />
                     <div>
@@ -326,7 +327,9 @@ const leftCenter = function (props) {
                         </li>
                         <li className="title">
                           <span>产品名称</span>
-                          <span>{item.leftEchartsPieInfoOne.productName}</span>
+                          <Tooltip title={item.leftEchartsPieInfoOne.productName}>
+                            <span>{item.leftEchartsPieInfoOne.productName}</span>
+                          </Tooltip>
                         </li>
                         <li className="title">
                           <span>计划等级</span>
@@ -391,7 +394,7 @@ const leftCenter = function (props) {
                                       : '-152%',
                                 }}
                               >
-                                {item.title}
+                                {item.flag ? item.title : ''}
                               </span>
                             </li>
                           );
@@ -411,20 +414,25 @@ const leftCenter = function (props) {
                                       : '-152%',
                                 }}
                               >
-                                {item.title}
+                                {item.flag ? item.title : ''}
                               </span>
                             </li>
                           );
                         })}
                       </ul>
                       <ul className="steps-baseicList">
-                        {item.baseicList.map((item, index) => {
+                        {item.uiList.map((item, index) => {
                           return <li key={index} style={{ background: item.color }}></li>;
                         })}
                       </ul>
                       <ul className="steps-baseicList-date">
-                        {item.baseicList.map((item, index) => {
-                          return <li key={index}>{item.fakeValue}</li>;
+                        {item.uiList.map((item, index) => {
+                          return (
+                            <li key={index} style={{ display: item.flag ? 'block' : 'none' }}>
+                              {' '}
+                              {item.fakeValue}
+                            </li>
+                          );
                         })}
                       </ul>
                     </div>

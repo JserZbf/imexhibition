@@ -261,7 +261,7 @@ const Home = function (props) {
   //   setOutSideScheduleTarget(res.scheduleTarget);
   //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
   //   const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
-  // //  console.log(oneCen, 'onononononon')
+  //   //  console.log(oneCen, 'onononononon')
   //   //tranMaterialTypeLaterList(oneCen);
   //   setMaterialTypeLaterList(oneCen);
   //   setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
@@ -352,43 +352,43 @@ const Home = function (props) {
   //   // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
   //   //    });
   // }, []);
-  // const tranMaterialTypeLaterList = (data) => {
-  //   const cenData = data.slice(0, 6).map((item, index) => {
-  //     return {
-  //       ...item,
-  //       index: 1,
-  //       delay: 2 * (index + 1),
-  //     };
-  //   });
-  //   const cenData2 = data.map((item, index) => {
-  //     return {
-  //       ...item,
-  //       index: 1,
-  //       delay: 2 * (index + 1),
-  //     };
-  //   });
-  //   setMaterialTypeLaterList(cenData);
-  //   materialTypeSixListScroll(12000, cenData, cenData2);
-  // }
-  // const materialTypeSixListScroll = (time, data, data2) => {
-  //   timer.current = setTimeout(() => {
-  //     const [newArr, currentIndex2] = loopData2(data2, 1);
-  //     const newData = newArr.map((item, index) => {
-  //       return {
-  //         ...item,
-  //         index: 1,
-  //         delay: 2 * (currentIndex2 + 1),
-  //       }
-  //     })
-  //     data.splice(currentIndex2, 1, newData[0]);
-  //     console.log(data, 'current-data')
-  //     setMaterialTypeLaterList(data);
-  //     return () => {
-  //       timer?.current && clearTimeout(timer?.current);
-  //     }
-  //     //    materialTypeSixListScroll(2000, data,data2);
-  //   }, time);
-  // };
+  const tranMaterialTypeLaterList = (data) => {
+    const cenData = data.slice(0, 6).map((item, index) => {
+      return {
+        ...item,
+        index: 1,
+        delay: 2 * (index + 1),
+      };
+    });
+    const cenData2 = data.map((item, index) => {
+      return {
+        ...item,
+        index: 1,
+        delay: 2 * (index + 1),
+      };
+    });
+    setMaterialTypeLaterList(cenData);
+    materialTypeSixListScroll(12000, cenData, cenData2);
+  };
+  const materialTypeSixListScroll = (time, data, data2) => {
+    timer.current = setTimeout(() => {
+      const [newArr, currentIndex2] = loopData2(data2, 1);
+      const newData = newArr.map((item, index) => {
+        return {
+          ...item,
+          index: 1,
+          delay: 2 * (currentIndex2 + 1),
+        };
+      });
+      data.splice(currentIndex2, 1, newData[0]);
+      console.log(data, 'current-data');
+      setMaterialTypeLaterList(data);
+      return () => {
+        timer?.current && clearTimeout(timer?.current);
+      };
+      //    materialTypeSixListScroll(2000, data,data2);
+    }, time);
+  };
   let currentPage2 = 6;
   let currentIndex2 = -1;
   const loopData2 = (arr, newLen) => {
@@ -479,6 +479,15 @@ const Home = function (props) {
     var d = diffTime.getDate() < 10 ? '0' + diffTime.getDate() : diffTime.getDate();
     return diffTime.getFullYear() + '-' + m + '-' + d;
   };
+  const addDateMD = (dateStr, diffDay) => {
+    var dateTime = new Date(dateStr).getTime();
+    var diffTimeLong = dateTime + diffDay * 24 * 3600 * 1000;
+    var diffTime = new Date(diffTimeLong);
+    var m =
+      diffTime.getMonth() + 1 < 10 ? '0' + (diffTime.getMonth() + 1) : diffTime.getMonth() + 1;
+    var d = diffTime.getDate() < 10 ? '0' + diffTime.getDate() : diffTime.getDate();
+    return m + '-' + d;
+  };
   const tranData = (obj, currentTime) => {
     var startTime = moment(obj.schedualStart).format('YYYY-MM-DD');
     var endTime = moment(obj.schedualEnd).format('YYYY-MM-DD');
@@ -552,81 +561,137 @@ const Home = function (props) {
     //   state: "加工中",
     // }]
     const totalObj = data.map((item, index) => {
-      const baseicList = [
-        {
-          fakeValue: FakeGetDateStr(1),
-          realValue: RealGetDateStr(1),
-          content: 1,
-        },
-        {
-          fakeValue: '',
-          content: 2,
-        },
-        {
-          fakeValue: FakeGetDateStr(2),
-          realValue: RealGetDateStr(2),
-          content: 3,
-        },
-        {
-          fakeValue: '',
-          content: 4,
-        },
-        {
-          fakeValue: FakeGetDateStr(3),
-          realValue: RealGetDateStr(3),
-          content: 5,
-        },
-        {
-          fakeValue: '',
-          content: 6,
-        },
-        {
-          fakeValue: FakeGetDateStr(4),
-          realValue: RealGetDateStr(4),
-          content: 7,
-        },
-        {
-          fakeValue: '',
-          content: 8,
-        },
-        {
-          fakeValue: FakeGetDateStr(5),
-          realValue: RealGetDateStr(5),
-          content: 9,
-        },
-        {
-          fakeValue: '',
-          content: 10,
-        },
-        {
-          fakeValue: FakeGetDateStr(6),
-          realValue: RealGetDateStr(6),
-          content: 11,
-        },
-        {
-          fakeValue: '',
-          content: 12,
-        },
-        {
-          fakeValue: FakeGetDateStr(7),
-          realValue: RealGetDateStr(7),
-          content: 13,
-        },
-        {
-          fakeValue: '',
-          content: 14,
-        },
-        {
-          fakeValue: FakeGetDateStr(8),
-          realValue: RealGetDateStr(8),
-          content: 15,
-        },
-      ];
+      const cenSortDateData = [];
+      cenSortDateData.push(
+        { value: moment(item.planStart).format('YYYY-MM-DD') },
+        { value: moment(item.planEnd).format('YYYY-MM-DD') },
+        { value: moment(item.schedualStart).format('YYYY-MM-DD') },
+        { value: moment(item.schedualEnd).format('YYYY-MM-DD') },
+      );
+      const sortDateData = compareFN(cenSortDateData, 'value');
+      // console.log(sortDateData, 'fourDataList');
+      console.log(item, 'fourDataList');
+      var dateCount =
+        (new Date(sortDateData[sortDateData.length - 1].value) - new Date(sortDateData[0].value)) /
+        (1000 * 60 * 60 * 24);
+      const uiList = [];
+      for (let i = 0; i <= dateCount; i++) {
+        if (i == dateCount) {
+          uiList.push({
+            fakeValue: addDateMD(sortDateData[0].value, i),
+            realValue: addDate(sortDateData[0].value, i),
+            content: i + 1,
+            flag: true,
+          });
+        } else {
+          uiList.push(
+            {
+              fakeValue: addDateMD(sortDateData[0].value, i),
+              realValue: addDate(sortDateData[0].value, i),
+              content: i + 1,
+              flag: true,
+            },
+            {
+              fakeValue: addDateMD(sortDateData[0].value, i),
+              realValue: addDate(sortDateData[0].value, i),
+              content: i + 1,
+              flag: false,
+            },
+          );
+        }
+      }
+      // const messList = [];
+      // for (let i = 0; i <= dateCount; i++) {
+      //   messList.push({
+      //     fakeValue: addDateMD(sortDateData[0].value, i),
+      //     realValue: addDate(sortDateData[0].value, i),
+      //     content: i + 1,
+      //   })
+      // }
+      // const dateList = [];
+      // for (let i = 0; i <= dateCount; i++) {
+      //   dateList.push({
+      //     fakeValue: addDateMD(sortDateData[0].value, i),
+      //     realValue: addDate(sortDateData[0].value, i),
+      //     content: i + 1,
+      //   })
+      // }
+      /*  const uiList = [
+         {
+           fakeValue: FakeGetDateStr(1),
+           realValue: RealGetDateStr(1),
+           content: 1,
+         },
+         {
+           fakeValue: '',
+           content: 2,
+         },
+         {
+           fakeValue: FakeGetDateStr(2),
+           realValue: RealGetDateStr(2),
+           content: 3,
+         },
+         {
+           fakeValue: '',
+           content: 4,
+         },
+         {
+           fakeValue: FakeGetDateStr(3),
+           realValue: RealGetDateStr(3),
+           content: 5,
+         },
+         {
+           fakeValue: '',
+           content: 6,
+         },
+         {
+           fakeValue: FakeGetDateStr(4),
+           realValue: RealGetDateStr(4),
+           content: 7,
+         },
+         {
+           fakeValue: '',
+           content: 8,
+         },
+         {
+           fakeValue: FakeGetDateStr(5),
+           realValue: RealGetDateStr(5),
+           content: 9,
+         },
+         {
+           fakeValue: '',
+           content: 10,
+         },
+         {
+           fakeValue: FakeGetDateStr(6),
+           realValue: RealGetDateStr(6),
+           content: 11,
+         },
+         {
+           fakeValue: '',
+           content: 12,
+         },
+         {
+           fakeValue: FakeGetDateStr(7),
+           realValue: RealGetDateStr(7),
+           content: 13,
+         },
+         {
+           fakeValue: '',
+           content: 14,
+         },
+         {
+           fakeValue: FakeGetDateStr(8),
+           realValue: RealGetDateStr(8),
+           content: 15,
+         },
+       ]; */
+      console.log(uiList, 'uiList-uiList');
       var planStartIndex = null;
       var planEndIndex = null;
       var schedualStartIndex = null;
       var schedualEndIndex = null;
-      baseicList.forEach((itemx) => {
+      uiList.forEach((itemx) => {
         if (itemx.realValue == moment(item.planStart).format('YYYY-MM-DD')) {
           planStartIndex = itemx.content;
         }
@@ -640,9 +705,9 @@ const Home = function (props) {
           schedualEndIndex = itemx.content;
         }
       });
-      const baseicLists = baseicList.map((items) => {
+      const uiLists = uiList.map((items) => {
         if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
-          if (items.content == planEndIndex && items.content == schedualEndIndex) {
+          if (items.content == planEndIndex && items.content == schedualEndIndex && items.flag) {
             return {
               ...items,
               color: 'green',
@@ -670,13 +735,20 @@ const Home = function (props) {
           };
         }
         if (items.content == schedualStartIndex) {
+          if (schedualEndIndex == schedualStartIndex && !items.flag) {
+            return {
+              ...items,
+              color: 'skyblue',
+              title: '排产开始时间',
+            };
+          }
           return {
             ...items,
             color: 'green',
             title: '排产开始时间',
           };
         }
-        if (items.content == schedualEndIndex) {
+        if (items.content == schedualEndIndex && items.flag) {
           return {
             ...items,
             color: 'green',
@@ -717,15 +789,15 @@ const Home = function (props) {
           title: '',
         };
       });
-      const schedualList = baseicList.map((items) => {
-        if (items.content == schedualStartIndex) {
+      const schedualList = uiList.map((items) => {
+        if (items.content == schedualStartIndex && items.flag) {
           if (schedualEndIndex == schedualStartIndex) {
             return {
               ...items,
               color: 'transparent',
               title: '排产开始与结束时间',
             };
-          } else if (schedualEndIndex - schedualStartIndex == 2) {
+          } else if (schedualEndIndex - schedualStartIndex == 1) {
             return {
               ...items,
               color: 'transparent',
@@ -739,10 +811,10 @@ const Home = function (props) {
             };
           }
         }
-        if (items.content == schedualEndIndex) {
+        if (items.content == schedualEndIndex && items.flag) {
           if (
             schedualEndIndex == schedualStartIndex ||
-            schedualEndIndex - schedualStartIndex == 2
+            schedualEndIndex - schedualStartIndex == 1
           ) {
             return {
               ...items,
@@ -757,7 +829,7 @@ const Home = function (props) {
             };
           }
         }
-        if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
+        if (items.content > schedualStartIndex && items.content < schedualEndIndex && items.flag) {
           return {
             ...items,
             color: 'transparent',
@@ -770,7 +842,7 @@ const Home = function (props) {
           title: '',
         };
       });
-      const planList = baseicList.map((items) => {
+      const planList = uiList.map((items) => {
         if (items.content == planStartIndex) {
           if (planStartIndex == planEndIndex) {
             return {
@@ -778,22 +850,22 @@ const Home = function (props) {
               color: 'transparent',
               title: '计划开始与结束时间',
             };
-          } else if (planEndIndex - planStartIndex == 2) {
+          }
+          if (planEndIndex - planStartIndex == 1) {
             return {
               ...items,
               color: 'transparent',
               title: '计划开始和结束时间',
             };
-          } else {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '计划开始时间',
-            };
           }
+          return {
+            ...items,
+            color: 'transparent',
+            title: '计划开始时间',
+          };
         }
         if (items.content == planEndIndex) {
-          if (planEndIndex == planStartIndex || planEndIndex - planStartIndex == 2) {
+          if (planEndIndex == planStartIndex || planEndIndex - planStartIndex == 1) {
             return {
               ...items,
               color: 'transparent',
@@ -820,7 +892,7 @@ const Home = function (props) {
           title: '',
         };
       });
-      const exceedList = baseicList.map((items) => {
+      const exceedList = uiList.map((items) => {
         if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
           if (items.content == planEndIndex && items.content == schedualEndIndex) {
             return {
@@ -848,6 +920,7 @@ const Home = function (props) {
           title: '',
         };
       });
+      console.log(schedualList, planList, exceedList, 'schedualList,planList,exceedList');
       return {
         leftEchartsPieInfoOne: item,
         leftEchartsPieOne: {
@@ -1034,13 +1107,28 @@ const Home = function (props) {
         },
         yijiagongCount: tranData(item, currentTime)[1],
         leftEchartsPieInfoOneCurrent: null,
-        baseicList: baseicLists,
+        uiList: uiLists,
         planList: planList,
         schedualList: schedualList,
         exceedList: exceedList,
       };
     });
     setLeftEchart(totalObj);
+  };
+  const compareFN = (arr, property) => {
+    var i = 0;
+    var j = 0;
+    let t;
+    for (i = 0; i < arr.length; i++) {
+      for (j = 0; j < arr.length; j++) {
+        if (arr[i][property] < arr[j][property]) {
+          t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+      }
+    }
+    return arr;
   };
   const tranDeviceCardDetail = (data) => {
     var ciolColor1 = [

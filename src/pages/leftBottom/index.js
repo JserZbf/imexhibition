@@ -66,7 +66,8 @@ const leftBottom = function (props) {
       },
       {
         title: '是否有保养任务',
-        value: allData.isHasMaintenance ? '是' : '否',
+        value:
+          allData.isHasMaintenance == true ? '是' : allData.isHasMaintenance == false ? '否' : '',
       },
       {
         title: '排产目标',
