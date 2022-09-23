@@ -172,7 +172,7 @@ const Gantt = ({ orderDetail }) => {
     let start = api.coord([api.value(1), categoryIndex]);
     let end = api.coord([api.value(2), categoryIndex]);
     let height = api.size([0, 1])[1] * 0.6;
-    console.log(api, 'start--start');
+    // console.log(api, 'start--start');
     let width = end[0] - start[0];
     let processName = `${api.value(3)} | ${api.value(4)} | ${api.value(5)}`;
     let processNameWidth = echarts.format.getTextRect(processName).width;

@@ -407,7 +407,7 @@ const leftCenter = function (props) {
                                       : '-152%',
                                 }}
                               >
-                                {item.flag ? item.title : ''}
+                                {item.title}
                               </span>
                             </li>
                           );
@@ -427,7 +427,7 @@ const leftCenter = function (props) {
                                       : '-152%',
                                 }}
                               >
-                                {item.flag ? item.title : ''}
+                                {item.title}
                               </span>
                             </li>
                           );
@@ -440,17 +440,7 @@ const leftCenter = function (props) {
                       </ul>
                       <ul className="steps-baseicList-date">
                         {item.uiList.map((items, index) => {
-                          return (
-                            <li
-                              key={index}
-                              style={{
-                                display: items.flag ? 'block' : 'none',
-                                marginLeft: item.uiListLength == 13 ? '-3%' : '-3.5%',
-                              }}
-                            >
-                              {items.fakeValue}
-                            </li>
-                          );
+                          return <li key={index}>{items.fakeValue}</li>;
                         })}
                       </ul>
                     </div>
