@@ -31,7 +31,6 @@ const leftCenter = function (props) {
   } = props;
   const [timer, setTimer] = useState(null);
   const timers = useRef(null);
-  const tableRef = useRef(null);
   const [leftEchartCen, setLeftEchartCen] = useState([]);
   //const [timers, setTimers] = useState(null);
   // useEffect(() => {
@@ -107,14 +106,10 @@ const leftCenter = function (props) {
   };
   useEffect(() => {
     InitialScroll(materialDemandList);
-    activeStyleFun();
     return () => {
       return clearInterval(timer);
     };
   }, [materialDemandList]);
-  const activeStyleFun = () => {
-    console.log(tableRef, 'tableRef');
-  };
   const columns = [
     {
       title: '序号',
@@ -269,7 +264,6 @@ const leftCenter = function (props) {
       if (Math.ceil(v.scrollTop) >= parseFloat(v.scrollHeight - v.clientHeight)) {
         v.scrollTop = 0;
         // setTimeout(() => { v.scrollTop = 0 }, 1000)
-        console.log(tableRef, 'tableRef');
       }
     }, 200);
     setTimer(time); // 定时器保存变量 利于停止
@@ -325,7 +319,6 @@ const leftCenter = function (props) {
               rowKey={'index' + 1}
               dataSource={materialDemandList}
               pagination={false}
-              ref={tableRef}
             />
           </div>
         </Col>

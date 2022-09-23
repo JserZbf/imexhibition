@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
+import React, { memo, useMemo, useRef, useEffect, useState } from 'react';
 import Echarts from 'echarts-for-react';
 import * as echarts from 'echarts/core';
 import moment from 'moment';
@@ -7,7 +7,7 @@ import styles from './index.less';
 const Gantt = ({ orderDetail }) => {
   const chartRef = useRef(null);
   const timer = useRef(null);
-
+  const [option, setOption] = useState({});
   const init = () => {
     timer?.current && clearTimeout(timer?.current);
   };
@@ -15,11 +15,27 @@ const Gantt = ({ orderDetail }) => {
   useEffect(() => {
     if (orderDetail?.length) {
       init();
-      ganttScroll();
+      ganttScroll(0);
     }
     return init;
   }, [orderDetail]);
-
+  let currentPage = 0;
+  const loopData = (arr, newLen) => {
+    let len = arr.length;
+    let result = len - currentPage;
+    let newArr = [];
+    if (result > 0 && result < newLen) {
+      newArr = [...arr.slice(currentPage, len), ...arr.slice(0, newLen - result)];
+      currentPage = newLen - result;
+    } else if (result >= newLen) {
+      newArr = arr.slice(currentPage, currentPage + newLen);
+      currentPage += newLen;
+    } else {
+      currentPage = 0;
+      newArr = arr.slice(currentPage, currentPage + newLen);
+    }
+    return newArr;
+  };
   const formatPropData = useMemo(() => {
     let formatData = [];
     if (!Array.isArray(orderDetail)) {
@@ -31,6 +47,7 @@ const Gantt = ({ orderDetail }) => {
       const { planLevel, planNO, productName, productNum, planStart, planEnd } = order;
       const startTimeStamp = moment(planStart).valueOf();
       const endTimeStamp = moment(planEnd).valueOf();
+      const height = 32.8;
       formatData.push({
         name: planNO,
         value: [
@@ -42,6 +59,7 @@ const Gantt = ({ orderDetail }) => {
           planLevel,
           planStart,
           planEnd,
+          height,
         ],
         itemStyle: {
           normal: {
@@ -72,32 +90,89 @@ const Gantt = ({ orderDetail }) => {
     };
   }, [orderDetail]);
 
-  const ganttScroll = () => {
-    const chart = chartRef?.current?.getEchartsInstance();
-    if (!chart) return;
+  const ganttScroll = (time) => {
+    const { formatData } = formatPropData;
+    //console.log(formatData, 'formatData-new-formatData')
     timer.current = setTimeout(() => {
-      const { dataZoom } = chart.getOption();
-      const { start, end } = dataZoom?.[0];
-      let _start = start + 25;
-      let _end = end + 25;
-      if (_end >= 100) {
-        _start = 0;
-        _end = 25;
-      }
-      chart?.dispatchAction({
-        type: 'dataZoom',
-        start: _start,
-        end: _end,
+      const currentData = loopData(formatData, 10);
+      currentData.forEach((item, index) => {
+        item.value[0] = index;
       });
-      ganttScroll();
-    }, 5000);
+      const obj = {
+        xAxis: {
+          type: 'time',
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#0F58EA',
+              width: 3,
+            },
+          },
+          axisLabel: {
+            show: true,
+            color: '#fff',
+            showMinLabel: true,
+            showMaxLabel: true,
+            formatter: '{yyyy}-{M}-{d}',
+          },
+          splitLine: {
+            show: true,
+            interval: 0,
+            lineStyle: {
+              color: ['#0074FE'],
+            },
+          },
+        },
+        yAxis: {
+          show: false,
+        },
+        dataZoom: [
+          {
+            type: 'inside',
+            yAxisIndex: 0,
+            start: 0,
+            end: 100,
+            zoomLock: true,
+            zoomOnMouseWheel: false,
+          },
+        ],
+        grid: {
+          show: true,
+          top: '5%',
+          bottom: '5%',
+          left: '5%',
+          right: '5%',
+          containLabel: true,
+          borderWidth: 0,
+        },
+        series: [
+          {
+            type: 'custom',
+            renderItem: renderItem,
+            itemStyle: {
+              opacity: 0.8,
+            },
+            encode: {
+              x: [1, 2],
+              y: 0,
+            },
+            data: currentData,
+          },
+        ],
+      };
+      setOption(obj);
+      ganttScroll(5000);
+    }, time);
   };
 
   const renderItem = (params, api) => {
+    // const postion = [86.06, 140.67000000000002, 195.28000000000003, 249.89, 304.5, 359.11, 413.71999999999997, 468.33, 522.9399999999999, 577.55]
+    const postion = [60, 115, 170, 225, 280, 335, 390, 445, 500, 555]; //手动计算并固定展示每个圆柱对应的y值。
     let categoryIndex = api.value(0);
     let start = api.coord([api.value(1), categoryIndex]);
     let end = api.coord([api.value(2), categoryIndex]);
     let height = api.size([0, 1])[1] * 0.6;
+    console.log(api, 'start--start');
     let width = end[0] - start[0];
     let processName = `${api.value(3)} | ${api.value(4)} | ${api.value(5)}`;
     let processNameWidth = echarts.format.getTextRect(processName).width;
@@ -105,9 +180,9 @@ const Gantt = ({ orderDetail }) => {
     let rectShape = echarts.graphic.clipRectByRect(
       {
         x: start[0],
-        y: start[1] - height / 2,
+        y: postion[categoryIndex] - api.value(8) / 2,
         width: width,
-        height: height,
+        height: api.value(8),
       },
       {
         x: params.coordSys.x,
@@ -119,9 +194,9 @@ const Gantt = ({ orderDetail }) => {
     let rectText = echarts.graphic.clipRectByRect(
       {
         x: start[0],
-        y: start[1] - height / 2,
+        y: postion[categoryIndex] - api.value(8) / 2,
         width: width,
-        height: height,
+        height: api.value(8),
       },
       {
         x: params.coordSys.x,
@@ -151,76 +226,9 @@ const Gantt = ({ orderDetail }) => {
       ],
     };
   };
-
-  const getOption = useCallback(() => {
-    const { formatData } = formatPropData;
-    return {
-      xAxis: {
-        type: 'time',
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#0F58EA',
-            width: 3,
-          },
-        },
-        axisLabel: {
-          show: true,
-          color: '#fff',
-          showMinLabel: true,
-          showMaxLabel: true,
-          formatter: '{yyyy}-{M}-{d}',
-        },
-        splitLine: {
-          show: true,
-          interval: 0,
-          lineStyle: {
-            color: ['#0074FE'],
-          },
-        },
-      },
-      yAxis: {
-        show: false,
-      },
-      dataZoom: [
-        {
-          type: 'inside',
-          yAxisIndex: 0,
-          start: 0,
-          end: 25,
-          zoomLock: true,
-          zoomOnMouseWheel: false,
-        },
-      ],
-      grid: {
-        show: true,
-        top: '5%',
-        bottom: '5%',
-        left: '5%',
-        right: '5%',
-        containLabel: true,
-        borderWidth: 0,
-      },
-      series: [
-        {
-          type: 'custom',
-          renderItem: renderItem,
-          itemStyle: {
-            opacity: 0.8,
-          },
-          encode: {
-            x: [1, 2],
-            y: 0,
-          },
-          data: formatData,
-        },
-      ],
-    };
-  }, [orderDetail]);
-
   return (
     <div className={styles.gantt}>
-      <Echarts option={getOption()} ref={chartRef} style={{ width: '100%', height: '100%' }} />
+      <Echarts option={option} ref={chartRef} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 };
