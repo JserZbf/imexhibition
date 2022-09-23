@@ -137,221 +137,221 @@ const Home = function (props) {
   //     clearInterval(timer);
   //   };
   // }, []);
-  // useEffect(() => {
-  //   const obj = {
-  //     source_code: 'SSS',
-  //   };
-  //   getQuery(obj).then((res) => {
-  //     if (res.code == 200) {
-  //       initClearTimeout(); // 返回新的排产结果清空之前的定时器
-  //       const { orderDetail } = res;
-  //       const sortOrderByStartTime = sortBy(orderDetail, (o) => moment(o.planStart)?.valueOf());
-  //       const startTime = moment(head(sortOrderByStartTime)?.planStart).startOf('day');
-  //       const endDay = moment(startTime).endOf('day');
-  //       // 目前暂定结束时间为开始时间 + 7天
-  //       const endTime = moment(endDay).add(7, 'days');
-  //       // 灵活范围-根据订单获取结束时间
-  //       // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
-  //       filterData(moment(startTime), moment(endDay), res.orderCardDetail); // 过滤出排产结果第一天的数据
-  //       addTime(startTime, endTime, res.orderCardDetail);
+  useEffect(() => {
+    const obj = {
+      source_code: 'SSS',
+    };
+    getQuery(obj).then((res) => {
+      if (res.code == 200) {
+        initClearTimeout(); // 返回新的排产结果清空之前的定时器
+        const { orderDetail } = res;
+        const sortOrderByStartTime = sortBy(orderDetail, (o) => moment(o.planStart)?.valueOf());
+        const startTime = moment(head(sortOrderByStartTime)?.planStart).startOf('day');
+        const endDay = moment(startTime).endOf('day');
+        // 目前暂定结束时间为开始时间 + 7天
+        const endTime = moment(endDay).add(7, 'days');
+        // 灵活范围-根据订单获取结束时间
+        // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
+        filterData(moment(startTime), moment(endDay), res.orderCardDetail); // 过滤出排产结果第一天的数据
+        addTime(startTime, endTime, res.orderCardDetail);
 
-  //       var cenTimeList = [];
-  //       res.orderDetail.forEach((item) => {
-  //         cenTimeList.push(item.planStart, item.planEnd);
-  //       });
-  //       var newCenTimeList = [...new Set(cenTimeList)];
-  //       setOutSideOrderDetailTimeList(newCenTimeList.sort(sorts));
-  //       setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
-  //       setOutSideScheduleCycle(res.scheduleCycle);
-  //       setOutSideSchedulePattern(res.schedulePattern);
-  //       setOutSideScheduleTarget(res.scheduleTarget);
-  //       setAllData(res);
-  //       const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
-  //       setMaterialTypeLaterList(oneCen);
-  //       setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
-  //       setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-  //       // const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-  //       //   return Number(-10000 * item);
-  //       // });
-  //       if (
-  //         res.orderStatisticsInfo.algorithmComparisonData &&
-  //         res.orderStatisticsInfo.algorithmComparisonData.Y
-  //       ) {
-  //         setDiffAlgorithmY(
-  //           res.orderStatisticsInfo.algorithmComparisonData &&
-  //           res.orderStatisticsInfo.algorithmComparisonData.Y,
-  //         ); //不同算法对比信息图
-  //         var bigValueLineCen = [];
-  //         const cenYst = JSON.parse(
-  //           JSON.stringify(
-  //             res.orderStatisticsInfo.algorithmComparisonData &&
-  //             res.orderStatisticsInfo.algorithmComparisonData.Y,
-  //           ),
-  //         );
-  //         for (var i = 1; i <= cenYst.length; i++) {
-  //           bigValueLineCen.push(
-  //             Number(
-  //               cenYst.sort(function (a, b) {
-  //                 return b - a;
-  //               })[0],
-  //             ),
-  //           );
-  //         }
-  //         setBigValueLine(bigValueLineCen);
-  //         setDiffAlgorithmX(
-  //           res.orderStatisticsInfo.algorithmComparisonData &&
-  //           res.orderStatisticsInfo.algorithmComparisonData.X,
-  //         );
-  //       }
+        var cenTimeList = [];
+        res.orderDetail.forEach((item) => {
+          cenTimeList.push(item.planStart, item.planEnd);
+        });
+        var newCenTimeList = [...new Set(cenTimeList)];
+        setOutSideOrderDetailTimeList(newCenTimeList.sort(sorts));
+        setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+        setOutSideScheduleCycle(res.scheduleCycle);
+        setOutSideSchedulePattern(res.schedulePattern);
+        setOutSideScheduleTarget(res.scheduleTarget);
+        setAllData(res);
+        const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
+        setMaterialTypeLaterList(oneCen);
+        setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+        setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+        // const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+        //   return Number(-10000 * item);
+        // });
+        if (
+          res.orderStatisticsInfo.algorithmComparisonData &&
+          res.orderStatisticsInfo.algorithmComparisonData.Y
+        ) {
+          setDiffAlgorithmY(
+            res.orderStatisticsInfo.algorithmComparisonData &&
+              res.orderStatisticsInfo.algorithmComparisonData.Y,
+          ); //不同算法对比信息图
+          var bigValueLineCen = [];
+          const cenYst = JSON.parse(
+            JSON.stringify(
+              res.orderStatisticsInfo.algorithmComparisonData &&
+                res.orderStatisticsInfo.algorithmComparisonData.Y,
+            ),
+          );
+          for (var i = 1; i <= cenYst.length; i++) {
+            bigValueLineCen.push(
+              Number(
+                cenYst.sort(function (a, b) {
+                  return b - a;
+                })[0],
+              ),
+            );
+          }
+          setBigValueLine(bigValueLineCen);
+          setDiffAlgorithmX(
+            res.orderStatisticsInfo.algorithmComparisonData &&
+              res.orderStatisticsInfo.algorithmComparisonData.X,
+          );
+        }
 
-  //       setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
-  //       setFourWeekFinishRateY(
-  //         res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
-  //           return Number(100 * item);
-  //         }),
-  //       );
-  //       setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
-  //       setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
-  //       setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
-  //       const cenY1 = JSON.parse(JSON.stringify(res.deviceStatisticsInfo.fourWeekUseTrend.Y1));
-  //       var bigValueY1Cen = [];
-  //       for (var i = 1; i <= res.deviceStatisticsInfo.fourWeekUseTrend.Y1.length; i++) {
-  //         bigValueY1Cen.push(
-  //           Number(
-  //             cenY1.sort(function (a, b) {
-  //               return b - a;
-  //             })[0],
-  //           ),
-  //         );
-  //       }
-  //       setBigValueY1(bigValueY1Cen);
-  //       setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
-  //       setOrderCardDetail(res.orderCardDetail);
-  //       setDeviceCardDetail(res.deviceCardDetail);
-  //       setOrderScheduleDetail(res.orderScheduleDetail);
-  //       //  tranOrderCardDetail(res.orderCardDetail,moment(startTime).format('YYYY-MM-DD')); //计划状态卡片四个饼图option
-  //       tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
-  //       setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
-  //     }
-  //   });
-  // }, [count]);
+        setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
+        setFourWeekFinishRateY(
+          res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
+            return Number(100 * item);
+          }),
+        );
+        setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+        setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+        setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+        const cenY1 = JSON.parse(JSON.stringify(res.deviceStatisticsInfo.fourWeekUseTrend.Y1));
+        var bigValueY1Cen = [];
+        for (var i = 1; i <= res.deviceStatisticsInfo.fourWeekUseTrend.Y1.length; i++) {
+          bigValueY1Cen.push(
+            Number(
+              cenY1.sort(function (a, b) {
+                return b - a;
+              })[0],
+            ),
+          );
+        }
+        setBigValueY1(bigValueY1Cen);
+        setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+        setOrderCardDetail(res.orderCardDetail);
+        setDeviceCardDetail(res.deviceCardDetail);
+        setOrderScheduleDetail(res.orderScheduleDetail);
+        //  tranOrderCardDetail(res.orderCardDetail,moment(startTime).format('YYYY-MM-DD')); //计划状态卡片四个饼图option
+        tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+        setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+      }
+    });
+  }, [count]);
   /*  /*   useEffect(() => {
       //console.log(orderCardDetail,'orderCardDetail-currentTime')
      // tranOrderCardDetail(orderCardDetail);
     }, [currentTime]); */
-  useEffect(() => {
-    //  getAllData(obj).then((res) => {
-    // console.log(res, 'res-last-dead');
-    const res = mockData;
-    setAllData(res);
-    initClearTimeout(); // 返回新的排产结果清空之前的定时器
-    const { orderDetail } = res;
-    const sortOrderByStartTime = sortBy(orderDetail, (o) => moment(o.planStart)?.valueOf());
-    const startTime = moment(head(sortOrderByStartTime)?.planStart).startOf('day');
-    const endDay = moment(startTime).endOf('day');
-    // 目前暂定结束时间为开始时间 + 7天
-    const endTime = moment(endDay).add(7, 'days');
-    // 灵活范围-根据订单获取结束时间
-    // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
-    filterData(moment(startTime), moment(endDay), res.orderCardDetail); // 过滤出排产结果第一天的数据
-    addTime(startTime, endTime, res.orderCardDetail);
-    setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
-    setOutSideScheduleCycle(res.scheduleCycle);
-    setOutSideSchedulePattern(res.schedulePattern);
-    setOutSideScheduleTarget(res.scheduleTarget);
-    // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
-    const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
-    //  console.log(oneCen, 'onononononon')
-    //tranMaterialTypeLaterList(oneCen);
-    setMaterialTypeLaterList(oneCen);
-    setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
-    setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
-    const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
-      return Number(-10000 * item);
-    });
-    var bigValueLineCen = [];
-    for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
-      bigValueLineCen.push(
-        Number(
-          -10000 *
-            res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
-              return a - b;
-            })[0],
-        ),
-      );
-    }
-    //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
-    setBigValueLine(bigValueLineCen);
-    setDiffAlgorithmY(cenY); //不同算法对比信息图
-    setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
-    setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
-    setFourWeekFinishRateY(
-      res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
-        return Number(100 * item);
-      }),
-    );
-    setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
-    setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
-    setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
-    setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
-    setOrderCardDetail(res.orderCardDetail);
-    setDeviceCardDetail(res.deviceCardDetail);
-    tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
-    tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
-    setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
-    // var chartDom = document.getElementById('main');
-    // myChart = echarts.init(chartDom);
-    //  axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
-    // console.log(rawData, 'rawData______________', ROOT_PATH);
-    //  _rawData = rawData.data;
-    // setGanTeData(res.orderScheduleDetail);
-    const cen0 = res.orderScheduleDetail.map((item, index) => {
-      return {
-        ...item,
-        yValue: index,
-      };
-    });
-    /*   var colorList = removeDuplicateColor(cen0).map((item, index) => {
-        return {
-          productName: item.productName,
-          color: color16(),
-        };
-      });
-      var cen1T = []
-      res.orderScheduleDetail.forEach((item, index) => {
-        colorList.forEach((item1, index1) => {
-          if (item.productName == item1.productName) {
-            cen1T.push({ ...item, currentColor: item1.color, yValue: index })
-          }
-        })
-      });
-      var cen2 = []
-      res.orderScheduleDetail.forEach((item, index) => {
-        colorList.forEach((item1, index1) => {
-          if (item.productName == item1.productName) {
-            cen2.push({ ...item, currentColor: item1.color, yValue: index })
-          }
-        })
-      });
-      var cen3 = []
-      res.orderScheduleDetail.forEach((item, index) => {
-        colorList.forEach((item1, index1) => {
-          if (item.productName == item1.productName) {
-            cen3.push({ ...item, currentColor: item1.color, yValue: index })
-          }
-        })
-      });
-      var cen4 = []
-      res.orderScheduleDetail.forEach((item, index) => {
-        colorList.forEach((item1, index1) => {
-          if (item.productName == item1.productName) {
-            cen4.push({ ...item, currentColor: item1.color, yValue: index })
-          }
-        })
-      }); */
-    // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
-    //    });
-  }, []);
+  // useEffect(() => {
+  //   //  getAllData(obj).then((res) => {
+  //   // console.log(res, 'res-last-dead');
+  //   const res = mockData;
+  //   setAllData(res);
+  //   initClearTimeout(); // 返回新的排产结果清空之前的定时器
+  //   const { orderDetail } = res;
+  //   const sortOrderByStartTime = sortBy(orderDetail, (o) => moment(o.planStart)?.valueOf());
+  //   const startTime = moment(head(sortOrderByStartTime)?.planStart).startOf('day');
+  //   const endDay = moment(startTime).endOf('day');
+  //   // 目前暂定结束时间为开始时间 + 7天
+  //   const endTime = moment(endDay).add(7, 'days');
+  //   // 灵活范围-根据订单获取结束时间
+  //   // const endTime = moment(last(sortOrderByStartTime)?.planEnd).startOf('day');
+  //   filterData(moment(startTime), moment(endDay), res.orderCardDetail); // 过滤出排产结果第一天的数据
+  //   addTime(startTime, endTime, res.orderCardDetail);
+  //   setOutSideOrderDetail(res.orderDetail ? res.orderDetail : []);
+  //   setOutSideScheduleCycle(res.scheduleCycle);
+  //   setOutSideSchedulePattern(res.schedulePattern);
+  //   setOutSideScheduleTarget(res.scheduleTarget);
+  //   // const oneCen = res.materialDemandList.slice(0, 5).concat({ shortNum: 666, supplyTime: '2022/7/2' })
+  //   const oneCen = res.materialDemandList.filter((item) => item.isAdequate == '否');
+  //   //  console.log(oneCen, 'onononononon')
+  //   //tranMaterialTypeLaterList(oneCen);
+  //   setMaterialTypeLaterList(oneCen);
+  //   setRightBottomInfor(res.deviceStatisticsInfo.deviceUseStatistics); //右下角信息
+  //   setFinishPlanObj(res.orderStatisticsInfo.orderFinishStatistics); //计划完成率相关信息
+  //   const cenY = res.orderStatisticsInfo.algorithmComparisonData.Y.map((item) => {
+  //     return Number(-10000 * item);
+  //   });
+  //   var bigValueLineCen = [];
+  //   for (var i = 1; i <= res.orderStatisticsInfo.algorithmComparisonData.Y.length; i++) {
+  //     bigValueLineCen.push(
+  //       Number(
+  //         -10000 *
+  //           res.orderStatisticsInfo.algorithmComparisonData.Y.sort(function (a, b) {
+  //             return a - b;
+  //           })[0],
+  //       ),
+  //     );
+  //   }
+  //   //console.log(bigValueLineCen, 'bigValueLineCenbigValueLineCenbigValueLineCen')
+  //   setBigValueLine(bigValueLineCen);
+  //   setDiffAlgorithmY(cenY); //不同算法对比信息图
+  //   setDiffAlgorithmX(res.orderStatisticsInfo.algorithmComparisonData.X);
+  //   setFourWeekFinishRateX(res.orderStatisticsInfo.fourWeekFinishRate.X);
+  //   setFourWeekFinishRateY(
+  //     res.orderStatisticsInfo.fourWeekFinishRate.Y.map((item) => {
+  //       return Number(100 * item);
+  //     }),
+  //   );
+  //   setFourWeekOutputStatistics(res.orderStatisticsInfo.fourWeekOutputStatistics); //aps系统可适应不用加工类型图表
+  //   setFourWeekEnergyConsumption(res.deviceStatisticsInfo.fourWeekEnergyConsumption); //预计设备不同状态图表
+  //   setFourWeekUseTrend(res.deviceStatisticsInfo.fourWeekUseTrend); //最近四周使用率趋势图
+  //   setFourWeekUtilizationRate(res.deviceStatisticsInfo.fourWeekUtilizationRate); //近四周设备利用率变化趋势
+  //   setOrderCardDetail(res.orderCardDetail);
+  //   setDeviceCardDetail(res.deviceCardDetail);
+  //   tranOrderCardDetail(res.orderCardDetail); //计划状态卡片四个饼图option
+  //   tranDeviceCardDetail(res.deviceCardDetail); //每台设备卡片十个折线图option、
+  //   setDeviceUseTime(res.deviceStatisticsInfo.deviceUseTime); //机床可用时间
+  //   // var chartDom = document.getElementById('main');
+  //   // myChart = echarts.init(chartDom);
+  //   //  axios.get(ROOT_PATH + '/data/asset/data/airport-schedule.json').then((rawData) => {
+  //   // console.log(rawData, 'rawData______________', ROOT_PATH);
+  //   //  _rawData = rawData.data;
+  //   // setGanTeData(res.orderScheduleDetail);
+  //   const cen0 = res.orderScheduleDetail.map((item, index) => {
+  //     return {
+  //       ...item,
+  //       yValue: index,
+  //     };
+  //   });
+  //   /*   var colorList = removeDuplicateColor(cen0).map((item, index) => {
+  //       return {
+  //         productName: item.productName,
+  //         color: color16(),
+  //       };
+  //     });
+  //     var cen1T = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen1T.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen2 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen2.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen3 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen3.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     });
+  //     var cen4 = []
+  //     res.orderScheduleDetail.forEach((item, index) => {
+  //       colorList.forEach((item1, index1) => {
+  //         if (item.productName == item1.productName) {
+  //           cen4.push({ ...item, currentColor: item1.color, yValue: index })
+  //         }
+  //       })
+  //     }); */
+  //   // myChart.setOption((option = makeOption(cen1T, cen2, cen3, cen4)));
+  //   //    });
+  // }, []);
   const tranMaterialTypeLaterList = (data) => {
     const cenData = data.slice(0, 6).map((item, index) => {
       return {
