@@ -139,7 +139,7 @@ const leftCenter = function (props) {
       title: '规格类型',
       dataIndex: 'Specs',
       key: 'Specs',
-      width: 100,
+      width: 200,
     },
     {
       title: '需求数量',
@@ -330,7 +330,7 @@ const leftCenter = function (props) {
                   /*   className="run-lis" */
                   <li key={index} className="run-lis" style={{ animationDelay: item.delay + 's' }}>
                     <ReactEchartsCom option={item.leftEchartsPieOne} />
-                    <div>
+                    <div style={{ marginLeft: item.uiList.length == 15 ? '-3.7%' : '0%' }}>
                       <ul className="steps-mess">
                         <li className="title">
                           <span>计划编号</span>
@@ -438,7 +438,10 @@ const leftCenter = function (props) {
                           return <li key={index} style={{ background: item.color }}></li>;
                         })}
                       </ul>
-                      <ul className="steps-baseicList-date">
+                      <ul
+                        className="steps-baseicList-date"
+                        style={{ width: item.uiList.length == 15 ? '133%' : '151%' }}
+                      >
                         {item.uiList.map((items, index) => {
                           return <li key={index}>{items.fakeValue}</li>;
                         })}

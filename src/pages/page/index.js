@@ -562,6 +562,7 @@ const Home = function (props) {
       );
     });
     var sortDateTotalData = compareFN(cenSortDateTotalData, 'value');
+    // var sortDateTotalData = [{value: moment('2022-09-27').format('YYYY-MM-DD')},{value:moment('2022-10-04').format('YYYY-MM-DD')}];
     const totalObj = data.map((item, index) => {
       var dateCount =
         (new Date(sortDateTotalData[sortDateTotalData.length - 1].value) -
