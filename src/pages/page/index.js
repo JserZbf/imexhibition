@@ -91,7 +91,8 @@ const Home = function (props) {
   // 参数为Moment类型
   const filterData = (start, end, orderCardDetail) => {
     // TODO
-    //  console.log(1, start.format(MOMENT_FORMAT), '', end.format(MOMENT_FORMAT));
+    // console.log(1, start.format(MOMENT_FORMAT), '', end.format(MOMENT_FORMAT));
+    //  console.log('我经过了');
     const cuurrentTimeCen = start.format('YYYY-MM-DD');
     setCurrentTime(cuurrentTimeCen);
     tranOrderCardDetail(orderCardDetail, cuurrentTimeCen);
@@ -423,7 +424,7 @@ const Home = function (props) {
   const sorts = (a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
   };
-  const compareTime = (stime, etime, currentTime) => {
+  const compareTime = (stimes, etimes, currentTimes) => {
     // 转换时间格式，并转换为时间戳
     // function tranDate(time) {
     //   if (time) {
@@ -450,14 +451,25 @@ const Home = function (props) {
     // console.log(nowTime,'nowTime--nowTime')
     // 如果当前时间处于时间段内，返回true，否则返回false
     //  console.log(currentTime, 'currentTime-fun')
-    if (currentTime >= stime && currentTime <= etime) {
-      return 'center';
-    }
-    if (currentTime < stime) {
-      return 'left';
-    }
-    if (currentTime > etime) {
-      return 'right';
+    let stime = Date.parse(stimes);
+    let etime = Date.parse(etimes);
+    let currentTime = Date.parse(currentTimes);
+    if (stime == etime) {
+      if (currentTime == stime) {
+        return 'center';
+      } else if (currentTime > stime) {
+        return 'right';
+      } else if (currentTime < stime) {
+        return 'left';
+      }
+    } else {
+      if (currentTime >= stime && currentTime <= etime) {
+        return 'center';
+      } else if (currentTime < stime) {
+        return 'left';
+      } else if (currentTime > etime) {
+        return 'right';
+      }
     }
   };
   const GetNumberOfDays = (date1, date2) => {
@@ -507,13 +519,6 @@ const Home = function (props) {
       cenValue = obj.productNum;
     }
     cenValue = obj.productNum / (GetNumberOfDays(startTime, endTime) + 1);
-    //console.log(cen, 'cen-center');
-    if (!cen) {
-      value = 0;
-      percent = 0 + '%';
-      processedValue = 0;
-      direction = 'left';
-    }
     if (cen == 'left') {
       value = 0;
       percent = 0 + '%';
@@ -552,274 +557,208 @@ const Home = function (props) {
   };
 
   const tranOrderCardDetail = (data, currentTime) => {
-    var cenSortDateTotalData = [];
-    data.forEach((item, index) => {
-      cenSortDateTotalData.push(
-        { value: moment(item.planStart).format('YYYY-MM-DD') },
-        { value: moment(item.planEnd).format('YYYY-MM-DD') },
-        { value: moment(item.schedualStart).format('YYYY-MM-DD') },
-        { value: moment(item.schedualEnd).format('YYYY-MM-DD') },
-      );
-    });
-    var sortDateTotalData = compareFN(cenSortDateTotalData, 'value');
-    // var sortDateTotalData = [{value: moment('2022-09-27').format('YYYY-MM-DD')},{value:moment('2022-10-04').format('YYYY-MM-DD')}];
-    const totalObj = data.map((item, index) => {
-      var dateCount =
-        (new Date(sortDateTotalData[sortDateTotalData.length - 1].value) -
-          new Date(sortDateTotalData[0].value)) /
-        (1000 * 60 * 60 * 24);
-      const baseicList = [];
-      for (let i = 0; i <= dateCount; i++) {
-        if (i == dateCount) {
-          baseicList.push({
-            fakeValue: addDateMD(sortDateTotalData[0].value, i, dateCount),
-            realValue: addDate(sortDateTotalData[0].value, i, dateCount),
-            content: i + 1,
-          });
-        } else {
-          baseicList.push(
-            {
+    if (currentTime) {
+      var cenSortDateTotalData = [];
+      data.forEach((item, index) => {
+        cenSortDateTotalData.push(
+          { value: moment(item.planStart).format('YYYY-MM-DD') },
+          { value: moment(item.planEnd).format('YYYY-MM-DD') },
+          { value: moment(item.schedualStart).format('YYYY-MM-DD') },
+          { value: moment(item.schedualEnd).format('YYYY-MM-DD') },
+        );
+      });
+      var sortDateTotalData = compareFN(cenSortDateTotalData, 'value');
+      // var sortDateTotalData = [{value: moment('2022-09-27').format('YYYY-MM-DD')},{value:moment('2022-10-04').format('YYYY-MM-DD')}];
+      const totalObj = data.map((item, index) => {
+        const [value, percent, processedValue, direction] = tranData(item, currentTime);
+        var a1 = Date.parse(new Date(sortDateTotalData[0].value));
+        var a2 = Date.parse(new Date(sortDateTotalData[sortDateTotalData.length - 1].value));
+        var dateCount = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
+        // var dateCount =
+        //   (new Date(sortDateTotalData[sortDateTotalData.length - 1].value) -
+        //     new Date(sortDateTotalData[0].value)) /
+        //   (1000 * 60 * 60 * 24);
+        // console.log(dateCount, sortDateTotalData, 'dateCount,sortDateTotalData');
+        const baseicList = [];
+        for (let i = 0; i <= dateCount; i++) {
+          if (i == dateCount) {
+            baseicList.push({
               fakeValue: addDateMD(sortDateTotalData[0].value, i, dateCount),
               realValue: addDate(sortDateTotalData[0].value, i, dateCount),
               content: i + 1,
-            },
-            {
-              fakeValue: '',
-              content: i + 1,
-            },
-          );
+            });
+          } else {
+            baseicList.push(
+              {
+                fakeValue: addDateMD(sortDateTotalData[0].value, i, dateCount),
+                realValue: addDate(sortDateTotalData[0].value, i, dateCount),
+                content: i + 1,
+              },
+              {
+                fakeValue: '',
+                content: i + 1,
+              },
+            );
+          }
+          baseicList.forEach((item, index) => {
+            item.content = index + 1;
+          });
         }
-        baseicList.forEach((item, index) => {
-          item.content = index + 1;
+        // console.log(baseicList, 'baseicList--baseicList');
+        var planStartIndex = null;
+        var planEndIndex = null;
+        var schedualStartIndex = null;
+        var schedualEndIndex = null;
+        baseicList.forEach((itemx) => {
+          if (itemx.realValue == moment(item.planStart).format('YYYY-MM-DD')) {
+            planStartIndex = itemx.content;
+          }
+          if (itemx.realValue == moment(item.planEnd).format('YYYY-MM-DD')) {
+            planEndIndex = itemx.content;
+          }
+          if (itemx.realValue == moment(item.schedualStart).format('YYYY-MM-DD')) {
+            schedualStartIndex = itemx.content;
+          }
+          if (itemx.realValue == moment(item.schedualEnd).format('YYYY-MM-DD')) {
+            schedualEndIndex = itemx.content;
+          }
         });
-      }
-      // console.log(baseicList, 'baseicList--baseicList');
-      var planStartIndex = null;
-      var planEndIndex = null;
-      var schedualStartIndex = null;
-      var schedualEndIndex = null;
-      baseicList.forEach((itemx) => {
-        if (itemx.realValue == moment(item.planStart).format('YYYY-MM-DD')) {
-          planStartIndex = itemx.content;
-        }
-        if (itemx.realValue == moment(item.planEnd).format('YYYY-MM-DD')) {
-          planEndIndex = itemx.content;
-        }
-        if (itemx.realValue == moment(item.schedualStart).format('YYYY-MM-DD')) {
-          schedualStartIndex = itemx.content;
-        }
-        if (itemx.realValue == moment(item.schedualEnd).format('YYYY-MM-DD')) {
-          schedualEndIndex = itemx.content;
-        }
-      });
-      baseicList.forEach((itemx) => {
-        if (itemx.realValue == moment(item.planStart).format('YYYY-MM-DD')) {
-          planStartIndex = itemx.content;
-        }
-        if (itemx.realValue == moment(item.planEnd).format('YYYY-MM-DD')) {
-          planEndIndex = itemx.content;
-        }
-        if (itemx.realValue == moment(item.schedualStart).format('YYYY-MM-DD')) {
-          schedualStartIndex = itemx.content;
-        }
-        if (itemx.realValue == moment(item.schedualEnd).format('YYYY-MM-DD')) {
-          schedualEndIndex = itemx.content;
-        }
-      });
-      const baseicLists = baseicList.map((items) => {
-        if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
-          if (items.content == planEndIndex && items.content == schedualEndIndex) {
-            return {
-              ...items,
-              color: 'green',
-              title: '',
-            };
+        baseicList.forEach((itemx) => {
+          if (itemx.realValue == moment(item.planStart).format('YYYY-MM-DD')) {
+            planStartIndex = itemx.content;
           }
-          if (item.planStart == item.schedualStart && item.planEnd == item.schedualEnd) {
-            return {
-              ...items,
-              color: 'green',
-              title: '',
-            };
+          if (itemx.realValue == moment(item.planEnd).format('YYYY-MM-DD')) {
+            planEndIndex = itemx.content;
           }
-          if (items.content == schedualEndIndex) {
+          if (itemx.realValue == moment(item.schedualStart).format('YYYY-MM-DD')) {
+            schedualStartIndex = itemx.content;
+          }
+          if (itemx.realValue == moment(item.schedualEnd).format('YYYY-MM-DD')) {
+            schedualEndIndex = itemx.content;
+          }
+        });
+        const baseicLists = baseicList.map((items) => {
+          if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
+            if (items.content == planEndIndex && items.content == schedualEndIndex) {
+              return {
+                ...items,
+                color: 'green',
+                title: '',
+              };
+            }
+            if (item.planStart == item.schedualStart && item.planEnd == item.schedualEnd) {
+              return {
+                ...items,
+                color: 'green',
+                title: '',
+              };
+            }
+            if (items.content == schedualEndIndex) {
+              return {
+                ...items,
+                color: 'red',
+                title: '实际超期时间',
+              };
+            }
             return {
               ...items,
               color: 'red',
-              title: '实际超期时间',
+              title: '',
             };
           }
-          return {
-            ...items,
-            color: 'red',
-            title: '',
-          };
-        }
-        if (items.content == schedualStartIndex) {
-          return {
-            ...items,
-            color: 'green',
-            title: '排产开始时间',
-          };
-        }
-        if (items.content == schedualEndIndex) {
-          return {
-            ...items,
-            color: 'green',
-            title: '排产结束时间',
-          };
-        }
-        if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
-          return {
-            ...items,
-            color: 'green',
-            title: '',
-          };
-        }
-        if (items.content == planStartIndex) {
-          return {
-            ...items,
-            color: 'skyblue',
-            title: '计划开始时间',
-          };
-        }
-        if (items.content == planEndIndex) {
-          return {
-            ...items,
-            color: 'skyblue',
-            title: '计划结束时间',
-          };
-        }
-        if (items.content > planStartIndex && items.content < planEndIndex) {
-          return {
-            ...items,
-            color: 'skyblue',
-            title: '',
-          };
-        }
-        return {
-          ...items,
-          color: '#f0f0f0',
-          title: '',
-        };
-      });
-      const schedualList = baseicList.map((items) => {
-        if (items.content == schedualStartIndex) {
-          if (schedualEndIndex == schedualStartIndex) {
+          if (items.content == schedualStartIndex) {
             return {
               ...items,
-              color: 'transparent',
-              title: '排产开始与结束时间',
-            };
-          } else if (schedualEndIndex - schedualStartIndex == 2) {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '排产开始和结束时间',
-            };
-          } else {
-            return {
-              ...items,
-              color: 'transparent',
+              color: 'green',
               title: '排产开始时间',
-            };
-          }
-        }
-        if (items.content == schedualEndIndex) {
-          if (
-            schedualEndIndex == schedualStartIndex ||
-            schedualEndIndex - schedualStartIndex == 2
-          ) {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '',
-            };
-          } else {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '排产结束时间',
-            };
-          }
-        }
-        if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
-          return {
-            ...items,
-            color: 'transparent',
-            title: '',
-          };
-        }
-        return {
-          ...items,
-          color: 'transparent',
-          title: '',
-        };
-      });
-      const planList = baseicList.map((items) => {
-        if (items.content == planStartIndex) {
-          if (planStartIndex == planEndIndex) {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '计划开始与结束时间',
-            };
-          } else if (planEndIndex - planStartIndex == 2) {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '计划开始和结束时间',
-            };
-          } else {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '计划开始时间',
-            };
-          }
-        }
-        if (items.content == planEndIndex) {
-          if (planEndIndex == planStartIndex || planEndIndex - planStartIndex == 2) {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '',
-            };
-          } else {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '计划结束时间',
-            };
-          }
-        }
-        if (items.content > planStartIndex && items.content < planEndIndex) {
-          return {
-            ...items,
-            color: 'transparent',
-            title: '',
-          };
-        }
-        return {
-          ...items,
-          color: 'transparent',
-          title: '',
-        };
-      });
-      const exceedList = baseicList.map((items) => {
-        if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
-          if (items.content == planEndIndex && items.content == schedualEndIndex) {
-            return {
-              ...items,
-              color: 'transparent',
-              title: '',
             };
           }
           if (items.content == schedualEndIndex) {
             return {
               ...items,
+              color: 'green',
+              title: '排产结束时间',
+            };
+          }
+          if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
+            return {
+              ...items,
+              color: 'green',
+              title: '',
+            };
+          }
+          if (items.content == planStartIndex) {
+            return {
+              ...items,
+              color: 'skyblue',
+              title: '计划开始时间',
+            };
+          }
+          if (items.content == planEndIndex) {
+            return {
+              ...items,
+              color: 'skyblue',
+              title: '计划结束时间',
+            };
+          }
+          if (items.content > planStartIndex && items.content < planEndIndex) {
+            return {
+              ...items,
+              color: 'skyblue',
+              title: '',
+            };
+          }
+          return {
+            ...items,
+            color: '#f0f0f0',
+            title: '',
+          };
+        });
+        const schedualList = baseicList.map((items) => {
+          if (items.content == schedualStartIndex) {
+            if (schedualEndIndex == schedualStartIndex) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '排产开始与结束时间',
+              };
+            } else if (schedualEndIndex - schedualStartIndex == 2) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '排产开始和结束时间',
+              };
+            } else {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '排产开始时间',
+              };
+            }
+          }
+          if (items.content == schedualEndIndex) {
+            if (
+              schedualEndIndex == schedualStartIndex ||
+              schedualEndIndex - schedualStartIndex == 2
+            ) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '',
+              };
+            } else {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '排产结束时间',
+              };
+            }
+          }
+          if (items.content > schedualStartIndex && items.content < schedualEndIndex) {
+            return {
+              ...items,
               color: 'transparent',
-              title: '实际超期时间',
+              title: '',
             };
           }
           return {
@@ -827,206 +766,278 @@ const Home = function (props) {
             color: 'transparent',
             title: '',
           };
-        }
+        });
+        const planList = baseicList.map((items) => {
+          if (items.content == planStartIndex) {
+            if (planStartIndex == planEndIndex) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '计划开始与结束时间',
+              };
+            } else if (planEndIndex - planStartIndex == 2) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '计划开始和结束时间',
+              };
+            } else {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '计划开始时间',
+              };
+            }
+          }
+          if (items.content == planEndIndex) {
+            if (planEndIndex == planStartIndex || planEndIndex - planStartIndex == 2) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '',
+              };
+            } else {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '计划结束时间',
+              };
+            }
+          }
+          if (items.content > planStartIndex && items.content < planEndIndex) {
+            return {
+              ...items,
+              color: 'transparent',
+              title: '',
+            };
+          }
+          return {
+            ...items,
+            color: 'transparent',
+            title: '',
+          };
+        });
+        const exceedList = baseicList.map((items) => {
+          if (items.content >= planEndIndex && items.content <= schedualEndIndex) {
+            if (items.content == planEndIndex && items.content == schedualEndIndex) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '',
+              };
+            }
+            if (items.content == schedualEndIndex) {
+              return {
+                ...items,
+                color: 'transparent',
+                title: '实际超期时间',
+              };
+            }
+            return {
+              ...items,
+              color: 'transparent',
+              title: '',
+            };
+          }
+          return {
+            ...items,
+            color: 'transparent',
+            title: '',
+          };
+        });
         return {
-          ...items,
-          color: 'transparent',
-          title: '',
+          leftEchartsPieInfoOne: item,
+          leftEchartsPieOne: {
+            title: {
+              text: '',
+              x: 'center',
+              y: 'center',
+              textStyle: {
+                fontWeight: 'normal',
+                color: '#0bb6f0',
+                fontSize: 20,
+              },
+            },
+            //backgroundColor: '#011128',
+            // backgroundColor:'pink',
+            color: ['#eb644b', '#313443', '#fff'],
+            tooltip: {
+              show: false,
+              formatter: '{a} <br/>{b} : {c} ({d}%)',
+            },
+            legend: {
+              show: false,
+              itemGap: 12,
+              data: ['01', '02'],
+            },
+            toolbox: {
+              show: false,
+              feature: {
+                mark: {
+                  show: true,
+                },
+                dataView: {
+                  show: true,
+                  readOnly: false,
+                },
+                restore: {
+                  show: true,
+                },
+                saveAsImage: {
+                  show: true,
+                },
+              },
+            },
+            series: [
+              {
+                name: 'Line 1',
+                type: 'pie',
+                clockWise: false,
+                radius: ['70%', '80%'],
+                itemStyle: {
+                  normal: {
+                    label: {
+                      show: false,
+                    },
+                    labelLine: {
+                      show: false,
+                    },
+                    shadowBlur: 40,
+                    shadowColor: 'rgba(40, 40, 40, 0.5)',
+                  },
+                },
+                hoverAnimation: false,
+                data: [
+                  {
+                    value: value,
+                    name: '01',
+                    itemStyle: {
+                      normal: {
+                        color: '#6879F7', //已完成的圆环的颜色
+                        label: {
+                          show: false,
+                        },
+                        labelLine: {
+                          show: false,
+                        },
+                      },
+                      emphasis: {
+                        color: 'rgba(44,59,70,1)', //未完成的圆环的颜色
+                      },
+                    },
+                    label: {
+                      normal: {
+                        rich: {
+                          a: {
+                            color: '#fff',
+                            align: 'center',
+                            fontSize: 11,
+                          },
+                          b: {
+                            color: '#fff',
+                            align: 'center',
+                            fontSize: 16,
+                            padding: 5,
+                          },
+                          c: {
+                            color: '#fff',
+                            align: 'center',
+                            fontSize: 22,
+                            padding: 5,
+                          },
+                        },
+                        formatter: function (params) {
+                          return (
+                            // '{a|计划编号:' +
+                            // item.planNO.slice(0, 6) +
+                            // '}' +
+                            // '\n\n{a|产品名称:' +
+                            // item.productName +
+                            // '件}' +
+                            '\n\n{b|计划产量' +
+                            item.productNum +
+                            '件}' +
+                            '\n\n{b|已加工' +
+                            processedValue +
+                            '件}' +
+                            '\n\n{c|' +
+                            percent +
+                            '}'
+                          );
+                        },
+                        position: 'center',
+                        show: true,
+                        textStyle: {
+                          fontSize: '14',
+                          fontWeight: 'normal',
+                          color: '#fff',
+                        },
+                      },
+                    },
+                  },
+                  {
+                    value: 100 - value,
+                    name: '',
+                    itemStyle: {
+                      normal: {
+                        color: '#071D58', //未完成的圆环的颜色
+                        label: {
+                          show: false,
+                        },
+                        labelLine: {
+                          show: false,
+                        },
+                      },
+                      emphasis: {
+                        color: 'rgba(44,59,70,1)', //未完成的圆环的颜色
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                name: 'Line 2',
+                type: 'pie',
+                animation: false,
+                clockWise: false,
+                radius: ['80%', '90%'],
+                itemStyle: {
+                  normal: {
+                    color: '#7CA9FF', //外层圆环的颜色
+                    label: {
+                      show: false,
+                    },
+                    labelLine: {
+                      show: false,
+                    },
+                  },
+                  emphasis: {
+                    color: 'rgba(44,59,70,1)', //外层圆环的颜色
+                  },
+                },
+                hoverAnimation: false,
+                tooltip: {
+                  show: false,
+                },
+                data: [
+                  {
+                    value: 100,
+                    name: '02',
+                  },
+                ],
+              },
+            ],
+          },
+          yijiagongCount: percent,
+          leftEchartsPieInfoOneCurrent: null,
+          uiList: baseicLists,
+          planList: planList,
+          schedualList: schedualList,
+          exceedList: exceedList,
         };
       });
-      return {
-        leftEchartsPieInfoOne: item,
-        leftEchartsPieOne: {
-          title: {
-            text: '',
-            x: 'center',
-            y: 'center',
-            textStyle: {
-              fontWeight: 'normal',
-              color: '#0bb6f0',
-              fontSize: 20,
-            },
-          },
-          //backgroundColor: '#011128',
-          // backgroundColor:'pink',
-          color: ['#eb644b', '#313443', '#fff'],
-          tooltip: {
-            show: false,
-            formatter: '{a} <br/>{b} : {c} ({d}%)',
-          },
-          legend: {
-            show: false,
-            itemGap: 12,
-            data: ['01', '02'],
-          },
-          toolbox: {
-            show: false,
-            feature: {
-              mark: {
-                show: true,
-              },
-              dataView: {
-                show: true,
-                readOnly: false,
-              },
-              restore: {
-                show: true,
-              },
-              saveAsImage: {
-                show: true,
-              },
-            },
-          },
-          series: [
-            {
-              name: 'Line 1',
-              type: 'pie',
-              clockWise: false,
-              radius: ['70%', '80%'],
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false,
-                  },
-                  labelLine: {
-                    show: false,
-                  },
-                  shadowBlur: 40,
-                  shadowColor: 'rgba(40, 40, 40, 0.5)',
-                },
-              },
-              hoverAnimation: false,
-              data: [
-                {
-                  value: tranData(item, currentTime)[0],
-                  name: '01',
-                  itemStyle: {
-                    normal: {
-                      color: '#6879F7', //已完成的圆环的颜色
-                      label: {
-                        show: false,
-                      },
-                      labelLine: {
-                        show: false,
-                      },
-                    },
-                    emphasis: {
-                      color: 'rgba(44,59,70,1)', //未完成的圆环的颜色
-                    },
-                  },
-                  label: {
-                    normal: {
-                      rich: {
-                        a: {
-                          color: '#fff',
-                          align: 'center',
-                          fontSize: 11,
-                        },
-                        b: {
-                          color: '#fff',
-                          align: 'center',
-                          fontSize: 16,
-                          padding: 5,
-                        },
-                        c: {
-                          color: '#fff',
-                          align: 'center',
-                          fontSize: 22,
-                          padding: 5,
-                        },
-                      },
-                      formatter: function (params) {
-                        const [value, percent, processedValue] = tranData(item, currentTime);
-                        return (
-                          // '{a|计划编号:' +
-                          // item.planNO.slice(0, 6) +
-                          // '}' +
-                          // '\n\n{a|产品名称:' +
-                          // item.productName +
-                          // '件}' +
-                          '\n\n{b|计划产量' +
-                          item.productNum +
-                          '件}' +
-                          '\n\n{b|已加工' +
-                          processedValue +
-                          '件}' +
-                          '\n\n{c|' +
-                          percent +
-                          '}'
-                        );
-                      },
-                      position: 'center',
-                      show: true,
-                      textStyle: {
-                        fontSize: '14',
-                        fontWeight: 'normal',
-                        color: '#fff',
-                      },
-                    },
-                  },
-                },
-                {
-                  value: 100 - tranData(item, currentTime)[0],
-                  name: '',
-                  itemStyle: {
-                    normal: {
-                      color: '#071D58', //未完成的圆环的颜色
-                      label: {
-                        show: false,
-                      },
-                      labelLine: {
-                        show: false,
-                      },
-                    },
-                    emphasis: {
-                      color: 'rgba(44,59,70,1)', //未完成的圆环的颜色
-                    },
-                  },
-                },
-              ],
-            },
-            {
-              name: 'Line 2',
-              type: 'pie',
-              animation: false,
-              clockWise: false,
-              radius: ['80%', '90%'],
-              itemStyle: {
-                normal: {
-                  color: '#7CA9FF', //外层圆环的颜色
-                  label: {
-                    show: false,
-                  },
-                  labelLine: {
-                    show: false,
-                  },
-                },
-                emphasis: {
-                  color: 'rgba(44,59,70,1)', //外层圆环的颜色
-                },
-              },
-              hoverAnimation: false,
-              tooltip: {
-                show: false,
-              },
-              data: [
-                {
-                  value: 100,
-                  name: '02',
-                },
-              ],
-            },
-          ],
-        },
-        yijiagongCount: tranData(item, currentTime)[1],
-        leftEchartsPieInfoOneCurrent: null,
-        uiList: baseicLists,
-        planList: planList,
-        schedualList: schedualList,
-        exceedList: exceedList,
-      };
-    });
-    setLeftEchart(totalObj);
+      setLeftEchart(totalObj);
+    }
   };
   const compareFN = (arr, property) => {
     var i = 0;
