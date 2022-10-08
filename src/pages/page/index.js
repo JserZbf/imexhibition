@@ -530,20 +530,19 @@ const Home = function (props) {
     }
     if (cen == 'center') {
       var tranDatas = GetNumberOfDays(startTime, endTime);
-      for (var index = 0; index <= tranDatas; index++) {
+      for (var index = 0; index < tranDatas; index++) {
         if (currentTime == addDate(startTime, index)) {
           if (index == 0) {
-            processedValue = cenValue.toFixed(0);
-            value = ((processedValue / obj.productNum) * 100).toFixed(0);
+            processedValue = parseFloat(cenValue.toFixed(1));
+            value = parseFloat(((processedValue / obj.productNum) * 100).toFixed(1));
             percent = value + '%';
             direction = 'center';
           } else {
             // value = (obj.productNum / GetNumberOfDays(startTime, endTime)) * index;
-            processedValue = (
-              (obj.productNum / GetNumberOfDays(startTime, endTime)) *
-              index
-            ).toFixed(0);
-            value = ((processedValue / obj.productNum) * 100).toFixed(0);
+            processedValue = parseFloat(
+              ((obj.productNum / GetNumberOfDays(startTime, endTime)) * index).toFixed(1),
+            );
+            value = parseFloat(((processedValue / obj.productNum) * 100).toFixed(1));
             percent = value + '%';
             direction = 'center';
           }
