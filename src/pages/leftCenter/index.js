@@ -350,27 +350,13 @@ const leftCenter = function (props) {
                         </li>
                         <li className="title"></li>
                         <li className="title-button">
-                          <span
-                            className={
-                              item.yijiagongCount != '0%' &&
-                              item.yijiagongCount != '100%' &&
-                              item.yijiagongCount != '100.0%'
-                                ? 'active'
-                                : ''
-                            }
-                          >
+                          <span className={item.yijiagongCount == 'center' ? 'active' : ''}>
                             加工中
                           </span>
-                          <span className={item.yijiagongCount == '0%' ? 'active' : ''}>
+                          <span className={item.yijiagongCount == 'left' ? 'active' : ''}>
                             未加工
                           </span>
-                          <span
-                            className={
-                              item.yijiagongCount == '100%' || item.yijiagongCount == '100.0%'
-                                ? 'active'
-                                : ''
-                            }
-                          >
+                          <span className={item.yijiagongCount == 'right' ? 'active' : ''}>
                             已加工
                           </span>
                         </li>

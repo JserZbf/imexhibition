@@ -456,7 +456,7 @@ const Home = function (props) {
     let currentTime = Date.parse(currentTimes);
     if (stime == etime) {
       if (currentTime == stime) {
-        return 'center';
+        return 'right';
       } else if (currentTime > stime) {
         return 'right';
       } else if (currentTime < stime) {
@@ -464,6 +464,9 @@ const Home = function (props) {
       }
     } else {
       if (currentTime >= stime && currentTime <= etime) {
+        if (currentTime == etime) {
+          return 'right';
+        }
         return 'center';
       } else if (currentTime < stime) {
         return 'left';
@@ -1028,7 +1031,7 @@ const Home = function (props) {
               },
             ],
           },
-          yijiagongCount: percent,
+          yijiagongCount: direction,
           leftEchartsPieInfoOneCurrent: null,
           uiList: baseicLists,
           planList: planList,
