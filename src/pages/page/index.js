@@ -98,6 +98,31 @@ const Home = function (props) {
     tranOrderCardDetail(orderCardDetail, cuurrentTimeCen);
   };
   const initClearTimeout = () => {
+    setAllData({});
+    setMaterialTypeLaterList([]);
+    setRightBottomInfor({});
+    setFinishPlanObj({});
+    setDiffAlgorithmX([]);
+    setDiffAlgorithmY([]);
+    setFourWeekFinishRateX([]);
+    setFourWeekFinishRateY([]);
+    setBigValueLine([]);
+    setBigValueY1([]);
+    setFourWeekOutputStatistics({});
+    setFourWeekEnergyConsumption({});
+    setFourWeekUseTrend({});
+    setFourWeekUtilizationRate({});
+    setLeftEchart([]);
+    setRightEchart([]);
+    setDeviceUseTime();
+    setOutSideOrderDetail([]);
+    setOutSideOrderDetailTimeList([]);
+    setOutSideScheduleCycle(null);
+    setOutSideSchedulePattern(null);
+    setOutSideScheduleTarget(null);
+    setOrderScheduleDetail([]);
+    setCurrentTime(null);
+    setTime('');
     timerRef?.current && clearTimeout(timerRef?.current);
   };
   useEffect(() => {
