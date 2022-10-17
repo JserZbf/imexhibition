@@ -114,6 +114,7 @@ const leftCenter = function (props) {
     {
       title: '序号',
       dataIndex: 'index',
+      width: 70,
       key: 'index',
       render: (text, record, index) => {
         return index + 1;
@@ -123,6 +124,7 @@ const leftCenter = function (props) {
       title: '物料类型',
       dataIndex: 'materialType',
       key: 'materialType',
+      width: 110,
       render: (text, record, index) => {
         if (record.materialType == 'blank') {
           return '毛坯';
