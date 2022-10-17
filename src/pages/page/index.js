@@ -285,7 +285,7 @@ const Home = function ({ scale }) {
     { name: '二十四小时', flag: false, value: 240 },
   ]);
   const [taskId, setTaskId] = useState(93578990);
-  const [schedulePattern, setSchedulePattern] = useState(2); //排产模拟场景
+  const [schedulePattern, setSchedulePattern] = useState(1); //排产模拟场景
   const [scheduleCycle, setScheduleCycle] = useState(7); //排产周期
   const [scheduleTarget, setScheduleTarget] = useState(1); //排产目标
   const [spinFlag, setSpinFlag] = useState(false);
